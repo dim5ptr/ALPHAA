@@ -58,6 +58,8 @@
 
         .modal-body {
             background-color: #f8f9fa;
+            color: #000000;
+            text-align: left;
         }
 
         .modal-footer {
