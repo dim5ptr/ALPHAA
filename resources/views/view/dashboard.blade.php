@@ -146,43 +146,43 @@
                 }
 
                 .card-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    opacity: 0; /* Awalnya tidak terlihat */
-    transition: opacity 0.3s; /* Transisi opacity */
-}
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    opacity: 0; /* Awalnya tidak terlihat */
+                    transition: opacity 0.3s; /* Transisi opacity */
+                }
 
-.card-text {
-    position: absolute;
-    top: 80%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    text-align: left;
-    border-radius: 15px;
-    border: 2px solid wheat;
-    width: 93%;
-    padding: 20px;
-    background-color: white;
-    color: #020202;
-    opacity: 0;
-    transition: opacity 0.3s;
-}
+                .card-text {
+                    position: absolute;
+                    top: 80%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    text-align: left;
+                    border-radius: 15px;
+                    border: 2px solid white;
+                    width: 93%;
+                    padding: 20px;
+                    background-color: rgba(255, 255, 255, 0.849);
+                    color: #020202;
+                    opacity: 0;
+                    transition: opacity 0.3s;
+                }
 
-.card:hover .card-overlay {
-    opacity: 1;
-}
+                .card:hover .card-overlay {
+                    opacity: 1;
+                }
 
-.card:hover .card-text {
-    opacity: 1;
-}
+                .card:hover .card-text {
+                    opacity: 1;
+                }
 
-.card:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
-}
+                .card:hover {
+                    transform: translateY(-10px);
+                    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+                }
 
 
                 .card-content {
@@ -233,7 +233,7 @@
             <p>Hire pre-vetted remote developers, designers and product managers with world-class technical and communication skills, without worrying about crazy fees or the legal hassles.</p>
         </div>
         <div class="pict">
-            <img src="pict/C.jpg">
+            <img src="img/C.jpg">
         </div>
     </section>
 
@@ -241,7 +241,7 @@
         <div class="grid">
             <div class="card">
                 <div class="card-content">
-                    <img src="pict/il.jpg" alt="Grafis ilustratif" class="card-icon">
+                    <img src="img/il.jpg" alt="Grafis ilustratif" class="card-icon">
                     <div class="card-text">
                         <p><span>Grafis ilustratif </span></br>gambarkan ide, menceritakan cerita, atau menjelaskan konsep.</p>
                     </div>
@@ -249,7 +249,7 @@
             </div>
             <div class="card">
                 <div class="card-content">
-                    <img src="pict/anm.jpg" alt="Motion graphics" class="card-icon">
+                    <img src="img/anm.jpg" alt="Motion graphics" class="card-icon">
                     <div class="card-text">
                         <p><span>Motion graphics</span></br>melibatkan pembuatan gerakan dan ilusi dari gambar statis atau objek untuk menciptakan ilusi gerak.</p>
 
@@ -258,7 +258,7 @@
             </div>
             <div class="card">
                 <div class="card-content">
-                    <img src="pict/grp.jpg" alt="Komunikasi visual" class="card-icon">
+                    <img src="img/grp.jpg" alt="Komunikasi visual" class="card-icon">
                     <div class="card-text">
                         <p><span>Komunikasi visual </span></br>gunakan elemen-elemen seperti gambar, teks, dan warna untuk menciptakan komunikasi yang efektif.</p>
                     </div>
@@ -266,7 +266,7 @@
             </div>
             <div class="card">
                 <div class="card-content">
-                    <img src="pict/vid.jpg" alt="Sinematografi digital" class="card-icon">
+                    <img src="img/vid.jpg" alt="Sinematografi digital" class="card-icon">
                     <div class="card-text">
                         <p><span>Sinematografi digital</span></br>konten visual bergerak yang bisa berupa animasi, video klip, atau kombinasi dari keduanya.</br></p>
                     </div>
