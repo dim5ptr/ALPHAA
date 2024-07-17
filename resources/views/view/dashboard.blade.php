@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Booksy | Online Book Shop</title>
+    <link rel="icon" type="image/x-icon" href="img/logo2.png">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <style>
         /* Inline CSS for simplicity */
@@ -80,7 +81,7 @@
 
                 .banner {
                     display: flex;
-                    background-color: #fbfbfb;
+                    background-color: #ffffff;
                     background-size: cover;
                     border-radius: 20px;
                     margin-top: 1.3%;
@@ -213,19 +214,7 @@
     </style>
 </head>
 <body>
-    <header class="navbar">
-        <div class="container">
-            <a href="#" class="brand">HelpU</a>
-            <div class="search-bar">
-            <input type="text" placeholder="What are you looking for?">
-            <i class="fas fa-search"></i></div>
-            <a href="#">
-                <i class="fas fa-home"></i>
-            </a>
-            <a href="{{ route('profil') }}">
-            <i class="fas fa-user"></i>
-        </a> </div>
-    </header>
+    @include('layouts.navigation')
 
     <section class="banner">
         <div class="wlc">

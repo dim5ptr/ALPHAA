@@ -1,60 +1,74 @@
-<nav class="navbar shadow-xl" style="background-color: #00008B;">
-    <div class="container-fluid">
-        <button type="button" class="btn btn-primary" data-bs-toggle="offcanvas" data-bs-target="#offcanvasScrolling" aria-controls="offcanvasScrolling">
-            <i class="bi bi-list"></i>
-        </button>
-        <div style="color: white; margin-left: 10px;">Sarastya Technology Integrata</div>
-        <div style="background-color: white; width: 60px; height: 60px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center;">
-            <img width="80px" src="{{ asset('img/logo_sarastya.png') }}" style="padding: 5px;">
-        </div>
-    </div>
-</nav>
+<style>
+    .navbar {
+                    margin-top: 1%;
+                    padding: 20px 0;
+                    display: flex;
+                    justify-content: space-between; /* Ensure space between the brand and the rest */
+                }
+                .container {
+                    display: flex;
+                    align-items: center;
+                    width: 100%; /* Ensure the container spans the full width */
+                }
 
-<div class="offcanvas offcanvas-start" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1" id="offcanvasScrolling" aria-labelledby="offcanvasScrollingLabel">
-    <div class="offcanvas-header" style="background-color: #00008B; color: white;">
-        <h3 class="offcanvas-title" id="offcanvasScrollingLabel">
-            Dashboard
-        </h3>
-        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-    </div>
-    <div class="offcanvas-body" style="background-color: #202340;">
-        <div class="text-light">
-            <h6>MENU</h6>
-        </div>
-        <div class="grid gap-4 text-light">
-            <div class="p-2">
-                <a href="{{ route('dashboard') }}" class="list-group-item list-group-item-action">
-                    <h6><i class="bi bi-house-door"></i> Home</h6>
-                </a>
-            </div>
-            <div class="p-2">
-                <a href="{{ route('tes_pkl') }}" class="list-group-item list-group-item-action">
-                    <h6><i class="bi bi-tags-fill"></i> Tes Prakerin/PKL </h6>
-                </a>
-            </div>
-            <div class="p-2">
-                <a href="{{ route('about') }}" class="list-group-item list-group-item-action">
-                    <h6><i class="bi bi-info-circle-fill"></i> About Us </h6>
-                </a>
-            </div>
-            <div class="p-2">
-                <a href="{{ route('profil') }}" class="list-group-item list-group-item-action">
-                    <h6><i class="bi bi-person-fill"></i> Profil</h6>
-                </a>
-            </div>
-            <div class="p-2">
-                <a href="{{ route('login') }}" class="list-group-item list-group-item-action">
-                    <h6><i class="bi bi-box-arrow-left"></i> Logout</h6>
-                </a>
-            </div>
-        </div>
-    </div>
-    <div class="offcanvas-footer" style="background-color: #8D99AE; color: white;">
-        <div class="grid ps-4 m-3">
-            <h6>Logged In As :</h6>
-            <h6>
-                <i class="bi bi-person-lines-fill"></i> {{ Auth::user()->user_fullname }}
-            </h6>
-        </div>
-    </div>
-</div>
+                .navbar a {
+                    color: #365AC2;
+                    text-decoration: none;
+                    margin: 0 15px;
+                    font-size: large;
+                    font-weight: 900;
+                }
+
+                i {
+                    color: #365AC2;
+                    font-size: x-large;
+                }
+
+                .search-bar {
+                    display: flex; /* Use flexbox for the container */
+                    align-items: center; /* Center items vertically */
+                    flex: 1; /* Allow the search bar to take up remaining space */
+                    max-width: 500px; /* Optional: limit the max width */
+                    padding: 5px;
+                    border: 2px solid #ffffff;
+                    border-radius: 50px;
+                    background-color: #ffffff;
+                margin-right: 40%;
+                margin-left: 5%;
+
+                }
+
+                .search-bar input {
+                    flex: 1; /* Allow the input to take up all available space */
+                    border: none;
+                    background-color: #ffffff;
+                    outline: none;
+                    padding-left: 10px;
+                }
+
+                .search-bar i {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    color: #fffafa;
+                    background-color: #365AC2;
+                    border-radius: 20px;
+                    font-size: medium;
+                    width: 30px;
+                    height: 30px;
+                    margin-left: 10px; /* Add some space between the input and the icon */
+                }
+</style>
+<header class="navbar">
+    <div class="container">
+        <a href="#" class="brand">HelpU</a>
+        <div class="search-bar">
+        <input type="text" placeholder="What are you looking for?">
+        <i class="fas fa-search"></i></div>
+        <a href="#">
+            <i class="fas fa-home"></i>
+        </a>
+        <a href="{{ route('profil') }}">
+        <i class="fas fa-user"></i>
+    </a> </div>
+</header>
