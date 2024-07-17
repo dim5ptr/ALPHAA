@@ -65,7 +65,7 @@
         <div class="search-bar">
         <input type="text" placeholder="What are you looking for?">
         <i class="fas fa-search"></i></div>
-        <a href="#">
+        <a href="{{ route('dashboard') }}">
             <i class="fas fa-home"></i>
         </a>
         <a href="{{ route('profil') }}">
