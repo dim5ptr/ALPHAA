@@ -8,18 +8,21 @@ use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\NewPasswordController;
 
 Route::get('forgot-password', [PasswordResetLinkController::class, 'create'])
+            ->middleware('guest')
             ->name('password.request');
 
-Route::post('forgot-password', [PasswordResetLinkController::class, 'store'])
+Route::put('forgot-password', [PasswordResetLinkController::class, 'store'])
+            ->middleware('guest')
             ->name('password.email');
 
+// Password Reset Routes...
 Route::get('reset-password/{token}', [NewPasswordController::class, 'create'])
+            ->middleware('guest')
             ->name('password.reset');
 
-Route::post('reset-password', [NewPasswordController::class, 'store'])
+Route::put('reset-password', [NewPasswordController::class, 'store'])
+            ->middleware('guest')
             ->name('password.update');
-
-
 
 Route::get('/dashboard', function () {
     return view('dashboard');
@@ -40,6 +43,9 @@ Route::post('/register', [UserController::class, 'register'])->name('user.regist
 Route::group(['middleware' => ['auth']], function () {
     Route::get('/dashboard', [PagesController::class, 'dashboardPage'])->name('dashboard');
 });
+
+Route::put('/profil/update/{id}', [UserController::class, 'update'])->name('profile.update');
+
 
 Route::get('/profil', [PagesController::class, 'profilPage'])->name('profil');
 

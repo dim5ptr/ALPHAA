@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lupa Password</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <title>Reset Password</title>
-
     <style>
         * {
             margin: 0;
@@ -111,23 +110,14 @@
             </div>
         @endif
         <div class="reset-password-box">
-            <h2>Reset Password</h2>
-            <form action="{{ route('password.update') }}" method="post">
+            <h2>Lupa Password</h2>
+            <form action="{{ route('password.email') }}" method="POST">
                 @csrf
-                {{-- <input type="hidden" name="token" value="{{ $token }}"> --}}
                 <div class="input-group">
-                    <input type="email" id="email" name="email" placeholder="Email" value="{{ $email ?? old('email') }}" required>
+                    <input type="email" id="email" name="email" placeholder="Email" required autofocus>
                     <span class="icon"><i class="fas fa-envelope"></i></span>
                 </div>
-                <div class="input-group">
-                    <input type="password" id="password" name="password" placeholder="Password" required>
-                    <span class="icon"><i class="fas fa-lock"></i></span>
-                </div>
-                <div class="input-group">
-                    <input type="password" id="password_confirmation" name="password_confirmation" placeholder="Konfirmasi Password" required>
-                    <span class="icon"><i class="fas fa-lock"></i></span>
-                </div>
-                <input type="submit" value="Reset Password">
+                <input type="submit" value="Kirim Tautan Reset Password">
             </form>
         </div>
     </div>

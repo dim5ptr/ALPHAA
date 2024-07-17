@@ -205,28 +205,29 @@
 
 @section('main')
     @include('layouts.navigation')
+    @if (session('success'))
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <strong>Berhasil!</strong> {{ session('success') }}
+        <button type="button" class="btn-close" onclick="closeAlert(this)"></button>
+    </div>
+@elseif (session('updated'))
+    <div class="alert alert-info alert-dismissible fade show" role="alert">
+        <strong>Berhasil!</strong> {{ session('updated') }}
+        <button type="button" class="btn-close" onclick="closeAlert(this)"></button>
+    </div>
+@elseif (session('deleted'))
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        <strong>Berhasil!</strong> {{ session('deleted') }}
+        <button type="button" class="btn-close" onclick="closeAlert(this)"></button>
+    </div>
+@elseif (session('error'))
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <strong>Gagal!</strong> {{ session('error') }}
+        <button type="button" class="btn-close" onclick="closeAlert(this)"></button>
+    </div>
+@endif
     <div class="container-flex pt-3 pb-3">
-        @if (session('success'))
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                <strong>Berhasil!</strong> {{ session('success') }}
-                <button type="button" class="btn-close" onclick="closeAlert(this)">Close</button>
-            </div>
-        @elseif (session('updated'))
-            <div class="alert alert-info alert-dismissible fade show" role="alert">
-                <strong>Berhasil!</strong> {{ session('updated') }}
-                <button type="button" class="btn-close" onclick="closeAlert(this)">Close</button>
-            </div>
-        @elseif (session('deleted'))
-            <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                <strong>Berhasil!</strong> {{ session('deleted') }}
-                <button type="button" class="btn-close" onclick="closeAlert(this)">Close</button>
-            </div>
-        @elseif (session('error'))
-            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                <strong>Gagal!</strong> {{ session('error') }}
-                <button type="button" class="btn-close" onclick="closeAlert(this)">Close</button>
-            </div>
-        @endif
+
         <div class="container grid grid-cols-2 gap-4">
             <div class="pict">
                 @if ($user->user_profil_url === '' || $user->user_profil_url === null)

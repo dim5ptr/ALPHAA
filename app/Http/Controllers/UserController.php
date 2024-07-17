@@ -3,10 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\DataUser;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
+
 
 class UserController extends Controller
 {
@@ -100,33 +103,46 @@ class UserController extends Controller
             ->with("success", "Data user berhasil ditambahkan!");
     }
     public function update(Request $request, $id)
-    {
-        $ids = DataUser::find($id);
-        if (!$ids) {
-            return redirect()
-                ->back()
-                ->with("error", "Data user tidak ditemukan.");
+{
+    $user = User::findOrFail($id);
+
+    // Validasi data
+    $request->validate([
+        'profil' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
+        'fullname' => 'required|string|max:255',
+        'username' => 'required|string|max:255|unique:users,username,'.$user->id,
+        'password' => 'nullable|string|min:8|confirmed',
+        'email' => 'required|string|email|max:255|unique:users,email,'.$user->id,
+        'notelp' => 'required|string|max:20',
+        'alamat' => 'required|string|max:255',
+    ]);
+
+    // Handle file upload
+    if ($request->hasFile('profil')) {
+        // Delete old profile picture if it exists
+        if ($user->user_profil_url) {
+            Storage::delete('public/user/profile/' . basename($user->user_profil_url));
         }
-        $profil = $request->file("profil");
-        $data = [
-            "id" => $id,
-            "user_fullname" => $request->input("fullname"),
-            "user_username" => $request->input("username"),
-            "user_password" => bcrypt($request->input("password")),
-            "user_email" => $request->input("email"),
-            "user_notelp" => $request->input("notelp"),
-            "user_alamat" => $request->input("alamat"),
-            "user_level" => $request->input("level"),
-            "user_status" => $request->input("status"),
-        ];
-        DataUser::updateDataUser($id, $data, $profil);
-        Log::notice(
-            "🟡 DataUser " . $request->input("nama") . " berhasil diubah"
-        );
-        return redirect()
-            ->back()
-            ->with("success", "Data user berhasil diperbarui!");
+
+        // Upload new profile picture
+        $fileName = $request->file('profil')->store('public/user/profile');
+        $user->user_profil_url = Storage::url($fileName);
     }
+
+    // Update user data
+    $user->user_fullname = $request->fullname;
+    $user->user_username = $request->username;
+    if ($request->filled('password')) {
+        $user->password = bcrypt($request->password);
+    }
+    $user->user_email = $request->email;
+    $user->user_notelp = $request->notelp;
+    $user->user_alamat = $request->alamat;
+
+    $user->save();
+
+    return redirect()->route('profil')->with('success', 'Profil berhasil diperbarui!');
+}
     public function delete($id)
     {
         $user = DataUser::find($id);
