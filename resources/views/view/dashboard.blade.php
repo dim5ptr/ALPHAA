@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Booksy | Online Book Shop</title>
+    <title>HelpU | Online Design Learned</title>
     <link rel="icon" type="image/x-icon" href="img/logo2.png">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <style>
@@ -133,7 +133,7 @@
                 .grid {
                     display: grid;
                     grid-template-columns: repeat(auto-fit, minmax(5%, 4fr));
-                    height: 210px;
+                    height: 100%;
                     gap: 20px;
                 }
 

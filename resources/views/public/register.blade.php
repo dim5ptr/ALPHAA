@@ -163,12 +163,6 @@
                 </div>
                 <div class="form-group">
                     <div class="input-group">
-                        <i class="fa fa-lock"></i>
-                        <input type="password" id="password" name="password" placeholder="Password" required>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="input-group">
                         <i class="fa fa-phone"></i>
                         <input type="text" id="notelp" name="notelp" placeholder="No. Telepon" value="{{ old('notelp') }}" required>
                     </div>
@@ -179,6 +173,13 @@
                         <input type="text" id="alamat" name="alamat" placeholder="Alamat" value="{{ old('alamat') }}" required>
                     </div>
                 </div>
+                <div class="form-group">
+                    <div class="input-group">
+                        <i class="fa fa-lock"></i>
+                        <input type="password" id="password" name="password" placeholder="Password" required>
+                    </div>
+                </div>
+
                 <button type="submit" class="btn-primary">Daftar</button>
                 <div class="form-text">
                     <p>Sudah punya akun? <a href="{{ route('login') }}">Masuk</a></p>
