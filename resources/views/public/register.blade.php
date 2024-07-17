@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="img/logo2.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <title>Register</title>
     <style>
@@ -24,8 +25,8 @@
             width: 50%;
             height: 100%;
             padding: 20px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Bayangan di sekitarnya */
-            color: white; /* Warna teks di dalam form */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            color: white;
             border-top-left-radius: 10px;
             border-bottom-left-radius: 10px;
         }
@@ -53,20 +54,18 @@
         .form-group .input-group input {
             outline: none;
             font-size: medium;
-            width: calc(80% - 20px); /* Lebar input dikurangi dengan padding untuk ikon */
+            width: calc(80% - 20px);
             height: 50px;
             padding: 10px;
-            padding-left: 50px; /* Ruang untuk ikon */
+            padding-left: 50px;
             border: 1px solid #ccc;
             border-radius: 30px;
             box-sizing: border-box;
-            color: #090909; /* Warna teks di dalam input */
+            color: #090909;
         }
-
         .form-group .input-group input:hover {
             box-shadow: 0 0 5px #AFC3FC;
         }
-
         .btn-primary {
             font-weight: bolder;
             width: 60%;
@@ -115,7 +114,7 @@
             width: 50%;
             display: flex;
             justify-content: center;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Bayangan di sekitarnya */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             align-items: center;
             border-top-right-radius: 10px;
             border-bottom-right-radius: 10px;
@@ -129,7 +128,6 @@
     <div class="container">
         <div class="form-container">
             <h2>Daftar</h2>
-            <!-- Menampilkan error validasi -->
             @if ($errors->any())
                 <div class="alert alert-danger">
                     <ul>
@@ -140,7 +138,6 @@
                 </div>
             @endif
 
-            <!-- Form registrasi -->
             <form action="{{ route('register') }}" method="POST">
                 @csrf
                 <div class="form-group">
@@ -179,15 +176,18 @@
                         <input type="password" id="password" name="password" placeholder="Password" required>
                     </div>
                 </div>
-
-                <button type="submit" class="btn-primary">Daftar</button>
-                <div class="form-text">
-                    <p>Sudah punya akun? <a href="{{ route('login') }}">Masuk</a></p>
+                <div class="form-group">
+                    <div class="input-group">
+                        <i class="fa fa-lock"></i>
+                        <input type="password" id="password_confirmation" name="password_confirmation" placeholder="Confirm Password" required>
+                    </div>
                 </div>
+                <button type="submit" class="btn btn-primary">Daftar</button>
             </form>
+            <p class="form-text">Sudah punya akun? <a href="{{ route('login') }}">Login disini</a></p>
         </div>
         <div class="pict">
-            <img src="img/A.jpg" alt="Registration Image">
+            <img src="{{ asset('img/A.jpg') }}" alt="">
         </div>
     </div>
 </body>

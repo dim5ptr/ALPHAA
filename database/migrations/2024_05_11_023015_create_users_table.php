@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string('user_profil_url')->nullable(true);
             $table->enum('user_level', ['admin', 'pengguna'])->default('pengguna');
             $table->boolean('user_status')->default(true);
+            $table->timestamp('email_verified_at')->nullable();
             $table->timestamps();
         });
     }
@@ -31,6 +32,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('users');
+        Schema::table('users', function (Blueprint $table) {
+            $table->dropColumn('email_verified_at');
+        });
     }
 };

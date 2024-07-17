@@ -29,4 +29,8 @@ class PagesController extends Controller
     {
         return view("view.about");
     }
+    public function emailVerifyNotice()
+    {
+        return view('auth.verify-email');
+    }
 }
