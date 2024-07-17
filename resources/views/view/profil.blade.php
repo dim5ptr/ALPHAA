@@ -13,8 +13,10 @@
     <style>
         body {
             background-color: #d5def7;
-            width: 100vw;
-            height: 100vh;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif; /* Ganti dengan font yang Anda inginkan */
         }
 
         ::-webkit-scrollbar {
@@ -25,10 +27,7 @@
             color: #000000;
         }
 
-        .btn-primary {
-            background-color: #007bff;
-            border-color: #007bff;
-            color: white;
+        .btn-primary, .btn-light, .btn-danger {
             padding: 10px 20px;
             text-align: center;
             text-decoration: none;
@@ -37,44 +36,53 @@
             margin: 4px 2px;
             cursor: pointer;
             border-radius: 4px;
+            border: none;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            color: white;
         }
 
         .btn-primary:hover {
             background-color: #0056b3;
-            border-color: #0056b3;
         }
 
         .btn-light {
             background-color: #f8f9fa;
-            border-color: #f8f9fa;
             color: black;
-            padding: 10px 20px;
-            text-align: center;
-            text-decoration: none;
-            display: inline-block;
-            font-size: 16px;
-            margin: 4px 2px;
-            cursor: pointer;
-            border-radius: 4px;
         }
 
         .btn-danger {
             background-color: #dc3545;
-            border-color: #dc3545;
             color: white;
-            padding: 10px 20px;
-            text-align: center;
-            text-decoration: none;
-            display: inline-block;
-            font-size: 16px;
-            margin: 4px 2px;
-            cursor: pointer;
-            border-radius: 4px;
         }
 
         .btn-danger:hover {
             background-color: #c82333;
-            border-color: #bd2130;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.4);
+            padding-top: 60px;
+        }
+
+        .modal-content {
+            background-color: white;
+            border: 1px solid #dee2e6;
+            border-radius: 0.3rem;
+            margin: 10px auto;
+            width: 80%;
+            max-width: 600px;
+            padding: 20px;
         }
 
         .modal-header {
@@ -98,34 +106,12 @@
             text-align: right;
         }
 
-        .modal-content {
-            background-color: white;
-            border: 1px solid #dee2e6;
-            border-radius: 0.3rem;
-            margin: 10px auto;
-            width: 80%;
-            max-width: 600px;
-            padding: 20px;
-        }
-
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgba(0, 0, 0, 0.4);
-            padding-top: 60px;
-        }
-
         .alert {
             padding: 20px;
             margin-bottom: 15px;
             border: 1px solid transparent;
             border-radius: 4px;
+            text-align: left;
         }
 
         .alert-success {
@@ -154,11 +140,24 @@
 
         .container-flex {
             display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
+            flex-direction: wrap;
             padding: 20px;
+            width:  80%;
+            max-width: 100%;
+            background-color: white;
+            margin-left: 10%;
+            margin-top: 2%;
+            border-radius: 20px;
         }
+
+.pict {
+    flex-basis: 150px; /* adjust the width of the image */
+    margin-right: 20px; /* add some space between the image and the data */
+}
+
+.data {
+    flex: 1; /* take up the remaining space */
+}
 
         .rounded {
             border-radius: 50%;
@@ -168,8 +167,8 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
-        .text-center {
-            text-align: center;
+        .text-left {
+            text-align: left;
         }
 
         .text-black {
@@ -209,45 +208,56 @@
 
 @section('main')
     @include('layouts.navigation')
-    <div class="container-flex text-center pt-3 pb-3" style="background: #d5def7">
+    <div class="container-flex pt-3 pb-3">
         @if (session('success'))
             <div class="alert alert-success alert-dismissible fade show" role="alert">
                 <strong>Berhasil!</strong> {{ session('success') }}
-                <button type="button" class="btn-close" onclick="closeAlert('success')">Close</button>
+                <button type="button" class="btn-close" onclick="closeAlert(this)">Close</button>
             </div>
         @elseif (session('updated'))
             <div class="alert alert-info alert-dismissible fade show" role="alert">
                 <strong>Berhasil!</strong> {{ session('updated') }}
-                <button type="button" class="btn-close" onclick="closeAlert('updated')">Close</button>
+                <button type="button" class="btn-close" onclick="closeAlert(this)">Close</button>
             </div>
         @elseif (session('deleted'))
             <div class="alert alert-warning alert-dismissible fade show" role="alert">
                 <strong>Berhasil!</strong> {{ session('deleted') }}
-                <button type="button" class="btn-close" onclick="closeAlert('deleted')">Close</button>
+                <button type="button" class="btn-close" onclick="closeAlert(this)">Close</button>
             </div>
         @elseif (session('error'))
             <div class="alert alert-danger alert-dismissible fade show" role="alert">
                 <strong>Gagal!</strong> {{ session('error') }}
-                <button type="button" class="btn-close" onclick="closeAlert('error')">Close</button>
+                <button type="button" class="btn-close" onclick="closeAlert(this)">Close</button>
             </div>
         @endif
-        <div class="text-bg-light p-2">
-            @auth
+        <div class="container grid grid-cols-2 gap-4">
+            <div class="pict">
                 @if ($user->user_profil_url === '' || $user->user_profil_url === null)
                     <img width="150px" height="150px" src="{{ asset('img/user.png') }}"
-                        class="rounded m-2 mx-auto d-block shadow-md" alt="...">
+                        class="rounded m-2 d-block shadow-md" alt="...">
                 @else
                     <img width="150px" height="150px"
                         src="{{ asset('storage/user/profile/' . basename($user->user_profil_url)) }}"
-                        class="rounded m-2 mx-auto d-block shadow-md" alt="...">
+                        class="rounded m-2 d-block shadow-md" alt="...">
                 @endif
+            </div>
+            <div class="data">
                 <h3 class="text-black">{{ $user->user_fullname }} - {{ $user->user_username }}</h3>
                 <h5 class="text-black">{{ $user->user_alamat }} | {{ $user->user_notelp }}</h5>
                 <p class="text-black">{{ $user->user_email }}</p>
                 <button type="button" class="btn btn-dark" onclick="openModal()">
                     <i class="fas fa-user-edit me-2"></i>Update Profil
                 </button>
-            @endauth
+            </div>
+        </div>
+        <div class="logout">
+            <form method="POST" action="{{ route('logout') }}">
+                @csrf
+                <button type="submit" class="btn btn-dark">
+                    Logout
+                </button>
+            </form>
+        </div>
             <div class="modal" id="updateUserModal">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -320,7 +330,8 @@
         document.getElementById('updateUserModal').style.display = 'none';
     }
 
-    function closeAlert(alertId) {
-        document.getElementById(alertId).style.display = 'none';
+    function closeAlert(button) {
+        var alert = button.parentElement;
+        alert.style.display = 'none';
     }
 </script>
