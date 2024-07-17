@@ -6,122 +6,198 @@
 
 @section('header')
 <style>
-    body {
-        background-color: #e8f0ff;
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Poppins', sans-serif;
     }
 
-    .login-container {
+    body {
         display: flex;
         justify-content: center;
         align-items: center;
         height: 100vh;
+        background: linear-gradient(135deg, #365AC2, #AFC3FC);
     }
 
-    .card {
+    .container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        width: 100%;
+        max-width: 1100px;
+    }
+
+    .login-box {
+        display: flex;
+        width: 100%;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+    }
+
+    .left, .right {
+        flex: 1;
+        padding: 40px;
+    }
+
+    .left {
+        background-color: #e9edf9;
+        color: #365AC2;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .left img {
+        width: 100%;
+        max-width: 400px;
+        height: auto;
+        margin-bottom: 20px;
+    }
+
+    .right {
+        background: #365AC2;
+        color: #e9edf9;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .right h2 {
+        font-size: 2.5rem;
+        font-weight: 900;
+        margin-bottom: 20px;
+        color: #e9edf9;
+    }
+
+    .input-group {
+        position: relative;
+        margin-bottom: 20px;
+        width: 100%;
+    }
+
+    .input-group input {
+        outline: none;
         width: 400px;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        margin-top: auto;
-        margin-bottom: auto;
-        color: #000000; /* Warna teks putih */
+        height: 50px;
+        padding: 18px;
+        padding-left: 50px;
+        border: 1px solid #ccc;
+        background: #e9edf9;
+        border-radius: 30px;
+        font-size: 1rem;
     }
 
-    .img-logo {
-        max-width: 200px;
-        animation: fadeInUp 2s ease;
-        margin: 20px auto; /* Membuat logo berada di tengah */
+    .input-group input:hover {
+        box-shadow: 0 0 5px #AFC3FC;
     }
 
-    .card-body {
-        text-align: left; /* Membuat teks menjadi rata kiri */
+    .input-group .icon {
+        position: absolute;
+        left: 20px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #365AC2;
     }
 
-    .btn-primary {
-        background-color: #007bff; /* Warna biru */
-        border-color: #007bff; /* Warna border biru */
+    .forgot-password {
+        text-align: right;
+        width: 100%;
+        margin-top: -10px;
+        margin-bottom: 20px;
     }
 
-    .btn-primary:hover {
-        background-color: #0056b3; /* Warna biru tua saat dihover */
-        border-color: #0056b3; /* Warna border biru tua saat dihover */
+    .forgot-password a {
+        color: #fff;
+        text-decoration: none;
+        font-size: 0.9rem;
     }
 
-    .card-footer {
+    .forgot-password a:hover {
+        text-decoration: underline;
+    }
+
+    input[type="submit"] {
+        width: 100%;
+        padding: 18px;
+        background: #e9edf9;
+        color: #365AC2;
+        border: none;
+        border-radius: 25px;
+        cursor: pointer;
+        font-size: 1rem;
+        font-weight: 600;
+        margin-top: 10px;
+        transition: background 0.3s;
+    }
+
+    input[type="submit"]:hover {
+        background: #AFC3FC;
+        color: rgb(0, 0, 0);
+    }
+
+    .register-link {
         text-align: center;
+        margin-top: 10px;
     }
 
-    .link-underline-opacity-0:hover {
-        opacity: 0.7;
+    .register-link a {
+        color: #afc3fc;
+        text-decoration: none;
+        font-weight: bold;
     }
 
-    @keyframes fadeInUp {
-        from {
-            opacity: 0;
-            transform: translateY(20px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
+    .register-link a:hover {
+        text-decoration: underline;
     }
 </style>
 @endsection
 
 @section('main')
-@if(session('success'))
-    <div class="alert alert-success alert-dismissible fade show" role="alert">
-        <strong>Berhasil!</strong> {{session('success')}}
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="close"></button>
-    </div>
-@elseif ($errors->has('message'))
+<div class="container">
+    @if(session('success'))
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <strong>Berhasil!</strong> {{session('success')}}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="close"></button>
+        </div>
+    @elseif ($errors->has('message'))
         <div class="alert alert-danger alert-dismissible fade show" role="alert">
             <strong>Gagal!</strong> {{ $errors->first('message') }}
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
-@endif
-<section class="login-container">
-    <div class="card">
-        <div class="card-header text-center"> <!-- Mengatur teks menjadi tengah -->
-            <img src="{{ asset('img/logo_sarastya.png') }}" alt="img-logo" class="img-logo"/>
+    @endif
+
+    <div class="login-box">
+        <div class="left">
+            <img src="{{ asset('img/logo_sarastya.png') }}" alt="Welcome Image">
         </div>
-        <div class="card-body">
-            <form action="{{ route('user.login') }}" method="POST">
+        <div class="right">
+            <h2>Login</h2>
+            <form action="{{ route('login') }}" method="post">
                 @csrf
-                <div class="form-group my-3">
-                    <label for="username" class="form-label">Username</label>
-                    <div class="input-group">
-                        <span class="input-group-text">
-                            <i class="bi bi-person-fill"></i>
-                        </span>
-                        <input type="text" name="username" id="username" class="form-control"
-                            placeholder="Masukkan username Anda" required />
-                    </div>
+                <div class="input-group">
+                    <input type="username" id="username" name="username" placeholder="Username" value="{{ old('username') }}">
+                    <span class="icon"><i class="fas fa-user"></i></span>
                 </div>
-                @error('username')
-                    <p class="text-danger">{{ $message }}</p>
-                @enderror
-                <div class="form-group my-3">
-                    <label for="password" class="form-label">Password</label>
-                    <div class="input-group">
-                        <span class="input-group-text">
-                            <i class="bi bi-key-fill"></i>
-                        </span>
-                        <input type="password" name="password" id="password" class="form-control"
-                            placeholder="Masukkan password Anda" required />
-                    </div>
+                <div class="input-group">
+                    <input type="password" id="password" name="password" placeholder="Password">
+                    <span class="icon"><i class="fas fa-lock"></i></span>
                 </div>
-                @error('password')
-                    <p class="text-danger">{{ $message }}</p>
-                @enderror
-                <div class="form-group my-3 d-grid">
-                    <button class="btn btn-primary" type="submit">Login</button>
+                <div class="forgot-password">
+                    {{-- <a href="{{ route('forgot-password') }}">Lupa Password?</a> --}}
                 </div>
+                <input type="submit" value="Login" class="btn-login">
             </form>
-        </div>
-        <div class="card-footer">
-            <a href="{{ route('register') }}" class="link-underline link-underline-opacity-0" style="color: #8423ff;">
-                <p>Tidak punya akun? Silahkan mendaftar</p>
-            </a>
+            <br>
+            <div class="register-link">
+                <p>Belum punya akun? <a href="{{ route('register') }}">Daftar Sekarang</a></p>
+            </div>
         </div>
     </div>
-</section>
+</div>
 @endsection

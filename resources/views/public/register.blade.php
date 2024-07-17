@@ -7,149 +7,185 @@
 @section('header')
 <style>
     body {
-        background-color: #e8f0ff; /* Ubah warna latar belakang */
-        opacity: 1;
+        font-family: Arial, sans-serif;
+        background: linear-gradient(135deg, #AFC3FC, #365AC2);
+        height: 100vh;
     }
-
-    .logo-container {
+    .container {
+        padding-top: 5%;
+        max-width: 75%;
+        border-radius: 20px;
         display: flex;
         justify-content: center;
+        margin: 50px auto;
+    }
+    .form-container {
+        background: #365AC2;
+        width: 50%;
+        height: 480px;
+        padding: 20px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        color: white;
+        border-top-left-radius: 10px;
+        border-bottom-left-radius: 10px;
+    }
+    .form-container h2 {
+        text-align: center;
+        margin-bottom: 20px;
+        font-size: 35px;
+        font-weight: 900;
+    }
+    .form-group {
+        margin-left: 20%;
+        margin-bottom: 15px;
+    }
+    .form-group .input-group {
+        position: relative;
+        width: 100%;
+    }
+    .form-group .input-group i {
+        position: absolute;
+        left: 20px;
+        top: 47%;
+        transform: translateY(-50%);
+        color: #365AC2;
+    }
+    .form-group .input-group input {
+        outline: none;
+        font-size: medium;
+        width: calc(80% - 20px);
+        height: 50px;
+        padding: 10px;
+        padding-left: 50px;
+        border: 1px solid #ccc;
+        border-radius: 30px;
+        box-sizing: border-box;
+        color: #090909;
     }
 
-    .img-logo {
-        max-width: 200px;
-        animation: fadeInUp 2s ease;
-        margin: 20px auto; /* Membuat logo berada di tengah */
+    .form-group .input-group input:hover {
+        box-shadow: 0 0 5px #AFC3FC;
     }
 
     .btn-primary {
-        background-color: #007bff; /* Warna biru */
-        border-color: #007bff; /* Warna border biru */
+        font-weight: bolder;
+        width: 60%;
+        height: 40px;
+        margin-left: 20%;
+        margin-top: 10px;
+        padding: 10px;
+        background-color: #c4d3ff;
+        font-size: medium;
+        color: #365AC2;
+        border: none;
+        border-radius: 30px;
+        cursor: pointer;
     }
-
     .btn-primary:hover {
-        background-color: #0056b3; /* Warna biru tua saat dihover */
-        border-color: #0056b3; /* Warna border biru tua saat dihover */
+        color: #0e0e0e;
+        background-color: #90b3d8;
     }
-
-    .link-underline-opacity-0:hover {
-        opacity: 0.7;
+    .form-text {
+        text-align: center;
+        margin-top: 10px;
     }
-
-    @keyframes fadeInUp {
-        from {
-            opacity: 0;
-            transform: translateY(20px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
+    .form-text a {
+        font-weight: bolder;
+        color: #AFC3FC;
+        text-decoration: none;
     }
-    
+    .form-text a:hover {
+        text-decoration: underline;
+    }
+    .alert-danger {
+        background-color: #f8d7da;
+        color: #721c24;
+        padding: 10px;
+        margin-bottom: 15px;
+        border: 1px solid #f5c6cb;
+        border-radius: 4px;
+    }
+    .alert-danger ul {
+        margin: 0;
+        padding: 0;
+        list-style-type: none;
+    }
+    .pict {
+        background-color: white;
+        width: 50%;
+        display: flex;
+        justify-content: center;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        align-items: center;
+        border-top-right-radius: 10px;
+        border-bottom-right-radius: 10px;
+    }
+    .pict img {
+        max-width: 70%;
+    }
 </style>
 @endsection
 
 @section('main')
-<section class="pt-4 container">
-    <div class="card shadow-lg">
-        <div class="card-header logo-container"> <!-- Tambahkan kelas logo-container di sini -->
-            <img src="{{ asset('img/logo_sarastya.png') }}" alt="img-logo" class="img-logo" loading="lazy" />
-        </div>
-        <div class="card-body container-fluid px-4 pt-4">
-            <form class="row g-3 needs-validation" action="{{ route('user.register') }}" method="post">
-                @csrf
-                <div class="form-label col-md-6">
-                    <label for="username" class="form-label">Username</label>
-                    <div class="input-group">
-                        <span class="input-group-text">
-                            <i class="bi bi-person-fill"></i>
-                        </span>
-                        <input type="text" name="username" id="username" value="{{ old('username') }}"
-                            class="form-control" placeholder="Masukkan username Anda" required />
-                    </div>
-                    @error('username')
-                        <p class="text-danger">{{ $message }}</p>
-                    @enderror
+<div class="container">
+    <div class="form-container">
+        <h2>Daftar</h2>
+        @if ($errors->any())
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
+        <form action="{{ route('register') }}" method="POST">
+            @csrf
+            <div class="form-group">
+                <div class="input-group">
+                    <i class="fa fa-user"></i>
+                    <input type="text" id="fullname" name="fullname" placeholder="Full Name" value="{{ old('fullname') }}" required>
                 </div>
-                    <div class="form-label col-md-6">
-                        <label for="alamat" class="form-label">Alamat</label>
-                        <div class="input-group">
-                            <span class="input-group-text">
-                                <i class="bi bi-geo-alt-fill"></i>
-                            </span>
-                            <input type="text" name="alamat" id="alamat" value="{{ old('alamat') }}"
-                                class="form-control" placeholder="Masukkan alamat Anda" required />
-                        </div>
-                        @error('alamat')
-                            <p class="text-danger">{{ $message }}</p>
-                        @enderror
-                    </div>
-                    <div class="form-label col-md-6">
-                        <label for="email" class="form-label">E-mail</label>
-                        <div class="input-group">
-                            <span class="input-group-text">
-                                <i class="bi bi-envelope-fill"></i>
-                            </span>
-                            <input type="email" name="email" id="email" value="{{ old('email') }}"
-                                class="form-control" placeholder="Masukkan email Anda" required />
-                        </div>
-                        @error('email')
-                            <p class="text-danger">{{ $message }}</p>
-                        @enderror
-                    </div>
-                    <div class="form-label col-md-6">
-                        <label for="notelp" class="form-label">No. Telp</label>
-                        <div class="input-group">
-                            <span class="input-group-text">
-                                <i class="bi bi-telephone-fill"></i>
-                            </span>
-                            <input type="tel" name="notelp" id="notelp" value="{{ old('notelp') }}"
-                                class="form-control" placeholder="Masukkan nomor telepon Anda" required />
-                        </div>
-                        @error('notelp')
-                            <p class="text-danger">{{ $message }}</p>
-                        @enderror
-                    </div>
-                    <div class="form-label col-md-6 my-3">
-                        <label for="password" class="form-label">Password</label>
-                        <div class="input-group">
-                            <span class="input-group-text">
-                                <i class="bi bi-key-fill"></i>
-                            </span>
-                            <input type="password" name="password" id="password" value="{{ old('password') }}"
-                                class="form-control" placeholder="Masukkan password Anda" required />
-                        </div>
-                        @error('password')
-                            <p class="text-danger">{{ $message }}</p>
-                        @enderror
-                    </div>
-                    <div class="form-label col-md-6 my-3">
-                        <label for="password" class="form-label">Confirm Password</label>
-                        <div class="input-group">
-                            <span class="input-group-text">
-                                <i class="bi bi-key-fill"></i>
-                            </span>
-                            <input type="password" name="valid_password" id="valid_password"
-                                value="{{ old('valid_password') }}"class="form-control"
-                                placeholder="Konfirmasi password Anda" required />
-                        </div>
-                        @error('valid_password')
-                            <p class="text-danger">{{ $message }}</p>
-                        @enderror
-                    </div>
-                    <div class="d-grid">
-                        <button class="btn btn-primary" type="submit">Register</button>
-                    </div>
-                </form>
             </div>
-            <div class="card-footer">
-                <a href="{{ route('login') }}" class="link-underline link-underline-opacity-0">
-                    <p class="text-center" style="color: #8423ff;">
-                        Sudah punya akun? Silahkan masuk
-                    </p>
-                </a>
+            <div class="form-group">
+                <div class="input-group">
+                    <i class="fa fa-user"></i>
+                    <input type="text" id="username" name="username" placeholder="Username" value="{{ old('username') }}" required>
+                </div>
             </div>
-        </div>
-    </section>
+            <div class="form-group">
+                <div class="input-group">
+                    <i class="fa fa-envelope"></i>
+                    <input type="email" id="email" name="email" placeholder="Email" value="{{ old('email') }}" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="input-group">
+                    <i class="fa fa-lock"></i>
+                    <input type="password" id="password" name="password" placeholder="Password" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="input-group">
+                    <i class="fa fa-phone"></i>
+                    <input type="text" id="notelp" name="notelp" placeholder="No. Telepon" value="{{ old('notelp') }}" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="input-group">
+                    <i class="fa fa-home"></i>
+                    <input type="text" id="alamat" name="alamat" placeholder="Alamat" value="{{ old('alamat') }}" required>
+                </div>
+            </div>
+            <button type="submit" class="btn-primary">Daftar</button>
+            <div class="form-text">
+                <p>Sudah punya akun? <a href="{{ route('login') }}">Masuk</a></p>
+            </div>
+        </form>
+    </div>
+    <div class="pict">
+        <img src="img/logo_sarastya.png" alt="Registration Image">
+    </div>
+</div>
 @endsection
