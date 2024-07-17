@@ -208,8 +208,7 @@
 @endsection
 
 @section('main')
-    @include('layouts.navigation')
-    <div class="container-flex text-center pt-3 pb-3" style="background: #d5def7">
+    <div class="container-flex text-left pt-3 pb-3" style="background: #d5def7">
         @if (session('success'))
             <div class="alert alert-success alert-dismissible fade show" role="alert">
                 <strong>Berhasil!</strong> {{ session('success') }}
