@@ -27,9 +27,7 @@
         color: #000000;
     }
 
-    .btn-primary,
-    .btn-dark,
-    .btn-danger {
+    .btn-primary, .btn-dark, .btn-danger {
         padding: 10px 20px;
         text-align: center;
         text-decoration: none;
@@ -66,64 +64,138 @@
         background-color: #c82333;
     }
 
-    .modal {
-        display: none;
-        position: fixed;
-        z-index: 1;
-        left: 0;
-        top: 0;
+    /* General modal styling */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed;
+    z-index: 1000; /* High z-index to ensure it's in front */
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(134, 144, 176, 0.315); /* Black w/ opacity */
+}
+
+.modal-content {
+    top: 10%;
+    left: 15%;
+    background-color: #fefefe;
+    border: 1px solid #888;
+    width:70%;
+    height: 20%;
+    display: flexbox;
+    border-radius: 10px;
+    position: relative;
+}
+
+.modal-header {
+    background-color: #007bff;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #e5e5e5;
+
+}
+
+.modal-header h1{
+    color: white;
+    font-weight: bolder;
+}
+
+.modal-title {
+    margin: 0;
+    font-size: 24px;
+}
+
+.btn-close {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+.edit{
+    left: 0%;
+    width: 100%;
+    padding-right: 5%;
+    padding-left: 5%;
+    padding-bottom: 10px;
+    border-radius: 10px;
+    background-color: white;
+
+}
+/* Input fields */
+.form-control {
+    top: 2%;
+    left: 2%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 2px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+    font-size: 14px; }
+
+.form-control::after {
+    border-color: #0056b3;
+}
+
+/* Labels */
+.form-label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+/* Form rows */
+.cf {
+    margin-bottom: 15px;
+}
+
+.cl {
+    display: flex;
+    justify-content: space-between;
+}
+
+.cl > div {
+    width: 48%;
+}
+
+/* Button */
+.btn-primary {
+    width: 40%%;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: #007bff;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.btn-primary:hover {
+    background-color: #365AC2;
+}
+
+/* Modal footer */
+.modal-footer {
+    display: flex;
+    justify-content: right;
+    border-top: 1px solid #e5e5e5;
+    padding-top: 10px;
+    padding-bottom: 20px;
+}
+
+@media (max-width: 500px) {
+    .cl {
+        flex-direction: column;
+    }
+
+    .cl > div {
         width: 100%;
-        height: 100%;
-        overflow: auto;
-        background-color: rgba(0, 0, 0, 0.4);
-        padding-top: 60px;
     }
+}
 
-    .modal-content {
-        background-color: white;
-        border: 1px solid #dee2e6;
-        border-radius: 0.3rem;
-        margin: auto;
-        padding: 20px;
-        width: 80%;
-        max-width: 600px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    }
-
-    .modal-header {
-        background-color: #d5def7;
-        color: #000000;
-        border-bottom: none;
-        padding: 15px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-
-    .modal-title {
-        margin: 0;
-    }
-
-    .btn-close {
-        background: none;
-        border: none;
-        cursor: pointer;
-        font-size: 1.5rem;
-    }
-
-    .modal-body {
-        background-color: #f8f9fa;
-        color: #000000;
-        text-align: left;
-        padding: 15px;
-    }
-
-    .modal-footer {
-        background-color: #f8f9fa;
-        border-top: none;
-        padding: 15px;
-        text-align: right;
-    }
 
     .alert {
         padding: 20px;
@@ -158,17 +230,30 @@
     }
 
     .container-flex {
-        display: flex;
-        flex-direction: row;
         padding: 20px;
         width: 80%;
+        height: 60%;;
         max-width: 100%;
         background-color: white;
         margin: 2% auto;
-        border-radius: 20px;
+        border-radius: 15px;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        justify-content: space-between;
+        justify-content: ;
         align-items: center;
+    }
+
+    .container-grid {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        margin: 2% auto;
+    }
+
+    .banner {
+        width: 100%;
+        height: 40%;
+        background-color: #0056b3;
+        border-radius: 15px;
     }
 
     .pict {
@@ -177,11 +262,26 @@
     }
 
     .data {
+        margin-top: 20px;
+        margin-left: 20px;
         flex: 1;
     }
 
-    .rounded {
-        border-radius: 50%;
+    .data h4 {
+        font-size: 40px;
+        margin-top: 0px;
+        line-height: 25px;
+    }
+
+    .data p{
+        font-weight: bold;
+        font-size: 15px;
+        line-height: 25px;
+        color: #a8a5a5;
+    }
+
+    .rounded img {
+        border-radius: 50px;
     }
 
     .text-left {
@@ -235,44 +335,8 @@
 
     form {
         position: absolute;
-        top: 50%;
-        right: 11%;
-    }
-
-    /* Tambahan styling untuk tombol */
-    .btn-edit {
-        background-color: #007bff;
-        color: white;
-        border: none;
-        padding: 10px 20px;
-        border-radius: 4px;
-        cursor: pointer;
-        transition: background-color 0.3s ease;
-        display: flex;
-        align-items: center;
-    }
-
-    .btn-edit i {
-        margin-right: 5px; /* Adjust as needed */
-    }
-
-    .btn-edit:hover {
-        background-color: #0056b3;
-    }
-
-    /* Styling untuk tombol logout */
-    .btn-logout {
-        background-color: #dc3545;
-        color: white;
-        border: none;
-        padding: 10px 20px;
-        border-radius: 4px;
-        cursor: pointer;
-        transition: background-color 0.3s ease;
-    }
-
-    .btn-logout:hover {
-        background-color: #c82333;
+        top: 50%; /* Adjust as necessary */
+        right: 11%; /* Adjust as necessary */
     }
 </style>
 @endsection
@@ -301,7 +365,8 @@
                 <button type="button" class="btn-close" onclick="closeAlert(this)">Close</button>
             </div>
         @endif
-        <div class="container grid grid-cols-2 gap-4">
+    <div class="banner"></div>
+        <div class="container-grid">
             <div class="pict">
                 @if ($user->user_profil_url === '' || $user->user_profil_url === null)
                     <img width="150px" height="150px" src="{{ asset('img/user.png') }}"
@@ -314,83 +379,75 @@
             </div>
             <div class="data">
                 <h4 class="text-black">{{ $user->user_username }}</h4>
-                <p class="text-black">Nama: {{ $user->user_fullname }}</p>
-                <p class="text-black">Alamat: {{ $user->user_alamat }}</p>
-                <p class="text-black">Telepon: {{ $user->user_notelp }}</p>
-                <p class="text-black">Email: {{ $user->user_email }}</p>
-
+                <p class="text-black"><span>Nama: </span>{{ $user->user_fullname }}</br><span>Email: </span>{{ $user->user_email }}</p>
             </div>
-            <div class="btn-container mt-3">
-                <div class="btn-container mt-3">
-                    <button type="button" class="btn btn-edit" onclick="openModal()">
-                        <i class="fas fa-user-edit me-2"></i>Edit
-                    </button>
-                </div>
-            </div>
+        </div>
+        <div class="btn-container mt-3">
+            <button type="button" class="btn btn-light" onclick="openModal()">
+                <i class="fas fa-user-edit me-2"></i>
+            </button>
         </div>
 
         <div class="modal" id="updateUserModal">
             <div class="modal-content">
                 <div class="modal-header">
                     <h1 class="modal-title" id="updateUserModalLabel">Ubah Profil</h1>
-                    <button type="button" class="btn-close" onclick="closeModal()"></button>
+                    <button type="button" class="btn-close" onclick="closeModal()">×</button>
                 </div>
-                <form action="{{ route('DataUser.update', ['id' => $user->id]) }}" method="post"
-                    enctype="multipart/form-data">
-                    <div class="modal-body row g-3">
+                <form action="{{ route('DataUser.update', ['id' => $user->id]) }}" method="post" enctype="multipart/form-data" class="edit">
+                    <div class="modal-body">
                         @csrf
                         @method('PATCH')
-                        <div class="d-grid">
+                        <div class="cf">
                             <label for="profil" class="form-label">Foto Profil</label>
-                            <input type="file" name="profil" class="form-control" id="profil"
-                                placeholder="Tambahkan Foto Profil" />
+                            <input type="file" name="profil" class="form-control" id="profil" placeholder="Tambahkan Foto Profil">
                         </div>
-                        <div class="col-md-6">
-                            <label for="fullname" class="form-label">Nama User</label>
-                            <input type="text" name="fullname" class="form-control" id="fullname"
-                                placeholder="Masukkan Nama User" value="{{ $user->user_fullname }}" />
+                        <div class="cl">
+                            <div>
+                                <label for="fullname" class="form-label">Nama User</label>
+                                <input type="text" name="fullname" class="form-control" id="fullname" placeholder="Masukkan Nama User" value="{{ $user->user_fullname }}" />
+                            </div>
+                            <div>
+                                <label for="username" class="form-label">Username User</label>
+                                <input type="text" name="username" class="form-control" id="username" placeholder="Masukkan Username User" value="{{ $user->user_username }}" />
+                            </div>
                         </div>
-                        <div class="col-md-6">
-                            <label for="username" class="form-label">Username User</label>
-                            <input type="text" name="username" class="form-control" id="username"
-                                placeholder="Masukkan Username User" value="{{ $user->user_username }}" />
+                        <div class="cl">
+                            <div>
+                                <label for="password" class="form-label">Password User</label>
+                                <input type="password" name="password" class="form-control" id="password" placeholder="Masukkan Password User" value="{{ old('password') }}" />
+                            </div>
+                            <div>
+                                <label for="email" class="form-label">E-mail User</label>
+                                <input type="email" name="email" class="form-control" id="email" placeholder="Masukkan E-mail User" value="{{ $user->user_email }}" />
+                            </div>
                         </div>
-                        <div class="col-md-6">
-                            <label for="password" class="form-label">Password User</label>
-                            <input type="password" name="password" class="form-control" id="password"
-                                placeholder="Masukkan Password User" value="{{ old('password') }}" />
+                        <div class="cl">
+                            <div>
+                                <label for="notelp" class="form-label">No. Telp User</label>
+                                <input type="number" name="notelp" class="form-control" id="notelp" placeholder="Masukkan No. Telp User" value="{{ $user->user_notelp }}" />
+                            </div>
+                            <div>
+                                <label for="alamat" class="form-label">Alamat User</label>
+                                <input type="text" name="alamat" class="form-control" id="alamat" placeholder="Masukkan Alamat User" value="{{ $user->user_alamat }}" />
+                            </div>
                         </div>
-                        <div class="col-md-6">
-                            <label for="email" class="form-label">E-mail User</label>
-                            <input type="email" name="email" class="form-control" id="email"
-                                placeholder="Masukkan E-mail User" value="{{ $user->user_email }}" />
-                        </div>
-                        <div class="col-md-6">
-                            <label for="notelp" class="form-label">No. Telp User</label>
-                            <input type="number" name="notelp" class="form-control" id="notelp"
-                                placeholder="Masukkan No. Telp User" value="{{ $user->user_notelp }}" />
-                        </div>
-                        <div class="col-md-6">
-                            <label for="alamat" class="form-label">Alamat User</label>
-                            <input type="text" name="alamat" class="form-control" id="alamat"
-                                placeholder="Masukkan Alamat User" value="{{ $user->user_alamat }}" />
-                        </div>
-                        <input type="hidden" name="level" class="form-control" id="level"
-                            value="{{ $user->user_level }}" />
-                        <input type="hidden" name="status" class="form-control" id="status"
-                            value="{{ $user->user_status }}" />
+                        <input type="hidden" name="level" class="form-control" id="level" value="{{ $user->user_level }}" />
+                        <input type="hidden" name="status" class="form-control" id="status" value="{{ $user->user_status }}" />
                     </div>
                     <div class="modal-footer">
                         <button type="submit" class="btn btn-primary"><i class="fas fa-save me-2"></i>Simpan</button>
                     </div>
-                </form>
+                 </form>
             </div>
         </div>
+
+
     </div>
     <form method="POST" action="{{ route('logout') }}" class="d-inline-block">
         @csrf
-        <button type="submit" class="btn btn-logout">
-            <i class="fas fa-sign-out-alt me-2"></i>Logout
+        <button type="submit" class="btn btn-dark">
+            Logout
         </button>
     </form>
 @endsection
@@ -403,6 +460,7 @@
     function closeModal() {
         document.getElementById('updateUserModal').style.display = 'none';
     }
+
 
     function closeAlert(button) {
         var alert = button.parentElement;
