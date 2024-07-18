@@ -19,13 +19,13 @@
             align-items: center;
             height: 100vh;
             background: linear-gradient(135deg, #365AC2, #AFC3FC);
+            padding: 20px;
         }
 
         .container {
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
             width: 100%;
             max-width: 1100px;
         }
@@ -41,7 +41,7 @@
         }
 
         .reset-password-box h2 {
-            font-size: 2.5rem;
+            font-size: 2rem;
             font-weight: 900;
             margin-bottom: 20px;
             color: #365AC2;
@@ -90,44 +90,163 @@
         input[type="submit"]:hover {
             background: #2e4d91;
         }
+
+        .alert {
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 1px solid transparent;
+            border-radius: 4px;
+            font-size: 0.9rem;
+        }
+
+        .alert-success {
+            color: #155724;
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+        }
+
+        .alert-danger {
+            color: #721c24;
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+        }
+
+        .alert ul {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #365AC2;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 15px 20px;
+            border-radius: 20px;
+            border: 1px solid #ccc;
+            font-size: 1rem;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 15px;
+            background: #365AC2;
+            color: #e9edf9;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            margin-top: 10px;
+            transition: background 0.3s;
+        }
+
+        .btn:hover {
+            background: #2e4d91;
+        }
+
+        .back-to-login {
+            display: inline-block;
+            margin-top: 20px;
+            color: #365AC2;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .back-to-login:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .reset-password-box {
+                padding: 20px;
+            }
+
+            .reset-password-box h2 {
+                font-size: 1.8rem;
+            }
+
+            .form-group input {
+                padding: 12px 15px;
+            }
+
+            input[type="submit"] {
+                padding: 15px;
+            }
+
+            .btn {
+                padding: 15px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .reset-password-box h2 {
+                font-size: 1.5rem;
+            }
+
+            .form-group input {
+                padding: 10px 12px;
+            }
+
+            input[type="submit"] {
+                padding: 12px;
+            }
+
+            .btn {
+                padding: 12px;
+            }
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        @if (session('status'))
-            <div class="alert alert-success">
-                {{ session('status') }}
-            </div>
-        @endif
 
-        @if ($errors->any())
-            <div class="alert alert-danger">
-                <ul>
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
         <form method="POST" action="{{ route('password.email') }}">
             @csrf
 
-            <div class="form-group">
-                <label for="email">Alamat Email</label>
-                <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
+            <div class="reset-password-box">
+                @if (session('status'))
+                    <div class="alert alert-success">
+                        {{ session('status') }}
+                    </div>
+                @endif
 
-                @error('email')
-                    <span class="invalid-feedback" role="alert">
-                        <strong>{{ $message }}</strong>
-                    </span>
-                @enderror
+                @if ($errors->any())
+                    <div class="alert alert-danger">
+                        <ul>
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+
+                <h2>Lupa Password</h2>
+
+                <div class="form-group">
+                    <label for="email">Alamat Email</label>
+                    <div class="input-group">
+                        <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn">
+                    Kirim Tautan Reset Password
+                </button>
+
+                <a href="{{ route('login') }}" class="back-to-login">Kembali ke Login</a>
             </div>
-
-            <button type="submit" class="btn btn-primary">
-                Kirim Tautan Reset Password
-            </button>
         </form>
-
     </div>
 </body>
 </html>
