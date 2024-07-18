@@ -109,17 +109,25 @@
                 </ul>
             </div>
         @endif
-        <div class="reset-password-box">
-            <h2>Lupa Password</h2>
-            <form action="{{ route('password.email') }}" method="POST">
-                @csrf
-                <div class="input-group">
-                    <input type="email" id="email" name="email" placeholder="Email" required autofocus>
-                    <span class="icon"><i class="fas fa-envelope"></i></span>
-                </div>
-                <input type="submit" value="Kirim Tautan Reset Password">
-            </form>
-        </div>
+        <form method="POST" action="{{ route('password.email') }}">
+            @csrf
+
+            <div class="form-group">
+                <label for="email">Alamat Email</label>
+                <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
+
+                @error('email')
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $message }}</strong>
+                    </span>
+                @enderror
+            </div>
+
+            <button type="submit" class="btn btn-primary">
+                Kirim Tautan Reset Password
+            </button>
+        </form>
+
     </div>
 </body>
 </html>

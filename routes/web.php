@@ -6,6 +6,12 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\PagesController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\NewPasswordController;
+use App\Http\Controllers\Auth\LogoutController;
+
+Route::post('/verification/resend', [UserController::class, 'resend'])->name('verification.resend');
+
+Route::post('/logout', [LogoutController::class, 'logout'])->name('logout');
+Route::get('/verify-email', [UserController::class, 'showVerificationStatus'])->name('verify.email');
 // Verifikasi email
 Route::get('/email/verify', function () {
     return view('auth.verify-email');

@@ -12,6 +12,9 @@ class PasswordController extends Controller
 {
     /**
      * Update the user's password.
+     *
+     * @param  Request  $request
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function update(Request $request): RedirectResponse
     {
@@ -20,10 +23,12 @@ class PasswordController extends Controller
             'password' => ['required', Password::defaults(), 'confirmed'],
         ]);
 
+        // Update the user's password
         $request->user()->update([
             'password' => Hash::make($validated['password']),
         ]);
 
+        // Redirect back with a status message
         return back()->with('status', 'password-updated');
     }
 }

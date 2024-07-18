@@ -139,34 +139,34 @@
             <h2>Reset Password</h2>
             <form method="POST" action="{{ route('password.update') }}">
                 @csrf
-                @method('PUT')
+                <input type="hidden" name="token" value="{{ $request->route('token') }}">
 
-                <!-- Password Reset Token -->
-                <input type="hidden" name="token" value="{{ $token }}">
-
-                <!-- Email Address -->
-                <div class="input-group">
-                    <input type="email" id="email" name="email" placeholder="Email" :value="old('email', $email)" required autofocus autocomplete="username">
-                    <span class="icon"><i class="fas fa-envelope"></i></span>
+                <div class="form-group">
+                    <label for="email">Alamat Email</label>
+                    <input id="email" type="email" class="form-control" name="email" value="{{ $request->email }}" required autocomplete="email" autofocus readonly>
                 </div>
-                <x-input-error :messages="$errors->get('email')" class="mt-2" />
 
-                <!-- Password -->
-                <div class="input-group">
-                    <input type="password" id="password" name="password" placeholder="Password" required autocomplete="new-password">
-                    <span class="icon"><i class="fas fa-lock"></i></span>
+                <div class="form-group">
+                    <label for="password">Password Baru</label>
+                    <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="new-password">
+
+                    @error('password')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                    @enderror
                 </div>
-                <x-input-error :messages="$errors->get('password')" class="mt-2" />
 
-                <!-- Confirm Password -->
-                <div class="input-group">
-                    <input type="password" id="password_confirmation" name="password_confirmation" placeholder="Confirm Password" required autocomplete="new-password">
-                    <span class="icon"><i class="fas fa-lock"></i></span>
+                <div class="form-group">
+                    <label for="password-confirm">Konfirmasi Password Baru</label>
+                    <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required autocomplete="new-password">
                 </div>
-                <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
 
-                <input type="submit" value="Reset Password">
+                <button type="submit" class="btn btn-primary">
+                    Reset Password
+                </button>
             </form>
+
         </div>
     </div>
 </body>

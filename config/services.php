@@ -35,4 +35,14 @@ return [
         ],
     ],
 
+    'api' => [
+        'key' => env('API_KEY'),
+        'base_url' => env('API_BASE_URL'),
+    ],
+
+    'backbone' => [
+        'base_url' => env('BASE_URL', 'http://192.168.1.24:14041/api'),
+        'api_key' => env('API_KEY', '5af97cb7eed7a5a4cff3ed91698d2ffb'),
+    ],
+
 ];
