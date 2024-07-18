@@ -27,7 +27,9 @@
         color: #000000;
     }
 
-    .btn-primary, .btn-dark, .btn-danger {
+    .btn-primary,
+    .btn-dark,
+    .btn-danger {
         padding: 10px 20px;
         text-align: center;
         text-decoration: none;
@@ -65,49 +67,63 @@
     }
 
     .modal {
-    display: none;
-    position: fixed;
-    z-index: 1;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    background-color: rgba(0, 0, 0, 0.4);
-    padding-top: 60px;
-}
+        display: none;
+        position: fixed;
+        z-index: 1;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0, 0, 0, 0.4);
+        padding-top: 60px;
+    }
 
-.modal-content {
-    background-color: white;
-    border: 1px solid #dee2e6;
-    border-radius: 0.3rem;
-    margin: 10px auto;
-    width: 80%;
-    max-width: 600px;
-    padding: 20px;
-}
+    .modal-content {
+        background-color: white;
+        border: 1px solid #dee2e6;
+        border-radius: 0.3rem;
+        margin: auto;
+        padding: 20px;
+        width: 80%;
+        max-width: 600px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
 
-.modal-header {
-    background-color: #d5def7;
-    color: #000000;
-    border-bottom: none;
-    padding: 15px;
-}
+    .modal-header {
+        background-color: #d5def7;
+        color: #000000;
+        border-bottom: none;
+        padding: 15px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
 
-.modal-body {
-    background-color: #f8f9fa;
-    color: #000000;
-    text-align: left;
-    padding: 15px;
-}
+    .modal-title {
+        margin: 0;
+    }
 
-.modal-footer {
-    background-color: #f8f9fa;
-    border-top: none;
-    padding: 15px;
-    text-align: right;
-}
+    .btn-close {
+        background: none;
+        border: none;
+        cursor: pointer;
+        font-size: 1.5rem;
+    }
 
+    .modal-body {
+        background-color: #f8f9fa;
+        color: #000000;
+        text-align: left;
+        padding: 15px;
+    }
+
+    .modal-footer {
+        background-color: #f8f9fa;
+        border-top: none;
+        padding: 15px;
+        text-align: right;
+    }
 
     .alert {
         padding: 20px;
@@ -219,8 +235,44 @@
 
     form {
         position: absolute;
-        top: 50%; /* Adjust as necessary */
-        right: 11%; /* Adjust as necessary */
+        top: 50%;
+        right: 11%;
+    }
+
+    /* Tambahan styling untuk tombol */
+    .btn-edit {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        display: flex;
+        align-items: center;
+    }
+
+    .btn-edit i {
+        margin-right: 5px; /* Adjust as needed */
+    }
+
+    .btn-edit:hover {
+        background-color: #0056b3;
+    }
+
+    /* Styling untuk tombol logout */
+    .btn-logout {
+        background-color: #dc3545;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .btn-logout:hover {
+        background-color: #c82333;
     }
 </style>
 @endsection
@@ -266,13 +318,17 @@
                 <p class="text-black">Alamat: {{ $user->user_alamat }}</p>
                 <p class="text-black">Telepon: {{ $user->user_notelp }}</p>
                 <p class="text-black">Email: {{ $user->user_email }}</p>
+
+            </div>
+            <div class="btn-container mt-3">
+                <div class="btn-container mt-3">
+                    <button type="button" class="btn btn-edit" onclick="openModal()">
+                        <i class="fas fa-user-edit me-2"></i>Edit
+                    </button>
+                </div>
             </div>
         </div>
-        <div class="btn-container mt-3">
-            <button type="button" class="btn btn-light" onclick="openModal()">
-                <i class="fas fa-user-edit me-2"></i>
-            </button>
-        </div>
+
         <div class="modal" id="updateUserModal">
             <div class="modal-content">
                 <div class="modal-header">
@@ -333,8 +389,8 @@
     </div>
     <form method="POST" action="{{ route('logout') }}" class="d-inline-block">
         @csrf
-        <button type="submit" class="btn btn-dark">
-            Logout
+        <button type="submit" class="btn btn-logout">
+            <i class="fas fa-sign-out-alt me-2"></i>Logout
         </button>
     </form>
 @endsection
