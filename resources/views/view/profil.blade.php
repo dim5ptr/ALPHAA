@@ -49,10 +49,19 @@
     }
 
     .btn-light {
-        background-color: #f8f9fa;
-        text-align: right;
-        font-size: x-large;
-        color: #0056b3;
+        padding: 10px 10px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        margin-top: 5px;
+        cursor: pointer;
+        border-radius: 4px;
+        border: none;
+        background-color: #365AC2;
+        font-size: small;
+        font-weight: bold;
+        color: #d5def7;
+
     }
 
     .btn-danger {
@@ -231,13 +240,13 @@
 
     .container-flex {
         padding: 20px;
-        width: 80%;
-        height: 60%;;
+        width: 90%;
+        height: 50%;;
         max-width: 100%;
         background-color: white;
-        margin: 2% auto;
-        border-radius: 15px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        margin: 1.2% auto;
+        border-radius: 20px;
+        box-shadow: 0 4px 8px 4px rgba(0, 0, 0, 0.1); /* Add box shadow */
         justify-content: ;
         align-items: center;
     }
@@ -250,10 +259,24 @@
     }
 
     .banner {
+        top: 12px;
         width: 100%;
         height: 40%;
+        max-width: 100%;
         background-color: #0056b3;
+        margin: 0.5% auto;
         border-radius: 15px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        justify-content: space-between;
+        align-items: center;
+        font-weight: bolder;
+        color: white;
+    }
+
+    .banner h4 {
+        margin-left: 5%;
+        padding-top: 4%;
+        font-weight: 700;
     }
 
     .pict {
@@ -273,11 +296,10 @@
         line-height: 25px;
     }
 
-    .data p{
-        font-weight: bold;
+    .data p {
         font-size: 15px;
         line-height: 25px;
-        color: #a8a5a5;
+        color: grey;
     }
 
     .rounded img {
@@ -288,9 +310,9 @@
         text-align: left;
     }
 
-    .text-black {
+    /* .text-black {
         color: black;
-    }
+    } */
 
     .p-2 {
         padding: 10px;
@@ -317,14 +339,12 @@
         margin-right: auto;
     }
 
-    .me-2 {
-        margin-right: 10px;
-    }
 
     .btn-container {
-        left: 10%;
-        flex-direction: column;
-        height: 50%;
+        left: 15%;
+        justify-content: left;
+        height: 20%%;
+        width: 100%;
     }
 
     .btn-dark {
@@ -335,8 +355,8 @@
 
     form {
         position: absolute;
-        top: 50%; /* Adjust as necessary */
-        right: 11%; /* Adjust as necessary */
+        top: 20%; /* Adjust as necessary */
+        right: 9%; /* Adjust as necessary */
     }
 </style>
 @endsection
@@ -365,11 +385,19 @@
                 <button type="button" class="btn-close" onclick="closeAlert(this)">Close</button>
             </div>
         @endif
-    <div class="banner"></div>
+        <div class="banner">
+            <h4>Akun Pengguna</h4>
+            <form method="POST" action="{{ route('logout') }}" class="d-inline-block">
+                @csrf
+                <button type="submit" class="btn btn-dark">
+                    Logout
+                </button>
+            </form>
+        </div>
         <div class="container-grid">
             <div class="pict">
                 @if ($user->user_profil_url === '' || $user->user_profil_url === null)
-                    <img width="150px" height="150px" src="{{ asset('img/user.png') }}"
+                    <img width="130px" height="130px" src="{{ asset('img/user.png') }}"
                         class="rounded m-2 d-block shadow-md" alt="...">
                 @else
                     <img width="150px" height="150px"
@@ -379,13 +407,13 @@
             </div>
             <div class="data">
                 <h4 class="text-black">{{ $user->user_username }}</h4>
-                <p class="text-black"><span>Nama: </span>{{ $user->user_fullname }}</br><span>Email: </span>{{ $user->user_email }}</p>
+                <p class="text-black">{{ $user->user_fullname }}</br>{{ $user->user_email }}</p>
+                <div class="btn-container mt-3">
+                    <button type="button" class="btn btn-light" onclick="openModal()">
+                        <i class="fas fa-user-edit me-2"></i>Edit Profile
+                    </button>
+                </div>
             </div>
-        </div>
-        <div class="btn-container mt-3">
-            <button type="button" class="btn btn-light" onclick="openModal()">
-                <i class="fas fa-user-edit me-2"></i>
-            </button>
         </div>
 
         <div class="modal" id="updateUserModal">
@@ -444,12 +472,6 @@
 
 
     </div>
-    <form method="POST" action="{{ route('logout') }}" class="d-inline-block">
-        @csrf
-        <button type="submit" class="btn btn-dark">
-            Logout
-        </button>
-    </form>
 @endsection
 
 <script>
