@@ -224,7 +224,7 @@
                         <span class="icon"><i class="fas fa-lock"></i></span>
                     </div>
                     <div class="forgot-password">
-                        <a href="{{ route('password.email') }}">Lupa Password?</a>
+                        <a href="{{ route('password.request') }}">Lupa Password?</a>
                     </div>
                     <input type="submit" value="Login" class="btn-login">
                 </form>

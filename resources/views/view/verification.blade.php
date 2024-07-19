@@ -82,5 +82,6 @@
 
         fetchVerificationStatus();
     </script>
+    <p>Kembali ke <a href="{{ route('login') }}">halaman login</a>.</p>
 </body>
 </html>

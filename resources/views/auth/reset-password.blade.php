@@ -139,13 +139,7 @@
             <h2>Reset Password</h2>
             <form method="POST" action="{{ route('password.update') }}">
                 @csrf
-                <input type="hidden" name="token" value="{{ $request->route('token') }}">
-
-                <div class="form-group">
-                    <label for="email">Alamat Email</label>
-                    <input id="email" type="email" class="form-control" name="email" value="{{ $request->email }}" required autocomplete="email" autofocus readonly>
-                </div>
-
+                <input type="hidden" name="token" value="{{ $token }}">
                 <div class="form-group">
                     <label for="password">Password Baru</label>
                     <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="new-password">
