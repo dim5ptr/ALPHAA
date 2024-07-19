@@ -90,9 +90,8 @@
     top: 10%;
     left: 15%;
     background-color: #fefefe;
-    border: 1px solid #888;
     width:70%;
-    height: 20%;
+    height: 50%;
     display: flexbox;
     border-radius: 10px;
     position: relative;
@@ -150,6 +149,7 @@
 
 /* Labels */
 .form-label {
+top: 10%;
     display: block;
     margin-bottom: 5px;
     font-weight: bold;
