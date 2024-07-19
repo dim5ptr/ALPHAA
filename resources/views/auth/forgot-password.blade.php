@@ -234,9 +234,9 @@
                 <h2>Lupa Password</h2>
 
                 <div class="form-group">
-                    <label for="email">Alamat Email</label>
+                    <label for="user_email">Alamat Email</label>
                     <div class="input-group">
-                        <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
+                        <input id="user_email" type="email" class="form-control @error('user_email') is-invalid @enderror" name="user_email" value="{{ old('user_email') }}" required autocomplete="user_email" autofocus>
                     </div>
                 </div>
 

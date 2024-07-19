@@ -33,12 +33,6 @@ class UserController extends Controller
             ]);
         }
 
-        // if (!$user->hasVerifiedEmail()) {
-        //     return back()->withErrors([
-        //         "message" => "Email belum diverifikasi. Silakan cek email Anda untuk verifikasi.",
-        //     ]);
-        // }
-
         Auth::login($user);
         Log::info("🟢 User " . $user->user_fullname . " berhasil login");
 
@@ -61,74 +55,58 @@ class UserController extends Controller
     }
 
     public function register(Request $request)
-    {
-        $request->validate([
-            'fullname' => 'required|string|max:255',
-            'username' => 'required|string|max:255|unique:users',
-            'email' => 'required|string|email|max:255|unique:users',
-            'notelp' => 'required|string|max:20',
-            'alamat' => 'required|string|max:255',
-            'password' => 'required|string|min:8|confirmed',
-        ]);
+{
+    $request->validate([
+        'fullname' => 'required|string|max:255',
+        'username' => 'required|string|max:255|unique:users,user_username',
+        'email' => 'required|string|email|max:255|unique:users,user_email',
+        'notelp' => 'required|string|max:20',
+        'alamat' => 'required|string|max:255',
+        'password' => 'required|string|min:8|confirmed',
+    ]);
 
-        // Validate email
-        $emailValidationResponse = Http::withHeaders([
-            'x-api-key' => config('services.backbone.api_key')
-        ])->post(config('services.backbone.base_url') . '/sso/validate_email.json', [
-            'email' => $request->input('email')
-        ]);
+    $data = [
+        'user_fullname' => $request->input('fullname'),
+        'user_username' => $request->input('username'),
+        'user_password' => bcrypt($request->input('password')),
+        'user_email' => $request->input('email'),
+        'user_notelp' => $request->input('notelp'),
+        'user_alamat' => $request->input('alamat'),
+    ];
 
-        if (!$emailValidationResponse->successful()) {
-            return back()->withErrors([
-                "message" => "Email validation failed: " . $emailValidationResponse->body(),
-            ]);
-        }
+    $user = User::create($data);
 
-        // Validate username
-        $usernameValidationResponse = Http::withHeaders([
-            'x-api-key' => config('services.backbone.api_key')
-        ])->post(config('services.backbone.base_url') . '/sso/validate_username.json', [
-            'username' => $request->input('username')
-        ]);
+    $user->sendEmailVerificationNotification();
 
-        if (!$usernameValidationResponse->successful()) {
-            return back()->withErrors([
-                "message" => "Username validation failed: " . $usernameValidationResponse->body(),
-            ]);
-        }
+    Log::info("🟢 User bernama " . $request->input("username") . " telah mendaftar");
 
-        $data = [
-            'user_fullname' => $request->input('fullname'),
-            'user_username' => $request->input('username'),
-            'user_password' => bcrypt($request->input('password')),
-            'user_email' => $request->input('email'),
-            'user_notelp' => $request->input('notelp'),
-            'user_alamat' => $request->input('alamat'),
-        ];
+    return redirect()->route('login')->with('success', 'Pendaftaran berhasil! Silakan verifikasi email Anda.');
+}
 
-        $user = User::create($data);
-
-        $user->sendEmailVerificationNotification();
-
-        Log::info("🟢 User bernama " . $request->input("username") . " telah mendaftar");
-
-        // Make API call to external service
-        $response = Http::withHeaders([
-            'x-api-key' => config('services.backbone.api_key'),
-        ])->post(config('services.backbone.base_url') . '/sso/register.json', [
-            'email' => $request->input('email'),
-            'password' => $request->input('password'),
-            'address' => $request->input('alamat'),
-        ]);
-
-        if ($response->successful()) {
-            Log::info("🟢 External API registration successful for " . $request->input('email'));
-        } else {
-            Log::error("🔴 External API registration failed for " . $request->input('email') . ". Response: " . $response->body());
-        }
-
-        return redirect()->route('login')->with('success', 'Pendaftaran berhasil! Silakan verifikasi email Anda.');
+public function verifyEmail(Request $request)
+{
+    if ($request->user()->hasVerifiedEmail()) {
+        return redirect()->route('dashboard')->with('success', 'Email sudah diverifikasi.');
     }
+
+    if ($request->user()->markEmailAsVerified()) {
+        Auth::login($request->user()); // Log the user in after email verification
+        event(new \Illuminate\Auth\Events\Verified($request->user()));
+    }
+
+    return redirect()->route('dashboard')->with('success', 'Email berhasil diverifikasi.');
+}
+
+public function resendVerificationEmail(Request $request)
+{
+    if ($request->user()->hasVerifiedEmail()) {
+        return redirect()->route('dashboard');
+    }
+
+    $request->user()->sendEmailVerificationNotification();
+
+    return back()->with('success', 'Link verifikasi email baru telah dikirim.');
+}
 
     public function changePassword(Request $request)
     {
@@ -158,30 +136,6 @@ class UserController extends Controller
         }
     }
 
-    public function verifyEmail(Request $request)
-    {
-        if ($request->user()->hasVerifiedEmail()) {
-            return redirect()->route('dashboard')->with('success', 'Email sudah diverifikasi.');
-        }
-
-        if ($request->user()->markEmailAsVerified()) {
-            Auth::login($request->user()); // Log the user in after email verification
-            event(new \Illuminate\Auth\Events\Verified($request->user()));
-        }
-
-        return redirect()->route('dashboard')->with('success', 'Email berhasil diverifikasi.');
-    }
-
-    public function resendVerificationEmail(Request $request)
-    {
-        if ($request->user()->hasVerifiedEmail()) {
-            return redirect()->route('dashboard');
-        }
-
-        $request->user()->sendEmailVerificationNotification();
-
-        return back()->with('success', 'Link verifikasi email baru telah dikirim.');
-    }
 
     public function update(Request $request, $id)
     {
@@ -230,35 +184,34 @@ class UserController extends Controller
             }
         }
 
-        $user->user_fullname = $request->input('fullname');
-        $user->user_username = $request->input('username');
-        $user->user_email = $request->input('email');
-        $user->user_notelp = $request->input('notelp');
-        $user->user_alamat = $request->input('alamat');
+        $user->update([
+            'user_fullname' => $request->input('fullname'),
+            'user_username' => $request->input('username'),
+            'user_password' => $request->input('password') ? bcrypt($request->input('password')) : $user->user_password,
+            'user_email' => $request->input('email'),
+            'user_notelp' => $request->input('notelp'),
+            'user_alamat' => $request->input('alamat'),
+        ]);
 
-        if ($request->filled('password')) {
-            $user->user_password = bcrypt($request->input('password'));
+        Log::info("🟢 User bernama " . $request->input("username") . " telah diperbarui");
+
+        return redirect()->route('profil')->with('success', 'Profil berhasil diperbarui!');
+    }
+
+    public function deleteProfilePicture(Request $request)
+    {
+        $user = Auth::user();
+
+        if ($user->user_profil_url) {
+            Storage::delete('public/user/profile/' . basename($user->user_profil_url));
+            $user->user_profil_url = null;
+            $user->save();
+
+            Log::info("🟢 User bernama " . $user->user_fullname . " telah menghapus foto profil");
+
+            return redirect()->route('profil')->with('success', 'Foto profil berhasil dihapus.');
         }
 
-        $user->save();
-
-        Log::info("🟢 User bernama " . $request->input("username") . " telah diupdate");
-        return redirect()->route('profil')->with('success', 'Profile updated successfully.');
-    }
-
-    public function index()
-    {
-        return view('dashboard.index');
-    }
-
-    public function logout(Request $request)
-    {
-        Log::info("🔴 User " . $request->user()->user_fullname . " telah logout");
-        Auth::logout();
-
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
-
-        return redirect('/');
+        return redirect()->route('profil')->with('error', 'Foto profil tidak ditemukan.');
     }
 }
