@@ -137,29 +137,34 @@
 
         <div class="reset-password-box">
             <h2>Reset Password</h2>
-            <form method="POST" action="{{ route('password.update') }}">
-                @csrf
-                <input type="hidden" name="token" value="{{ $token }}">
-                <div class="form-group">
-                    <label for="password">Password Baru</label>
-                    <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="new-password">
+            <!-- resources/views/auth/passwords/reset.blade.php -->
+<!-- resources/views/auth/passwords/reset.blade.php -->
+<form method="POST" action="{{ route('password.update') }}">
+    @csrf
+    <input type="hidden" name="token" value="{{ $token }}">
+    <input type="hidden" name="user_email" value="{{ $user_email }}">
 
-                    @error('password')
-                        <span class="invalid-feedback" role="alert">
-                            <strong>{{ $message }}</strong>
-                        </span>
-                    @enderror
-                </div>
+    <div>
+        <label for="user_email">Email Address</label>
+        <input id="user_email" type="email" name="user_email" value="{{ $user_email }}" required>
+    </div>
 
-                <div class="form-group">
-                    <label for="password-confirm">Konfirmasi Password Baru</label>
-                    <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required autocomplete="new-password">
-                </div>
+    <div>
+        <label for="password">Password</label>
+        <input id="password" type="password" name="password" required>
+    </div>
 
-                <button type="submit" class="btn btn-primary">
-                    Reset Password
-                </button>
-            </form>
+    <div>
+        <label for="password-confirm">Confirm Password</label>
+        <input id="password-confirm" type="password" name="password_confirmation" required>
+    </div>
+
+    <div>
+        <button type="submit">Reset Password</button>
+    </div>
+</form>
+
+
 
         </div>
     </div>
