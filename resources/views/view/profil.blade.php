@@ -28,7 +28,7 @@
     }
 
     .btn-primary, .btn-dark, .btn-danger {
-        padding: 10px 20px;
+        padding: 8px 20px;
         text-align: center;
         text-decoration: none;
         display: inline-block;
@@ -53,7 +53,7 @@
         text-align: center;
         text-decoration: none;
         display: inline-block;
-        margin-top: 5px;
+        margin-top: 0px;
         cursor: pointer;
         border-radius: 4px;
         border: none;
@@ -61,7 +61,12 @@
         font-size: small;
         font-weight: bold;
         color: #d5def7;
+    }
 
+    .btn-dark {
+        background-color: #bee5eb;
+        color: #000000;
+        font-weight: bold;
     }
 
     .btn-danger {
@@ -277,6 +282,7 @@ top: 10%;
         margin-left: 5%;
         padding-top: 4%;
         font-weight: 700;
+        font-size: 30px;
     }
 
     .pict {
@@ -285,21 +291,22 @@ top: 10%;
     }
 
     .data {
-        margin-top: 20px;
+        margin-top: 12px;
         margin-left: 20px;
         flex: 1;
     }
 
-    .data h4 {
+    .data span {
         font-size: 40px;
         margin-top: 0px;
-        line-height: 25px;
+        line-height: 45px;
+        color: #000000;
     }
 
-    .data p {
+     p {
         font-size: 15px;
-        line-height: 25px;
-        color: grey;
+        line-height: 20px;
+        color: rgb(92, 89, 89);
     }
 
     .rounded img {
@@ -406,8 +413,7 @@ top: 10%;
                 @endif
             </div>
             <div class="data">
-                <h4 class="text-black">{{ $user->user_username }}</h4>
-                <p class="text-black">{{ $user->user_fullname }}</br>{{ $user->user_email }}</p>
+                <p><span>{{ $user->user_username }}</span></br>{{ $user->user_fullname }}</br>{{ $user->user_email }}</p>
                 <div class="btn-container mt-3">
                     <button type="button" class="btn btn-light" onclick="openModal()">
                         <i class="fas fa-user-edit me-2"></i>Edit Profile
