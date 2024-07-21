@@ -10,6 +10,7 @@
 @section('title', 'Data Profil')
 
 @section('header')
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 <style>
     body {
         background-color: #d5def7;
@@ -163,9 +164,12 @@ top: 10%;
 
 /* Form rows */
 .cf {
-    margin-bottom: 15px;
+    display: flex;
+    justify-content: space-between;
 }
-
+.cf > div {
+    width: 48%;
+}
 .cl {
     display: flex;
     justify-content: space-between;
@@ -370,28 +374,9 @@ top: 10%;
 
 @section('main')
     @include('layouts.navigation')
+
     <div class="container-flex pt-3 pb-3">
-        @if (session('success'))
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                <strong>Berhasil!</strong> {{ session('success') }}
-                <button type="button" class="btn-close" onclick="closeAlert(this)">Close</button>
-            </div>
-        @elseif (session('updated'))
-            <div class="alert alert-info alert-dismissible fade show" role="alert">
-                <strong>Berhasil!</strong> {{ session('updated') }}
-                <button type="button" class="btn-close" onclick="closeAlert(this)">Close</button>
-            </div>
-        @elseif (session('deleted'))
-            <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                <strong>Berhasil!</strong> {{ session('deleted') }}
-                <button type="button" class="btn-close" onclick="closeAlert(this)">Close</button>
-            </div>
-        @elseif (session('error'))
-            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                <strong>Gagal!</strong> {{ session('error') }}
-                <button type="button" class="btn-close" onclick="closeAlert(this)">Close</button>
-            </div>
-        @endif
+
         <div class="banner">
             <h4>Akun Pengguna</h4>
             <form method="POST" action="{{ route('logout') }}" class="d-inline-block">
@@ -433,37 +418,46 @@ top: 10%;
                         @csrf
                         @method('PATCH')
                         <div class="cf">
-                            <label for="profil" class="form-label">Foto Profil</label>
-                            <input type="file" name="profil" class="form-control" id="profil" placeholder="Tambahkan Foto Profil">
-                        </div>
-                        <div class="cl">
                             <div>
-                                <label for="fullname" class="form-label">Nama User</label>
-                                <input type="text" name="fullname" class="form-control" id="fullname" placeholder="Masukkan Nama User" value="{{ $user->user_fullname }}" />
+                                <label for="profil" class="form-label">Foto Profil</label>
+                                <input type="file" name="profil" class="form-control" id="profil" placeholder="Tambahkan Foto Profil">
                             </div>
                             <div>
                                 <label for="username" class="form-label">Username User</label>
                                 <input type="text" name="username" class="form-control" id="username" placeholder="Masukkan Username User" value="{{ $user->user_username }}" />
                             </div>
                         </div>
+
                         <div class="cl">
                             <div>
-                                <label for="password" class="form-label">Password User</label>
-                                <input type="password" name="password" class="form-control" id="password" placeholder="Masukkan Password User" value="{{ old('password') }}" />
+                                <label for="fullname" class="form-label">Nama User</label>
+                                <input type="text" name="fullname" class="form-control" id="fullname" placeholder="Masukkan Nama User" value="{{ $user->user_fullname }}" />
+                            </div>
+                            <div>
+                                <label for="alamat" class="form-label">Alamat User</label>
+                                <input type="text" name="alamat" class="form-control" id="alamat" placeholder="Masukkan Alamat User" value="{{ $user->user_alamat }}" />
+                            </div>
+                        </div>
+                        <div class="cl">
+                            <div>
+                                <label for="notelp" class="form-label">No. Telp User</label>
+                                <input type="text" name="notelp" class="form-control" id="notelp" placeholder="Masukkan No. Telp User" value="{{ $user->user_notelp }}" />
                             </div>
                             <div>
                                 <label for="email" class="form-label">E-mail User</label>
                                 <input type="email" name="email" class="form-control" id="email" placeholder="Masukkan E-mail User" value="{{ $user->user_email }}" />
                             </div>
                         </div>
+
                         <div class="cl">
+
                             <div>
-                                <label for="notelp" class="form-label">No. Telp User</label>
-                                <input type="number" name="notelp" class="form-control" id="notelp" placeholder="Masukkan No. Telp User" value="{{ $user->user_notelp }}" />
+                                <label for="password" class="form-label">Password User</label>
+                                <input type="password" name="password" class="form-control" id="password" placeholder="Masukkan Password User" value="{{ old('password') }}" />
                             </div>
                             <div>
-                                <label for="alamat" class="form-label">Alamat User</label>
-                                <input type="text" name="alamat" class="form-control" id="alamat" placeholder="Masukkan Alamat User" value="{{ $user->user_alamat }}" />
+                                <label for="password_confirmation" class="form-label">Konfirmasi Password</label>
+                                <input type="password" name="password_confirmation" class="form-control" id="password_confirmation" placeholder="Konfirmasi Password" />
                             </div>
                         </div>
                         <input type="hidden" name="level" class="form-control" id="level" value="{{ $user->user_level }}" />
@@ -478,6 +472,36 @@ top: 10%;
 
 
     </div>
+    @if (session('success'))
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <strong>Berhasil!</strong> {{ session('success') }}
+        <button type="button" class="btn-close" aria-label="Close" data-bs-dismiss="alert">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+@elseif (session('updated'))
+    <div class="alert alert-info alert-dismissible fade show" role="alert">
+        <strong>Berhasil!</strong> {{ session('updated') }}
+        <button type="button" class="btn-close" aria-label="Close" data-bs-dismiss="alert">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+@elseif (session('deleted'))
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        <strong>Berhasil!</strong> {{ session('deleted') }}
+        <button type="button" class="btn-close" aria-label="Close" data-bs-dismiss="alert">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+@elseif (session('error'))
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <strong>Gagal!</strong> {{ session('error') }}
+        <button type="button" class="btn-close" aria-label="Close" data-bs-dismiss="alert">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+@endif
+
 @endsection
 
 <script>
