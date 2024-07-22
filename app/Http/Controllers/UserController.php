@@ -33,6 +33,9 @@ class UserController extends Controller
 
     // Check if user exists and password matches
     if (!$user || !Hash::check($credentials["password"], $user->user_password)) {
+        Log::warning('Login failed: Invalid username or password.', [
+            'username' => $credentials["username"]
+        ]);
         return back()->withErrors([
             "message" => "Username atau password Anda salah.",
         ])->withInput();
@@ -40,6 +43,9 @@ class UserController extends Controller
 
     // Check if the user's email is verified
     if (!$user->hasVerifiedEmail()) {
+        Log::warning('Login failed: Email not verified.', [
+            'username' => $credentials["username"]
+        ]);
         return back()->withErrors([
             "message" => "Silakan konfirmasi email Anda terlebih dahulu.",
         ])->withInput();
@@ -68,6 +74,9 @@ class UserController extends Controller
             if ($dataResponse['result'] === 1) {
                 return redirect()->route("dashboard");
             } else {
+                Log::warning('External login failed: ' . $dataResponse['data'], [
+                    'username' => $credentials["username"]
+                ]);
                 return back()->withErrors([
                     'error_message' => $dataResponse['data'],
                 ])->withInput();
