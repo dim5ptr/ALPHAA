@@ -11,9 +11,15 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Auth\Events\Verified;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\VerificationEmail;
+
 
 class UserController extends Controller
 {
+    const API_URL='http://192.168.1.24:14041/api';
+    const API_KEY='5af97cb7eed7a5a4cff3ed91698d2ffb';
+
     public function login(Request $request)
     {
         $credentials = [
@@ -54,8 +60,49 @@ class UserController extends Controller
         return redirect()->route("dashboard");
     }
 
-    public function register(Request $request)
+//     public function register(Request $request)
+// {
+//     $request->validate([
+//         'fullname' => 'required|string|max:255',
+//         'username' => 'required|string|max:255|unique:users,user_username',
+//         'email' => 'required|string|email|max:255|unique:users,user_email',
+//         'notelp' => 'required|string|max:20',
+//         'alamat' => 'required|string|max:255',
+//         'password' => 'required|string|min:8|confirmed',
+//     ]);
+
+//     $data = [
+//         'user_fullname' => $request->input('fullname'),
+//         'user_username' => $request->input('username'),
+//         'user_password' => bcrypt($request->input('password')),
+//         'user_email' => $request->input('email'),
+//         'user_notelp' => $request->input('notelp'),
+//         'user_alamat' => $request->input('alamat'),
+//     ];
+
+//     $user = User::create($data);
+//     $user->sendEmailVerificationNotification(); // Mengirim email verifikasi
+
+//     // Make the API call to register the user on the external service
+//     $apiResponse = Http::withHeaders([
+//         'x-api-key' => config('app.api_key'),
+//     ])->post(config('app.base_url') . '/sso/register.json', [
+//         'email' => $request->input('email'),
+//         'password' => $request->input('password'),
+//         'address' => $request->input('alamat'),
+//     ]);
+
+//     if ($apiResponse->failed()) {
+//         return redirect()->route('register')->withErrors('Pendaftaran ke layanan eksternal gagal.');
+//     }
+
+//     // Redirect ke halaman dengan pesan sukses
+//     return redirect()->route('register.confirmation')->with('success', 'Pendaftaran berhasil! Silakan cek email Anda untuk konfirmasi.');
+// }
+
+public function register(Request $request)
 {
+    // Validasi input
     $request->validate([
         'fullname' => 'required|string|max:255',
         'username' => 'required|string|max:255|unique:users,user_username',
@@ -74,26 +121,46 @@ class UserController extends Controller
         'user_alamat' => $request->input('alamat'),
     ];
 
-    $user = User::create($data);
-    $user->sendEmailVerificationNotification(); // Mengirim email verifikasi
+    try {
+        // Kirim request ke API SSO
+        $response = Http::withHeaders([
+            'x-api-key' => self::API_KEY,
+        ])->post(self::API_URL . '/sso/register.json', [
+            'email' => $request->email,
+            'password' => $request->password,
+        ]);
 
-    // Make the API call to register the user on the external service
-    $apiResponse = Http::withHeaders([
-        'x-api-key' => config('app.api_key'),
-    ])->post(config('app.base_url') . '/sso/register.json', [
-        'email' => $request->input('email'),
-        'password' => $request->input('password'),
-        'address' => $request->input('alamat'),
-    ]);
+        $dataResponse = $response->json();
 
-    if ($apiResponse->failed()) {
-        return redirect()->route('register')->withErrors('Pendaftaran ke layanan eksternal gagal.');
+        // Logging response dari API
+        Log::info('API Response', ['response' => $dataResponse]);
+
+        if ($response->successful() && isset($dataResponse['result'])) {
+            if ($dataResponse['result'] === 1) {
+                // Kirim email verifikasi
+                Mail::to($request->email)->send(new VerificationEmail($request->username));
+
+                return redirect('/verify')->with('success_message', $dataResponse['data']);
+            } else {
+                return back()->withErrors([
+                    'error_message' => $dataResponse['data'],
+                ])->withInput();
+            }
+        } else {
+            // Logging error jika respons tidak sukses
+            Log::error('API Response Error', ['response' => $dataResponse]);
+            return back()->withErrors([
+                'error_message' => 'Registration failed. Please try again!',
+            ])->withInput();
+        }
+    } catch (\Exception $e) {
+        // Logging exception
+        Log::error('Exception caught in register method', ['error' => $e->getMessage()]);
+        return back()->withErrors([
+            'error_message' => 'Something went wrong, please try again!',
+        ])->withInput();
     }
-
-    // Redirect ke halaman dengan pesan sukses
-    return redirect()->route('register.confirmation')->with('success', 'Pendaftaran berhasil! Silakan cek email Anda untuk konfirmasi.');
 }
-
 
     public function verifyEmail($id, $hash)
     {

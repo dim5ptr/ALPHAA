@@ -43,7 +43,7 @@
         }
     </style>
 </head>
-<body>
+{{-- <body>
     <div class="container">
         <h1>Konfirmasi Email</h1>
         @if(session('success'))
@@ -52,5 +52,11 @@
         <p>Silakan cek email Anda untuk link konfirmasi. Jika Anda tidak menerima email, silakan periksa folder spam atau coba daftarkan ulang.</p>
         <p>Kembali ke <a href="{{ route('login') }}">halaman login</a>.</p>
     </div>
+</body> --}}
+<body>
+    <h1>Hi, {{ $username }}</h1>
+    <p>Thank you for registering. Please verify your email by clicking the link below:</p>
+    <a href="{{ url('/verify?email=' . $username) }}">Verify Email</a>
+    <p>Kembali ke <a href="{{ route('login') }}">halaman login</a>.</p>
 </body>
 </html>
