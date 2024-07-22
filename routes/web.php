@@ -29,6 +29,9 @@ Route::post('/login', [UserController::class, 'login'])->name('user.login');
 // Register Routes
 Route::get('/register', [PagesController::class, 'registerPage'])->name('register');
 Route::post('/register', [UserController::class, 'register'])->name('user.register');
+Route::get('/register/confirmation', function () {
+    return view('public.register-confirmation');
+})->name('register.confirmation');
 
 // Authenticated Routes
 Route::group(['middleware' => ['auth']], function () {

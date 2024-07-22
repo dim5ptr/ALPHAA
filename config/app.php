@@ -123,4 +123,15 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | API Base URL
+    |--------------------------------------------------------------------------
+    |
+    | This URL is used as the base URL for external API calls.
+    |
+    */
+
+    'base_url' => env('BASE_URL', 'http://localhost/api'),
+
 ];
