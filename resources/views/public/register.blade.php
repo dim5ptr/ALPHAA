@@ -21,7 +21,7 @@
             margin: 50px auto;
         }
         .form-container {
-            background: #365AC2 ;
+            background: #365AC2;
             width: 50%;
             height: 100%;
             padding: 20px;
@@ -129,7 +129,7 @@
         <div class="form-container">
             <h2>Daftar</h2>
             @if ($errors->any())
-                <div class="alert alert-danger">
+                <div class="alert alert-danger" id="error-alert">
                     <ul>
                         @foreach ($errors->all() as $error)
                             <li>{{ $error }}</li>
@@ -142,32 +142,8 @@
                 @csrf
                 <div class="form-group">
                     <div class="input-group">
-                        <i class="fa fa-user"></i>
-                        <input type="text" id="fullname" name="fullname" placeholder="Full Name" value="{{ old('fullname') }}" required>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="input-group">
-                        <i class="fa fa-user"></i>
-                        <input type="text" id="username" name="username" placeholder="Username" value="{{ old('username') }}" required>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="input-group">
                         <i class="fa fa-envelope"></i>
                         <input type="email" id="email" name="email" placeholder="Email" value="{{ old('email') }}" required>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="input-group">
-                        <i class="fa fa-phone"></i>
-                        <input type="text" id="notelp" name="notelp" placeholder="No. Telepon" value="{{ old('notelp') }}" required>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="input-group">
-                        <i class="fa fa-home"></i>
-                        <input type="text" id="alamat" name="alamat" placeholder="Alamat" value="{{ old('alamat') }}" required>
                     </div>
                 </div>
                 <div class="form-group">
@@ -190,5 +166,15 @@
             <img src="{{ asset('img/A.jpg') }}" alt="">
         </div>
     </div>
+
+    <script>
+        // Automatically hide alert messages after 10 seconds
+        setTimeout(() => {
+            const alert = document.getElementById('error-alert');
+            if (alert) {
+                alert.style.display = 'none';
+            }
+        }, 5000);
+    </script>
 </body>
 </html>

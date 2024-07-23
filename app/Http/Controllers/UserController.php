@@ -21,81 +21,82 @@ class UserController extends Controller
     const API_KEY='5af97cb7eed7a5a4cff3ed91698d2ffb';
 
     public function login(Request $request)
-{
-    // Validate input
-    $credentials = $request->validate([
-        'username' => 'required|string|max:255',
-        'password' => 'required|string|min:8',
-    ]);
-
-    // Retrieve user by username
-    $user = User::where("user_username", $credentials["username"])->first();
-
-    // Check if user exists and password matches
-    if (!$user || !Hash::check($credentials["password"], $user->user_password)) {
-        Log::warning('Login failed: Invalid username or password.', [
-            'username' => $credentials["username"]
-        ]);
-        return back()->withErrors([
-            "message" => "Username atau password Anda salah.",
-        ])->withInput();
-    }
-
-    // Check if the user's email is verified
-    if (!$user->hasVerifiedEmail()) {
-        Log::warning('Login failed: Email not verified.', [
-            'username' => $credentials["username"]
-        ]);
-        return back()->withErrors([
-            "message" => "Silakan konfirmasi email Anda terlebih dahulu.",
-        ])->withInput();
-    }
-
-    // Log the user in
-    Auth::login($user);
-    Log::info("🟢 User " . $user->user_fullname . " berhasil login");
-
-    // Make the API call to login the user on the external service
-    try {
-        $response = Http::withHeaders([
-            'x-api-key' => self::API_KEY,
-            'dev-key' => '12',
-        ])->post(self::API_URL . '/sso/login.json', [
-            'username' => $credentials['username'],
-            'password' => $credentials['password'],
+    {
+        // Validasi input
+        $credentials = $request->validate([
+            'email' => 'required|string|email|max:255',
+            'password' => 'required|string|min:8',
         ]);
 
-        $dataResponse = $response->json();
+        // Ambil pengguna berdasarkan email
+        $user = User::where("user_email", $credentials["email"])->first();
 
-        // Log API response
-        Log::info('API Response', ['response' => $dataResponse]);
-
-        if ($response->successful() && isset($dataResponse['result'])) {
-            if ($dataResponse['result'] === 1) {
-                return redirect()->route("dashboard");
-            } else {
-                Log::warning('External login failed: ' . $dataResponse['data'], [
-                    'username' => $credentials["username"]
-                ]);
-                return back()->withErrors([
-                    'error_message' => $dataResponse['data'],
-                ])->withInput();
-            }
-        } else {
-            // Log API error if response is not successful
-            Log::error('API Response Error', ['response' => $dataResponse]);
+        // Cek apakah pengguna ada dan password cocok
+        if (!$user || !Hash::check($credentials["password"], $user->user_password)) {
+            Log::warning('Login gagal: Email atau password salah.', [
+                'email' => $credentials["email"]
+            ]);
             return back()->withErrors([
-                'error_message' => 'Login ke layanan eksternal gagal.',
+                "message" => "Email atau password Anda salah.",
             ])->withInput();
         }
-    } catch (\Exception $e) {
-        // Log exception
-        Log::error('Exception caught in login method', ['error' => $e->getMessage()]);
-        return back()->withErrors([
-            'error_message' => 'Terjadi kesalahan, silakan coba lagi!',
-        ])->withInput();
+
+        // Cek apakah email pengguna sudah diverifikasi
+        if (!$user->hasVerifiedEmail()) {
+            Log::warning('Login gagal: Email belum diverifikasi.', [
+                'email' => $credentials["email"]
+            ]);
+            return back()->withErrors([
+                "message" => "Silakan konfirmasi email Anda terlebih dahulu.",
+            ])->withInput();
+        }
+
+        // Login pengguna
+        Auth::login($user);
+        Log::info("🟢 Pengguna " . $user->user_fullname . " berhasil login");
+
+        // Panggil API untuk login pengguna pada layanan eksternal menggunakan metode GET
+        try {
+            $response = Http::withHeaders([
+                'x-api-key' => self::API_KEY,
+                'dev-key' => '12',
+            ])->get(self::API_URL . '/sso/login.json', [
+                'email' => $credentials['email'],
+                'password' => $credentials['password'],
+            ]);
+
+            $dataResponse = $response->json();
+
+            // Log respons API
+            Log::info('Respons API', ['response' => $dataResponse]);
+
+            if ($response->successful() && isset($dataResponse['result'])) {
+                if ($dataResponse['result'] === 1) {
+                    return redirect()->route("dashboard");
+                } else {
+                    Log::warning('Login eksternal gagal: ' . $dataResponse['data'], [
+                        'email' => $credentials["email"]
+                    ]);
+                    return back()->withErrors([
+                        'error_message' => $dataResponse['data'],
+                    ])->withInput();
+                }
+            } else {
+                // Log error API jika respons tidak sukses
+                Log::error('Kesalahan Respons API', ['response' => $dataResponse]);
+                return back()->withErrors([
+                    'error_message' => 'Login ke layanan eksternal gagal.',
+                ])->withInput();
+            }
+        } catch (\Exception $e) {
+            // Log pengecualian
+            Log::error('Exception tertangkap di metode login', ['error' => $e->getMessage()]);
+            return back()->withErrors([
+                'error_message' => 'Terjadi kesalahan, silakan coba lagi!',
+            ])->withInput();
+        }
     }
-}
+
 
 
 
@@ -139,67 +140,55 @@ class UserController extends Controller
 //     return redirect()->route('register.confirmation')->with('success', 'Pendaftaran berhasil! Silakan cek email Anda untuk konfirmasi.');
 // }
 
-public function register(Request $request)
-{
-    // Validasi input
-    $request->validate([
-        'fullname' => 'required|string|max:255',
-        'username' => 'required|string|max:255|unique:users,user_username',
-        'email' => 'required|string|email|max:255|unique:users,user_email',
-        'notelp' => 'required|string|max:20',
-        'alamat' => 'required|string|max:255',
-        'password' => 'required|string|min:8|confirmed',
-    ]);
-
-    $data = [
-        'user_fullname' => $request->input('fullname'),
-        'user_username' => $request->input('username'),
-        'user_password' => bcrypt($request->input('password')),
-        'user_email' => $request->input('email'),
-        'user_notelp' => $request->input('notelp'),
-        'user_alamat' => $request->input('alamat'),
-    ];
-
-    try {
-        // Kirim request ke API SSO
-        $response = Http::withHeaders([
-            'x-api-key' => self::API_KEY,
-        ])->post(self::API_URL . '/sso/register.json', [
-            'email' => $request->email,
-            'password' => $request->password,
+    public function register(Request $request)
+    {
+        // Validate input
+        $request->validate([
+            'email' => 'required|string|email|max:255|unique:users,user_email',
+            'password' => 'required|string|min:8|confirmed',
         ]);
 
-        $dataResponse = $response->json();
+        try {
+            // Send request to SSO API
+            $response = Http::withHeaders([
+                'x-api-key' => self::API_KEY,
+            ])->post(self::API_URL . '/sso/register.json', [
+                'email' => $request->email,
+                'password' => $request->password,
+            ]);
 
-        // Logging response dari API
-        Log::info('API Response', ['response' => $dataResponse]);
+            $dataResponse = $response->json();
 
-        if ($response->successful() && isset($dataResponse['result'])) {
-            if ($dataResponse['result'] === 1) {
-                // Kirim email verifikasi
-                Mail::to($request->email)->send(new VerificationEmail($request->username));
+            // Log response from API
+            Log::info('API Response', ['response' => $dataResponse]);
 
-                return redirect('register.confirmation')->with('success_message', $dataResponse['data']);
+            if ($response->successful() && isset($dataResponse['result'])) {
+                if ($dataResponse['result'] === 1) {
+                    // Send verification email
+                    Mail::to($request->email)->send(new VerificationEmail($request->email));
+
+                    return redirect('register.confirmation')->with('success_message', $dataResponse['data']);
+                } else {
+                    return back()->withErrors([
+                        'error_message' => $dataResponse['data'],
+                    ])->withInput();
+                }
             } else {
+                // Log error if response is not successful
+                Log::error('API Response Error', ['response' => $dataResponse]);
                 return back()->withErrors([
-                    'error_message' => $dataResponse['data'],
+                    'error_message' => 'Registration failed. Please try again!',
                 ])->withInput();
             }
-        } else {
-            // Logging error jika respons tidak sukses
-            Log::error('API Response Error', ['response' => $dataResponse]);
+        } catch (\Exception $e) {
+            // Log exception
+            Log::error('Exception caught in register method', ['error' => $e->getMessage()]);
             return back()->withErrors([
-                'error_message' => 'Registration failed. Please try again!',
+                'error_message' => 'Something went wrong, please try again!',
             ])->withInput();
         }
-    } catch (\Exception $e) {
-        // Logging exception
-        Log::error('Exception caught in register method', ['error' => $e->getMessage()]);
-        return back()->withErrors([
-            'error_message' => 'Something went wrong, please try again!',
-        ])->withInput();
     }
-}
+
 
     public function verifyEmail($id, $hash)
     {

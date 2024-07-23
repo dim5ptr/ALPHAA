@@ -167,6 +167,7 @@
             text-align: left;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             font-size: 0.9rem;
+            position: relative;
         }
 
         .alert-success {
@@ -186,6 +187,14 @@
             padding: 0;
             list-style: none;
         }
+
+        .alert .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+            color: inherit;
+        }
     </style>
 </head>
 <body>
@@ -195,29 +204,29 @@
                 <img src="{{ asset('img/B.png') }}" alt="Welcome Image">
             </div>
             <div class="right">
-
-
                 <h2>Login</h2>
                 @if (session('message'))
-                <div class="alert alert-success">
+                <div class="alert alert-success" id="alert-success">
                     {{ session('message') }}
+                    <span class="close-btn" onclick="closeAlert('alert-success')">&times;</span>
                 </div>
-            @endif
+                @endif
 
-            @if ($errors->any())
-                <div class="alert alert-danger">
+                @if ($errors->any())
+                <div class="alert alert-danger" id="alert-danger">
                     <ul>
                         @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
+                        <li>{{ $error }}</li>
                         @endforeach
                     </ul>
+                    <span class="close-btn" onclick="closeAlert('alert-danger')">&times;</span>
                 </div>
-            @endif
+                @endif
                 <form action="{{ route('login') }}" method="post">
                     @csrf
                     <div class="input-group">
-                        <input type="username" id="username" name="username" placeholder="Username" value="{{ old('username') }}">
-                        <span class="icon"><i class="fas fa-user"></i></span>
+                        <input type="email" id="email" name="email" placeholder="Email" value="{{ old('email') }}">
+                        <span class="icon"><i class="fas fa-envelope"></i></span>
                     </div>
                     <div class="input-group">
                         <input type="password" id="password" name="password" placeholder="Password">
@@ -235,5 +244,41 @@
             </div>
         </div>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Hide success alert after 5 seconds
+            const successAlert = document.getElementById('alert-success');
+            if (successAlert) {
+                setTimeout(function() {
+                    successAlert.style.opacity = 0;
+                    setTimeout(function() {
+                        successAlert.style.display = 'none';
+                    }, 500);
+                }, 5000);
+            }
+
+            // Hide error alert after 5 seconds
+            const errorAlert = document.getElementById('alert-danger');
+            if (errorAlert) {
+                setTimeout(function() {
+                    errorAlert.style.opacity = 0;
+                    setTimeout(function() {
+                        errorAlert.style.display = 'none';
+                    }, 500);
+                }, 5000);
+            }
+        });
+
+        function closeAlert(alertId) {
+            const alert = document.getElementById(alertId);
+            if (alert) {
+                alert.style.opacity = 0;
+                setTimeout(function() {
+                    alert.style.display = 'none';
+                }, 500);
+            }
+        }
+    </script>
 </body>
 </html>
