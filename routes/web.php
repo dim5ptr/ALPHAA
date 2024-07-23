@@ -13,7 +13,7 @@ Route::get('email/verify/{id}/{hash}', 'UserController@verifyEmail')->name('veri
 
 // Dashboard Route
 Route::get('/dashboard', function () {
-    return view('dashboard');
+    return view('view.dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 // Authentication Routes
@@ -34,11 +34,11 @@ Route::get('/register.confirmation', function () {
 })->name('register.confirmation');
 
 // Authenticated Routes
-Route::group(['middleware' => ['auth']], function () {
-    Route::get('/dashboard', [PagesController::class, 'dashboardPage'])->name('dashboard');
-    Route::put('/profil/update/{id}', [UserController::class, 'update'])->name('profile.update');
-    Route::get('/profil', [PagesController::class, 'profilPage'])->name('profil');
-    Route::get('/tes_pkl', [PagesController::class, 'tesPKL'])->name('tes_pkl');
-    Route::patch('/data-user/{id}', [UserController::class, 'update'])->name('DataUser.update');
-    Route::get('/about', [PagesController::class, 'aboutPage'])->name('about');
-});
+// Route::group(['middleware' => ['auth']], function () {
+//     Route::get('/dashboard', [PagesController::class, 'dashboardPage'])->name('dashboard');
+//     Route::put('/profil/update/{id}', [UserController::class, 'update'])->name('profile.update');
+//     Route::get('/profil', [PagesController::class, 'profilPage'])->name('profil');
+//     Route::get('/tes_pkl', [PagesController::class, 'tesPKL'])->name('tes_pkl');
+//     Route::patch('/data-user/{id}', [UserController::class, 'update'])->name('DataUser.update');
+//     Route::get('/about', [PagesController::class, 'aboutPage'])->name('about');
+// });

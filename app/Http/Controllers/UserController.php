@@ -20,82 +20,154 @@ class UserController extends Controller
     const API_URL='http://192.168.1.24:14041/api';
     const API_KEY='5af97cb7eed7a5a4cff3ed91698d2ffb';
 
+    // public function login(Request $request)
+    // {
+    //     // Validasi input
+    //     $credentials = $request->validate([
+    //         'email' => 'required|string|email|max:255',
+    //         'password' => 'required|string|min:8',
+    //     ]);
+
+    //     // Ambil pengguna berdasarkan email
+    //     $user = User::where("user_email", $credentials["email"])->first();
+
+    //     // Cek apakah pengguna ada dan password cocok
+    //     if (!$user || !Hash::check($credentials["password"], $user->user_password)) {
+    //         Log::warning('Login gagal: Email atau password salah.', [
+    //             'email' => $credentials["email"]
+    //         ]);
+    //         return back()->withErrors([
+    //             "message" => "Email atau password Anda salah.",
+    //         ])->withInput();
+    //     }
+
+    //     // Cek apakah email pengguna sudah diverifikasi
+    //     if (!$user->hasVerifiedEmail()) {
+    //         Log::warning('Login gagal: Email belum diverifikasi.', [
+    //             'email' => $credentials["email"]
+    //         ]);
+    //         return back()->withErrors([
+    //             "message" => "Silakan konfirmasi email Anda terlebih dahulu.",
+    //         ])->withInput();
+    //     }
+
+    //     // Login pengguna
+    //     Auth::login($user);
+    //     Log::info("🟢 Pengguna " . $user->user_fullname . " berhasil login");
+
+    //     // Panggil API untuk login pengguna pada layanan eksternal menggunakan metode GET
+    //     try {
+    //         $response = Http::withHeaders([
+    //             'x-api-key' => self::API_KEY,
+    //             'dev-key' => '12',
+    //         ])->get(self::API_URL . '/sso/login.json', [
+    //             'email' => $credentials['email'],
+    //             'password' => $credentials['password'],
+    //         ]);
+
+    //         $dataResponse = $response->json();
+
+    //         // Log respons API
+    //         Log::info('Respons API', ['response' => $dataResponse]);
+
+    //         if ($response->successful() && isset($dataResponse['result'])) {
+    //             if ($dataResponse['result'] === 1) {
+    //                 return redirect()->route("dashboard");
+    //             } else {
+    //                 Log::warning('Login eksternal gagal: ' . $dataResponse['data'], [
+    //                     'email' => $credentials["email"]
+    //                 ]);
+    //                 return back()->withErrors([
+    //                     'error_message' => $dataResponse['data'],
+    //                 ])->withInput();
+    //             }
+    //         } else {
+    //             // Log error API jika respons tidak sukses
+    //             Log::error('Kesalahan Respons API', ['response' => $dataResponse]);
+    //             return back()->withErrors([
+    //                 'error_message' => 'Login ke layanan eksternal gagal.',
+    //             ])->withInput();
+    //         }
+    //     } catch (\Exception $e) {
+    //         // Log pengecualian
+    //         Log::error('Exception tertangkap di metode login', ['error' => $e->getMessage()]);
+    //         return back()->withErrors([
+    //             'error_message' => 'Terjadi kesalahan, silakan coba lagi!',
+    //         ])->withInput();
+    //     }
+    // }
     public function login(Request $request)
-    {
-        // Validasi input
-        $credentials = $request->validate([
-            'email' => 'required|string|email|max:255',
-            'password' => 'required|string|min:8',
+{
+    // Validasi input
+    $request->validate([
+        'email' => 'required|string|email|max:255',
+        'password' => 'required|string|min:8',
+    ]);
+
+    try {
+        $response = Http::withHeaders([
+            'x-api-key' => self::API_KEY,
+        ])->post(self::API_URL . '/sso/login.json', [
+            'username' => $request->email,
+            'password' => $request->password,
         ]);
 
-        // Ambil pengguna berdasarkan email
-        $user = User::where("user_email", $credentials["email"])->first();
+        $responseData = $response->json();
 
-        // Cek apakah pengguna ada dan password cocok
-        if (!$user || !Hash::check($credentials["password"], $user->user_password)) {
-            Log::warning('Login gagal: Email atau password salah.', [
-                'email' => $credentials["email"]
-            ]);
-            return back()->withErrors([
-                "message" => "Email atau password Anda salah.",
-            ])->withInput();
-        }
+        // Log response for debugging
+        Log::info('API Response', ['response' => $responseData]);
 
-        // Cek apakah email pengguna sudah diverifikasi
-        if (!$user->hasVerifiedEmail()) {
-            Log::warning('Login gagal: Email belum diverifikasi.', [
-                'email' => $credentials["email"]
-            ]);
-            return back()->withErrors([
-                "message" => "Silakan konfirmasi email Anda terlebih dahulu.",
-            ])->withInput();
-        }
+        if ($response->successful() && isset($responseData['data']['access_token'])) {
 
-        // Login pengguna
-        Auth::login($user);
-        Log::info("🟢 Pengguna " . $user->user_fullname . " berhasil login");
+            // Simpan access token ke session
+            session(['access_token' => $responseData['data']['access_token']]);
 
-        // Panggil API untuk login pengguna pada layanan eksternal menggunakan metode GET
-        try {
-            $response = Http::withHeaders([
-                'x-api-key' => self::API_KEY,
-                'dev-key' => '12',
-            ])->get(self::API_URL . '/sso/login.json', [
-                'email' => $credentials['email'],
-                'password' => $credentials['password'],
-            ]);
+            // Jika personal_info tersedia dalam respons, simpan data tersebut ke session juga
+            if (isset($responseData['data']['personal_info'])) {
+                $personalInfo = $responseData['data']['personal_info'];
+                session([
+                    'birthday' => $personalInfo['birthday'],
+                    'full_name' => $personalInfo['full_name'],
+                    'gender' => $personalInfo['gender'],
+                    'phone' => $personalInfo['phone'],
+                    'username' => $personalInfo['username'],
+                    'email' => $request->email, // Simpan email ke session
+                ]);
 
-            $dataResponse = $response->json();
-
-            // Log respons API
-            Log::info('Respons API', ['response' => $dataResponse]);
-
-            if ($response->successful() && isset($dataResponse['result'])) {
-                if ($dataResponse['result'] === 1) {
-                    return redirect()->route("dashboard");
-                } else {
-                    Log::warning('Login eksternal gagal: ' . $dataResponse['data'], [
-                        'email' => $credentials["email"]
-                    ]);
-                    return back()->withErrors([
-                        'error_message' => $dataResponse['data'],
-                    ])->withInput();
+                // Simpan URL gambar profil ke session jika tersedia
+                if (isset($personalInfo['profile_picture'])) {
+                    session(['profile_picture' => $personalInfo['profile_picture']]);
                 }
-            } else {
-                // Log error API jika respons tidak sukses
-                Log::error('Kesalahan Respons API', ['response' => $dataResponse]);
-                return back()->withErrors([
-                    'error_message' => 'Login ke layanan eksternal gagal.',
-                ])->withInput();
             }
-        } catch (\Exception $e) {
-            // Log pengecualian
-            Log::error('Exception tertangkap di metode login', ['error' => $e->getMessage()]);
+
+            return redirect()->route('dashboard');
+        } elseif (isset($responseData['data']) && $responseData['result'] === 2) {
             return back()->withErrors([
-                'error_message' => 'Terjadi kesalahan, silakan coba lagi!',
+                'error' => $responseData['data'],
+            ])->withInput();
+        } elseif (isset($responseData['data']) && $responseData['result'] === 3) {
+            return back()->withErrors([
+                'error' => $responseData['data'],
+            ])->withInput();
+        } elseif (isset($responseData['data']) && $responseData['result'] === 4) {
+            return back()->withErrors([
+                'error' => $responseData['data'],
             ])->withInput();
         }
+
+        return back()->withErrors([
+            'email' => 'The provided credentials do not match our records.',
+        ])->withInput();
+    } catch (\Exception $e) {
+        // Log the exception for debugging
+        Log::error('Exception caught in login method', ['error' => $e->getMessage()]);
+
+        // Tangani kesalahan jika terjadi kesalahan dalam melakukan permintaan HTTP
+        return back()->withErrors([
+            'error' => 'Something went wrong. Please try again later.'
+        ])->withInput();
     }
+}
 
 
 
