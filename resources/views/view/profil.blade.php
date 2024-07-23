@@ -450,7 +450,6 @@ top: 10%;
                         </div>
 
                         <div class="cl">
-
                             <div>
                                 <label for="password" class="form-label">Password User</label>
                                 <input type="password" name="password" class="form-control" id="password" placeholder="Masukkan Password User" value="{{ old('password') }}" />
@@ -460,15 +459,31 @@ top: 10%;
                                 <input type="password" name="password_confirmation" class="form-control" id="password_confirmation" placeholder="Konfirmasi Password" />
                             </div>
                         </div>
+
+                        <div class="cl">
+                            <div>
+                                <label for="birthday" class="form-label">Tanggal Lahir</label>
+                                <input type="date" name="birthday" class="form-control" id="birthday" placeholder="Masukkan Tanggal Lahir" value="{{ $user->birthday }}" />
+                            </div>
+                            <div>
+                                <label for="gender" class="form-label">Jenis Kelamin</label>
+                                <select name="gender" class="form-control" id="gender">
+                                    <option value="1" {{ $user->gender == 1 ? 'selected' : '' }}>Laki-laki</option>
+                                    <option value="0" {{ $user->gender == 0 ? 'selected' : '' }}>Perempuan</option>
+                                </select>
+                            </div>
+                        </div>
+
                         <input type="hidden" name="level" class="form-control" id="level" value="{{ $user->user_level }}" />
                         <input type="hidden" name="status" class="form-control" id="status" value="{{ $user->user_status }}" />
                     </div>
                     <div class="modal-footer">
                         <button type="submit" class="btn btn-primary"><i class="fas fa-save me-2"></i>Simpan</button>
                     </div>
-                 </form>
+                </form>
             </div>
         </div>
+
 
 
     </div>

@@ -297,58 +297,62 @@ class UserController extends Controller
     }
 
     public function update(Request $request, $id)
-    {
-        $validator = Validator::make($request->all(), [
-            'fullname' => 'required|string|max:255',
-            'username' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255',
-            'notelp' => 'nullable|numeric',
-            'alamat' => 'nullable|string|max:255',
-            'password' => 'nullable|string|min:8|confirmed',
-        ]);
+{
+    $validator = Validator::make($request->all(), [
+        'fullname' => 'required|string|max:255',
+        'username' => 'required|string|max:255',
+        'email' => 'required|string|email|max:255',
+        'notelp' => 'nullable|numeric',
+        'alamat' => 'nullable|string|max:255',
+        'password' => 'nullable|string|min:8|confirmed',
+        'birthday' => 'required|date', // Assuming date is in the correct format
+        'gender' => 'required|integer|in:0,1', // 0 for Female, 1 for Male
+    ]);
 
-        if ($validator->fails()) {
-            return redirect()->back()->withErrors($validator)->withInput();
-        }
-
-        $user = User::find($id);
-        if ($request->has('password')) {
-            $user->user_password = Hash::make($request->password);
-        }
-        $user->user_fullname = $request->fullname;
-        $user->user_username = $request->username;
-        $user->user_email = $request->email;
-        $user->user_notelp = $request->notelp;
-        $user->user_alamat = $request->alamat;
-        $user->user_level = $request->level;
-        $user->user_status = $request->status;
-
-        if ($request->hasFile('profil')) {
-            $file = $request->file('profil');
-            $filePath = $file->store('public/user/profile');
-            $user->user_profil_url = $filePath;
-        }
-
-        $user->save();
-
-        // Make the API call to update the personal info on the external service
-        $apiResponse = Http::withHeaders([
-            'x-api-key' => config('app.api_key'),
-            'Authorization' => '0f031be1caef52cfc46ecbb8eee10c77',
-        ])->post(config('app.base_url') . '/sso/update_personal_info.json', [
-            'fullname' => $request->input('fullname'),
-            'username' => $request->input('username'),
-            'email' => $request->input('email'),
-            'phone' => $request->input('phone'),
-            'address' => $request->input('address'),
-        ]);
-
-        if ($apiResponse->failed()) {
-            return redirect()->back()->withErrors('Perbarui info pribadi di layanan eksternal gagal.');
-        }
-
-        return redirect()->back()->with('success', 'Profil berhasil diperbarui!');
+    if ($validator->fails()) {
+        return redirect()->back()->withErrors($validator)->withInput();
     }
+
+    $user = User::find($id);
+    if ($request->has('password')) {
+        $user->user_password = Hash::make($request->password);
+    }
+    $user->user_fullname = $request->fullname;
+    $user->user_username = $request->username;
+    $user->user_email = $request->email;
+    $user->user_notelp = $request->notelp;
+    $user->user_alamat = $request->alamat;
+    $user->user_level = $request->level;
+    $user->user_status = $request->status;
+
+    if ($request->hasFile('profil')) {
+        $file = $request->file('profil');
+        $filePath = $file->store('public/user/profile');
+        $user->user_profil_url = $filePath;
+    }
+
+    $user->save();
+
+    // Make the API call to update the personal info on the external service
+    $apiResponse = Http::withHeaders([
+        'x-api-key' => config('app.api_key'),
+        'Authorization' => '0f031be1caef52cfc46ecbb8eee10c77',
+        'Content-Type' => 'application/json',
+    ])->post(config('app.base_url') . '/sso/update_personal_info.json', [
+        'fullname' => $request->input('fullname'),
+        'username' => $request->input('username'),
+        'birthday' => $request->input('birthday'),
+        'phone' => $request->input('notelp'),
+        'gender' => $request->input('gender'),
+        'address' => $request->input('alamat'),
+    ]);
+
+    if ($apiResponse->failed()) {
+        return redirect()->back()->withErrors('Perbarui info pribadi di layanan eksternal gagal.');
+    }
+
+    return redirect()->back()->with('success', 'Profil berhasil diperbarui!');
+}
 
     public function deleteProfilePicture(Request $request)
     {
