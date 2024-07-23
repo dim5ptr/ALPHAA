@@ -1,20 +1,11 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Illuminate\Http\Request;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\PagesController;
-use App\Http\Controllers\Auth\PasswordResetLinkController;
-use App\Http\Controllers\Auth\NewPasswordController;
-use App\Http\Controllers\Auth\LogoutController;
-use Illuminate\Support\Facades\Password;
 
-Route::get('email/verify/{id}/{hash}', 'UserController@verifyEmail')->name('verification.verify');
-
-// Dashboard Route
-Route::get('/dashboard', function () {
-    return view('view.dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+// Email Verification Route
+//Route::get('email/verify/{id}/{hash}', [UserController::class, 'verifyEmail'])->name('verification.verify');
 
 // Authentication Routes
 require __DIR__.'/auth.php';
@@ -29,16 +20,16 @@ Route::post('/login', [UserController::class, 'login'])->name('user.login');
 // Register Routes
 Route::get('/register', [PagesController::class, 'registerPage'])->name('register');
 Route::post('/register', [UserController::class, 'register'])->name('user.register');
-Route::get('/register.confirmation', function () {
+Route::get('/register/confirmation', function () {
     return view('public.register-confirmation');
 })->name('register.confirmation');
 
 // Authenticated Routes
-// Route::group(['middleware' => ['auth']], function () {
-//     Route::get('/dashboard', [PagesController::class, 'dashboardPage'])->name('dashboard');
-//     Route::put('/profil/update/{id}', [UserController::class, 'update'])->name('profile.update');
-//     Route::get('/profil', [PagesController::class, 'profilPage'])->name('profil');
-//     Route::get('/tes_pkl', [PagesController::class, 'tesPKL'])->name('tes_pkl');
-//     Route::patch('/data-user/{id}', [UserController::class, 'update'])->name('DataUser.update');
-//     Route::get('/about', [PagesController::class, 'aboutPage'])->name('about');
-// });
+Route::middleware(['api'])->group(function () {
+    Route::get('/dashboard', [PagesController::class, 'dashboardPage'])->name('dashboard');
+    Route::get('/profil', [PagesController::class, 'profilPage'])->name('profil');
+    Route::put('/profil/update/{id}', [UserController::class, 'update'])->name('profile.update');
+    Route::get('/tes_pkl', [PagesController::class, 'tesPKL'])->name('tes_pkl');
+    Route::patch('/data-user/{id}', [UserController::class, 'update'])->name('DataUser.update');
+    Route::get('/about', [PagesController::class, 'aboutPage'])->name('about');
+ });

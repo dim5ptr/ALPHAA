@@ -97,77 +97,78 @@ class UserController extends Controller
     //     }
     // }
     public function login(Request $request)
-{
-    // Validasi input
-    $request->validate([
-        'email' => 'required|string|email|max:255',
-        'password' => 'required|string|min:8',
-    ]);
-
-    try {
-        $response = Http::withHeaders([
-            'x-api-key' => self::API_KEY,
-        ])->post(self::API_URL . '/sso/login.json', [
-            'username' => $request->email,
-            'password' => $request->password,
+    {
+        // Validasi input
+        $request->validate([
+            'email' => 'required|string|email|max:255',
+            'password' => 'required|string|min:8',
         ]);
 
-        $responseData = $response->json();
+        try {
+            $response = Http::withHeaders([
+                'x-api-key' => self::API_KEY,
+            ])->post(self::API_URL . '/sso/login.json', [
+                'username' => $request->email,
+                'password' => $request->password,
+            ]);
 
-        // Log response for debugging
-        Log::info('API Response', ['response' => $responseData]);
+            $responseData = $response->json();
 
-        if ($response->successful() && isset($responseData['data']['access_token'])) {
+            // Log response for debugging
+            Log::info('API Response', ['response' => $responseData]);
 
-            // Simpan access token ke session
-            session(['access_token' => $responseData['data']['access_token']]);
+            if ($response->successful() && isset($responseData['data']['access_token'])) {
 
-            // Jika personal_info tersedia dalam respons, simpan data tersebut ke session juga
-            if (isset($responseData['data']['personal_info'])) {
-                $personalInfo = $responseData['data']['personal_info'];
-                session([
-                    'birthday' => $personalInfo['birthday'],
-                    'full_name' => $personalInfo['full_name'],
-                    'gender' => $personalInfo['gender'],
-                    'phone' => $personalInfo['phone'],
-                    'username' => $personalInfo['username'],
-                    'email' => $request->email, // Simpan email ke session
-                ]);
+                // Simpan access token ke session
+                session(['access_token' => $responseData['data']['access_token']]);
 
-                // Simpan URL gambar profil ke session jika tersedia
-                if (isset($personalInfo['profile_picture'])) {
-                    session(['profile_picture' => $personalInfo['profile_picture']]);
+                // Jika personal_info tersedia dalam respons, simpan data tersebut ke session juga
+                if (isset($responseData['data']['personal_info'])) {
+                    $personalInfo = $responseData['data']['personal_info'];
+                    session([
+                        'birthday' => $personalInfo['birthday'],
+                        'full_name' => $personalInfo['full_name'],
+                        'gender' => $personalInfo['gender'],
+                        'phone' => $personalInfo['phone'],
+                        'username' => $personalInfo['username'],
+                        'email' => $request->email, // Simpan email ke session
+                    ]);
+
+                    // Simpan URL gambar profil ke session jika tersedia
+                    if (isset($personalInfo['profile_picture'])) {
+                        session(['profile_picture' => $personalInfo['profile_picture']]);
+                    }
                 }
+
+                return redirect()->route('dashboard');
+            } else {
+                // Tangani hasil respons berdasarkan nilai result
+                $errorMessages = [
+                    2 => 'Error 2 occurred. Please check the details.',
+                    3 => 'Error 3 occurred. Please check the details.',
+                    4 => 'Error 4 occurred. Please check the details.',
+                ];
+
+                // Jika result tidak sesuai dengan errorMessages, tampilkan pesan default
+                $resultCode = $responseData['result'] ?? null;
+                $errorMessage = $errorMessages[$resultCode] ?? 'The provided credentials do not match our records.';
+
+                return back()->withErrors([
+                    'error' => $errorMessage,
+                ])->withInput();
             }
 
-            return redirect()->route('dashboard');
-        } elseif (isset($responseData['data']) && $responseData['result'] === 2) {
+        } catch (\Exception $e) {
+            // Log the exception for debugging
+            Log::error('Exception caught in login method', ['error' => $e->getMessage()]);
+
+            // Tangani kesalahan jika terjadi kesalahan dalam melakukan permintaan HTTP
             return back()->withErrors([
-                'error' => $responseData['data'],
-            ])->withInput();
-        } elseif (isset($responseData['data']) && $responseData['result'] === 3) {
-            return back()->withErrors([
-                'error' => $responseData['data'],
-            ])->withInput();
-        } elseif (isset($responseData['data']) && $responseData['result'] === 4) {
-            return back()->withErrors([
-                'error' => $responseData['data'],
+                'error' => 'Something went wrong. Please try again later.'
             ])->withInput();
         }
-
-        return back()->withErrors([
-            'email' => 'The provided credentials do not match our records.',
-        ])->withInput();
-    } catch (\Exception $e) {
-        // Log the exception for debugging
-        Log::error('Exception caught in login method', ['error' => $e->getMessage()]);
-
-        // Tangani kesalahan jika terjadi kesalahan dalam melakukan permintaan HTTP
-        return back()->withErrors([
-            'error' => 'Something went wrong. Please try again later.'
-        ])->withInput();
     }
-}
+
 
 
 

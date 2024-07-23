@@ -222,7 +222,7 @@
                     <span class="close-btn" onclick="closeAlert('alert-danger')">&times;</span>
                 </div>
                 @endif
-                <form action="{{ route('login') }}" method="post">
+                <form action="{{ route('user.login') }}" method="post">
                     @csrf
                     <div class="input-group">
                         <input type="email" id="email" name="email" placeholder="Email" value="{{ old('email') }}">
