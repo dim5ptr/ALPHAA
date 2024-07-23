@@ -89,19 +89,19 @@
                     box-shadow: 0 4px 8px 4px rgba(0, 0, 0, 0.1); /* Add box shadow */
                 }
 
-                .wlc h1 {
-                    font-size: 2.3rem;
-                    font-weight: bold;
-                    color: #365AC2;
-                    margin-bottom: 20px;
+                .wlc h2 {
+                    margin-top: 8%;
+                    font-size: 2.8rem;
+                    font-weight: 800;
+                    color: rgba(20, 19, 19, 0.923);
+                    margin-bottom: 1%;
                 }
 
                 .wlc span {
-                    font-size: 2.3rem;
-                    font-weight: bold;
-                    color: #333;
-                    margin-bottom: 20px;
+                    color: #365AC2;
+                    font-weight: bolder;
                 }
+
 
                 .wlc {
                     margin-left: 10%;
@@ -110,7 +110,7 @@
 
                 .wlc p {
                     color: #666;
-                    font-size: 1rem;
+                    font-size: 1.5rem;
                     line-height: 1.5;
                 }
 
@@ -218,8 +218,8 @@
 
     <section class="banner">
         <div class="wlc">
-            <h1>Selamat datang!<span></br>Cari tahu desain populer disekitarmu</span></h1>
-            <p>Hire pre-vetted remote developers, designers and product managers with world-class technical and communication skills, without worrying about crazy fees or the legal hassles.</p>
+            <h2>Welcome To Our Page!</h2>
+            <p><span>SARASTYA TECHNOLOGY INTEGRATA</span> Merupakan tempat di mana inovasi bertemu dengan teknologi. Kami menyediakan solusi perangkat lunak inovatif untuk membantu bisnis Anda berkembang.</p>
         </div>
         <div class="pict">
             <img src="img/C.jpg">
