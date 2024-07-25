@@ -10,12 +10,18 @@ class PagesController extends Controller
     {
         return view("public.login");
     }
-
+    public function AloginPage()
+    {
+        return view("public.admin_login");
+    }
     public function registerPage()
     {
         return view("public.register");
     }
-
+    public function AregisterPage()
+    {
+        return view("public.admin_regis");
+    }
     public function profilPage()
     {
         $personalInfo = [
@@ -49,7 +55,10 @@ class PagesController extends Controller
     {
         return view("view.dashboard");
     }
-
+    public function AdashboardPage()
+    {
+        return view("view.admin_dashboard");
+    }
     public function tesPKL()
     {
         return view("view.tes_pkl");

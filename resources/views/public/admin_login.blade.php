@@ -201,7 +201,7 @@
     <div class="container">
         <div class="login-box">
             <div class="left">
-                <img src="{{ asset('img/E.png') }}" alt="Welcome Image">
+                <img src="{{ asset('img/E.jpg') }}" alt="Welcome Image">
             </div>
             <div class="right">
                 <h2>Login Admin</h2>
@@ -222,7 +222,7 @@
                     <span class="close-btn" onclick="closeAlert('alert-danger')">&times;</span>
                 </div>
                 @endif
-                <form action="{{ route('user.login') }}" method="post">
+                <form action="{{ route('admin.login') }}" method="post">
                     @csrf
                     <div class="input-group">
                         <input type="email" id="email" name="email" placeholder="Email" value="{{ old('email') }}">
@@ -239,7 +239,7 @@
                 </form>
                 <br>
                 <div class="register-link">
-                    <p>Belum punya akun? <a href="{{ route('register') }}">Daftar Sekarang</a></p>
+                    <p>Belum punya akun? <a href="{{ route('Aregister') }}">Daftar Sekarang</a></p>
                 </div>
             </div>
         </div>

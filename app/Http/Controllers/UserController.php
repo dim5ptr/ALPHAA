@@ -169,7 +169,78 @@ class UserController extends Controller
         }
     }
 
+    public function Alogin(Request $request)
+    {
+        // Validasi input
+        $request->validate([
+            'email' => 'required|string|email|max:255',
+            'password' => 'required|string|min:8',
+        ]);
 
+        try {
+            $response = Http::withHeaders([
+                'x-api-key' => self::API_KEY,
+            ])->post(self::API_URL . '/sso/login.json', [
+                'username' => $request->email,
+                'password' => $request->password,
+            ]);
+
+            $responseData = $response->json();
+
+            // Log response for debugging
+            Log::info('API Response', ['response' => $responseData]);
+
+            if ($response->successful() && isset($responseData['data']['access_token'])) {
+
+                // Simpan access token ke session
+                session(['access_token' => $responseData['data']['access_token']]);
+
+                // Jika personal_info tersedia dalam respons, simpan data tersebut ke session juga
+                if (isset($responseData['data']['personal_info'])) {
+                    $personalInfo = $responseData['data']['personal_info'];
+                    session([
+                        'birthday' => $personalInfo['birthday'],
+                        'full_name' => $personalInfo['full_name'],
+                        'gender' => $personalInfo['gender'],
+                        'phone' => $personalInfo['phone'],
+                        'username' => $personalInfo['username'],
+                        'email' => $request->email, // Simpan email ke session
+                    ]);
+
+                    // Simpan URL gambar profil ke session jika tersedia
+                    if (isset($personalInfo['profile_picture'])) {
+                        session(['profile_picture' => $personalInfo['profile_picture']]);
+                    }
+                }
+
+                return redirect()->route('Adashboard');
+            } else {
+                // Tangani hasil respons berdasarkan nilai result
+                $errorMessages = [
+                    2 => 'Error 2 occurred. Please check the details.',
+                    3 => 'Error 3 occurred. Please check the details.',
+                    4 => 'Error 4 occurred. Please check the details.',
+                ];
+
+                // Jika result tidak sesuai dengan errorMessages, tampilkan pesan default
+                $resultCode = $responseData['result'] ?? null;
+                $errorMessage = $errorMessages[$resultCode] ?? 'The provided credentials do not match our records.';
+
+                return back()->withErrors([
+                    'error' => $errorMessage,
+                ])->withInput();
+            }
+
+        } catch (\Exception $e) {
+            // Log the exception for debugging
+            Log::error('Exception caught in login method', ['error' => $e->getMessage()]);
+
+            // Tangani kesalahan jika terjadi kesalahan dalam melakukan permintaan HTTP
+            return back()->withErrors([
+                'error' => 'Something went wrong. Please try again later.'
+            ])->withInput();
+        }
+    }
 
 
 
@@ -214,6 +285,55 @@ class UserController extends Controller
 // }
 
     public function register(Request $request)
+    {
+        // Validate input
+        $request->validate([
+            'email' => 'required|string|email|max:255|unique:users,user_email',
+            'password' => 'required|string|min:8|confirmed',
+        ]);
+
+        try {
+            // Send request to SSO API
+            $response = Http::withHeaders([
+                'x-api-key' => self::API_KEY,
+            ])->post(self::API_URL . '/sso/register.json', [
+                'email' => $request->email,
+                'password' => $request->password,
+            ]);
+
+            $dataResponse = $response->json();
+
+            // Log response from API
+            Log::info('API Response', ['response' => $dataResponse]);
+
+            if ($response->successful() && isset($dataResponse['result'])) {
+                if ($dataResponse['result'] === 1) {
+                    // Send verification email
+                    Mail::to($request->email)->send(new VerificationEmail($request->email));
+
+                    return redirect('register.confirmation')->with('success_message', $dataResponse['data']);
+                } else {
+                    return back()->withErrors([
+                        'error_message' => $dataResponse['data'],
+                    ])->withInput();
+                }
+            } else {
+                // Log error if response is not successful
+                Log::error('API Response Error', ['response' => $dataResponse]);
+                return back()->withErrors([
+                    'error_message' => 'Registration failed. Please try again!',
+                ])->withInput();
+            }
+        } catch (\Exception $e) {
+            // Log exception
+            Log::error('Exception caught in register method', ['error' => $e->getMessage()]);
+            return back()->withErrors([
+                'error_message' => 'Something went wrong, please try again!',
+            ])->withInput();
+        }
+    }
+
+    public function Aregister(Request $request)
     {
         // Validate input
         $request->validate([

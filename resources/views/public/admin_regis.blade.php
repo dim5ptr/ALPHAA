@@ -138,7 +138,7 @@
                 </div>
             @endif
 
-            <form action="{{ route('register') }}" method="POST">
+            <form action="{{ route('admin.register') }}" method="POST">
                 @csrf
                 <div class="form-group">
                     <div class="input-group">
@@ -160,7 +160,7 @@
                 </div>
                 <button type="submit" class="btn btn-primary">Daftar</button>
             </form>
-            <p class="form-text">Sudah punya akun? <a href="{{ route('login') }}">Login disini</a></p>
+            <p class="form-text">Sudah punya akun? <a href="{{ route('Alogin') }}">Login disini</a></p>
         </div>
         <div class="pict">
             <img src="{{ asset('img/D.jpg') }}" alt="">
