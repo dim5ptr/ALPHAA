@@ -10,10 +10,11 @@
         /* Inline CSS for simplicity */
                 body {
                     font-family: 'Arial', sans-serif;
-                    margin-left: 5%;
-                    margin-right: 5%;
+                    margin-left: 0;
+                    margin-right: 0;
                     height: 100vh;
                     background-color: #d5def7;
+                    box-sizing: border-box;
                 }
 
 
@@ -84,8 +85,8 @@
                     background-color: #ffffff;
                     background-size: cover;
                     border-radius: 20px;
-                    margin-top: 1.3%;
-                    padding: 40px 0;
+                    margin: 20px 5%;
+                    padding: 40px;
                     box-shadow: 0 4px 8px 4px rgba(0, 0, 0, 0.1); /* Add box shadow */
                 }
 
@@ -135,6 +136,8 @@
                     grid-template-columns: repeat(auto-fit, minmax(5%, 4fr));
                     height: 100%;
                     gap: 20px;
+                    margin: 20px 2%;
+                    padding: 40px;
                 }
 
                 .card {

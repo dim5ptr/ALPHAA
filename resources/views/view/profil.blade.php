@@ -18,6 +18,7 @@
         padding: 0;
         box-sizing: border-box;
         font-family: Arial, sans-serif;
+        width: 100%;
     }
 
     ::-webkit-scrollbar {
@@ -28,7 +29,7 @@
         color: #000000;
     }
 
-    .btn-primary, .btn-dark, .btn-danger {
+    .btn-primary, .btn-dark, .btn-danger, .btn-light {
         padding: 8px 20px;
         text-align: center;
         text-decoration: none;
@@ -38,6 +39,7 @@
         cursor: pointer;
         border-radius: 4px;
         border: none;
+        transition: background-color 0.3s ease;
     }
 
     .btn-primary {
@@ -50,14 +52,6 @@
     }
 
     .btn-light {
-        padding: 10px 10px;
-        text-align: center;
-        text-decoration: none;
-        display: inline-block;
-        margin-top: 0px;
-        cursor: pointer;
-        border-radius: 4px;
-        border: none;
         background-color: #365AC2;
         font-size: small;
         font-weight: bold;
@@ -65,8 +59,8 @@
     }
 
     .btn-dark {
-        background-color: #bee5eb;
-        color: #000000;
+        background-color: #000000;
+        color: white;
         font-weight: bold;
     }
 
@@ -79,141 +73,77 @@
         background-color: #c82333;
     }
 
-    /* General modal styling */
-.modal {
-    display: none; /* Hidden by default */
-    position: fixed;
-    z-index: 1000; /* High z-index to ensure it's in front */
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    background-color: rgba(134, 144, 176, 0.315); /* Black w/ opacity */
-}
-
-.modal-content {
-    top: 10%;
-    left: 15%;
-    background-color: #fefefe;
-    width:70%;
-    height: 50%;
-    display: flexbox;
-    border-radius: 10px;
-    position: relative;
-}
-
-.modal-header {
-    background-color: #007bff;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 1px solid #e5e5e5;
-
-}
-
-.modal-header h1{
-    color: white;
-    font-weight: bolder;
-}
-
-.modal-title {
-    margin: 0;
-    font-size: 24px;
-}
-
-.btn-close {
-    background: none;
-    border: none;
-    font-size: 24px;
-    cursor: pointer;
-}
-
-.edit{
-    left: 0%;
-    width: 100%;
-    padding-right: 5%;
-    padding-left: 5%;
-    padding-bottom: 10px;
-    border-radius: 10px;
-    background-color: white;
-
-}
-/* Input fields */
-.form-control {
-    top: 2%;
-    left: 2%;
-    padding: 10px;
-    margin-bottom: 15px;
-    border: 2px solid #ccc;
-    border-radius: 5px;
-    box-sizing: border-box;
-    font-size: 14px; }
-
-.form-control::after {
-    border-color: #0056b3;
-}
-
-/* Labels */
-.form-label {
-top: 10%;
-    display: block;
-    margin-bottom: 5px;
-    font-weight: bold;
-    font-size: 14px;
-}
-
-/* Form rows */
-.cf {
-    display: flex;
-    justify-content: space-between;
-}
-.cf > div {
-    width: 48%;
-}
-.cl {
-    display: flex;
-    justify-content: space-between;
-}
-
-.cl > div {
-    width: 48%;
-}
-
-/* Button */
-.btn-primary {
-    width: 40%%;
-    padding: 10px;
-    border: none;
-    border-radius: 5px;
-    background-color: #007bff;
-    color: white;
-    font-size: 16px;
-    cursor: pointer;
-}
-
-.btn-primary:hover {
-    background-color: #365AC2;
-}
-
-/* Modal footer */
-.modal-footer {
-    display: flex;
-    justify-content: right;
-    border-top: 1px solid #e5e5e5;
-    padding-top: 10px;
-    padding-bottom: 20px;
-}
-
-@media (max-width: 500px) {
-    .cl {
-        flex-direction: column;
-    }
-
-    .cl > div {
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
         width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0, 0, 0, 0.5);
     }
-}
 
+    .modal-content {
+        background-color: #fefefe;
+        margin: 10% auto;
+        padding: 20px;
+        border: 1px solid #888;
+        width: 80%;
+        max-width: 600px;
+        border-radius: 10px;
+    }
+
+    .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid #e5e5e5;
+        background-color: #007bff;
+        color: white;
+        padding: 10px 20px;
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+        margin-bottom: 2.1%;
+    }
+
+    .modal-header h1 {
+        margin: 0;
+        font-size: 24px;
+    }
+
+    .btn-close {
+        background: none;
+        border: none;
+        font-size: 24px;
+        cursor: pointer;
+        color: white;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 15px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 14px;
+    }
+
+    .form-label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+        font-size: 14px;
+    }
+
+    .modal-footer {
+        display: flex;
+        justify-content: flex-end;
+        border-top: 1px solid #e5e5e5;
+        padding-top: 10px;
+        margin-top: 20px;
+    }
 
     .alert {
         padding: 20px;
@@ -249,134 +179,206 @@ top: 10%;
 
     .container-flex {
         padding: 20px;
-        width: 90%;
-        height: 50%;;
-        max-width: 100%;
+        max-width: 90%;
         background-color: white;
-        margin: 1.2% auto;
+        margin: 4.5% auto;
         border-radius: 20px;
-        box-shadow: 0 4px 8px 4px rgba(0, 0, 0, 0.1); /* Add box shadow */
-        justify-content: ;
-        align-items: center;
-    }
-
-    .container-grid {
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         display: flex;
-        flex-direction: row;
-        justify-content: space-between;
-        margin: 2% auto;
+        flex-direction: column;
+        align-items: center;
     }
 
     .banner {
-        top: 12px;
         width: 100%;
-        height: 40%;
-        max-width: 100%;
         background-color: #0056b3;
-        margin: 0.5% auto;
+        padding: 20px;
         border-radius: 15px;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        display: flex;
         justify-content: space-between;
         align-items: center;
-        font-weight: bolder;
         color: white;
     }
 
     .banner h4 {
-        margin-left: 5%;
-        padding-top: 4%;
-        font-weight: 700;
-        font-size: 30px;
+        margin: 0;
+        font-size: 24px;
     }
 
-    .pict {
-        flex-basis: 150px;
+    .profile-info {
+        display: flex;
+        align-items: center;
+        width: 100%;
+        margin-top: 20px;
+    }
+
+    .profile-info img {
+        border-radius: 50%;
         margin-right: 20px;
     }
 
-    .data {
-        margin-top: 12px;
-        margin-left: 20px;
+    .profile-info .data {
         flex: 1;
     }
 
-    .data span {
-        font-size: 40px;
-        margin-top: 0px;
-        line-height: 45px;
+    .profile-info .data span {
+        font-size: 18px;
         color: #000000;
     }
 
-     p {
-        font-size: 15px;
-        line-height: 20px;
+    .profile-info .data p {
+        font-size: 16px;
         color: rgb(92, 89, 89);
     }
 
-    .rounded img {
-        border-radius: 50px;
+    .btn-container {
+        display: flex;
+        justify-content: flex-start;
+        margin-top: 20px;
     }
 
-    .text-left {
-        text-align: left;
+    @media (max-width: 768px) {
+        .profile-info {
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .profile-info img {
+            margin-bottom: 20px;
+        }
+
+        .profile-info .data span, .profile-info .data p {
+            text-align: center;
+        }
     }
 
-    /* .text-black {
-        color: black;
-    } */
+    /* Navbar styles */
+    /* General Navbar Styles */
+.navbar {
+    height: auto;
+    margin-top: 1%;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    background: #ffffff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    align-items: center;
+}
 
-    .p-2 {
+.navbar .container {
+    display: flex;
+    align-items: center;
+    flex: 1;
+}
+
+.navbar .container img {
+    width: 100px; /* Adjust width as needed */
+}
+
+.navbar a {
+    color: #365AC2;
+    text-decoration: none;
+    margin: 0 10px;
+    font-size: 18px; /* Adjust font size as needed */
+    font-weight: 900;
+}
+
+.navbar .aiken {
+    display: flex;
+    align-items: center;
+}
+
+/* Icon Styles */
+.navbar .aiken i {
+    color: #365AC2;
+    font-size: 24px; /* Adjust font size as needed */
+}
+
+/* Responsive Styles */
+@media (max-width: 1024px) {
+    .navbar {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .navbar .container,
+    .navbar .aiken {
+        width: 100%;
+        justify-content: center;
+        text-align: center;
+    }
+
+    .navbar .container img {
+        width: 80px; /* Adjust width for smaller screens */
+    }
+
+    .navbar a {
+        margin: 5px 10px;
+        font-size: 16px; /* Adjust font size for smaller screens */
+    }
+
+    .navbar .aiken i {
+        font-size: 20px; /* Adjust font size for smaller screens */
+    }
+}
+
+@media (max-width: 768px) {
+    .navbar {
         padding: 10px;
     }
 
-    .p-3 {
-        padding: 20px;
+    .navbar .container img {
+        width: 60px; /* Further adjust width for mobile screens */
     }
 
-    .pb-3 {
-        padding-bottom: 20px;
+    .navbar a {
+        font-size: 14px; /* Adjust font size for mobile screens */
     }
 
-    .pt-3 {
-        padding-top: 20px;
+    .navbar .aiken i {
+        font-size: 18px; /* Adjust font size for mobile screens */
+    }
+}
+
+@media (max-width: 480px) {
+    .navbar {
+        padding: 5px;
     }
 
-    .m-2 {
-        margin: 10px;
+    .navbar .container img {
+        width: 50px; /* Further adjust width for extra-small screens */
     }
 
-    .mx-auto {
-        margin-left: auto;
-        margin-right: auto;
+    .navbar a {
+        font-size: 12px; /* Adjust font size for extra-small screens */
     }
 
-
-    .btn-container {
-        left: 15%;
-        justify-content: left;
-        height: 20%%;
-        width: 100%;
+    .navbar .aiken i {
+        font-size: 16px; /* Adjust font size for extra-small screens */
     }
+}
 
-    .btn-dark {
-        display: flex;
-        align-items: center;
-        gap: 5px;
-    }
-
-    form {
-        position: absolute;
-        top: 20%; /* Adjust as necessary */
-        right: 9%; /* Adjust as necessary */
-    }
 </style>
 @endsection
 
 @section('main')
-    @include('layouts.navigation')
+<header class="navbar">
+    <div class="container">
+        <img src="img/logo_sarastya.png" alt="Logo">
+    </div>
+    <div class="aiken">
+        <a href="{{ route('dashboard') }}">
+            <i class="fas fa-home"></i>
+        </a>
+        <a href="{{ route('profil') }}">
+            <i class="fas fa-user"></i>
+        </a>
+    </div>
+</header>
 
-    <div class="container-flex pt-3 pb-3">
-
+    <div class="container-flex">
         <div class="banner">
             <h4>Akun Pengguna</h4>
             <form method="POST" action="{{ route('logout') }}" class="d-inline-block">
@@ -386,151 +388,80 @@ top: 10%;
                 </button>
             </form>
         </div>
-        <div class="container-grid">
-            <div class="pict">
-                @if ($user->user_profil_url === '' || $user->user_profil_url === null)
-                    <img width="130px" height="130px" src="{{ asset('img/user.png') }}"
-                        class="rounded m-2 d-block shadow-md" alt="...">
-                @else
-                    <img width="150px" height="150px"
-                        src="{{ asset('storage/user/profile/' . basename($user->user_profil_url)) }}"
-                        class="rounded m-2 d-block shadow-md" alt="...">
-                @endif
-            </div>
+        <div class="profile-info">
+            <img width="130px" height="130px" src="{{ empty($user['user_profil_url']) ? asset('img/user.png') : asset('storage/user/profile/' . basename($user['user_profil_url'])) }}" alt="Profile Image">
             <div class="data">
-                <p><span>{{ $user->user_username }}</span></br>{{ $user->user_fullname }}</br>{{ $user->user_email }}</p>
-                <div class="btn-container mt-3">
+                <p>
+                    <span><strong>Username:</strong> {{ $personalInfo['username'] }}</span><br>
+                    <strong>Full Name:</strong> {{ $personalInfo['fullname'] }}<br>
+                    <strong>Email:</strong> {{ $personalInfo['email'] }}<br>
+                    <strong>Phone:</strong> {{ $personalInfo['phone'] ?? 'Not Provided' }}<br>
+                    <strong>Date of Birth:</strong> {{ $personalInfo['dateofbirth'] ?? 'Not Provided' }}<br>
+                    <strong>Gender:</strong> {{ $personalInfo['gender'] ?? 'Not Provided' }}
+                </p>
+                <div class="btn-container">
                     <button type="button" class="btn btn-light" onclick="openModal()">
                         <i class="fas fa-user-edit me-2"></i>Edit Profile
                     </button>
                 </div>
             </div>
         </div>
+    </div>
 
-        <div class="modal" id="updateUserModal">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title" id="updateUserModalLabel">Ubah Profil</h1>
-                    <button type="button" class="btn-close" onclick="closeModal()">×</button>
-                </div>
-                <form action="{{ route('DataUser.update', ['id' => $user->id]) }}" method="post" enctype="multipart/form-data" class="edit">
-                    <div class="modal-body">
-                        @csrf
-                        @method('PATCH')
-                        <div class="cf">
-                            <div>
-                                <label for="profil" class="form-label">Foto Profil</label>
-                                <input type="file" name="profil" class="form-control" id="profil" placeholder="Tambahkan Foto Profil">
-                            </div>
-                            <div>
-                                <label for="username" class="form-label">Username User</label>
-                                <input type="text" name="username" class="form-control" id="username" placeholder="Masukkan Username User" value="{{ $user->user_username }}" />
-                            </div>
-                        </div>
-
-                        <div class="cl">
-                            <div>
-                                <label for="fullname" class="form-label">Nama User</label>
-                                <input type="text" name="fullname" class="form-control" id="fullname" placeholder="Masukkan Nama User" value="{{ $user->user_fullname }}" />
-                            </div>
-                            <div>
-                                <label for="alamat" class="form-label">Alamat User</label>
-                                <input type="text" name="alamat" class="form-control" id="alamat" placeholder="Masukkan Alamat User" value="{{ $user->user_alamat }}" />
-                            </div>
-                        </div>
-                        <div class="cl">
-                            <div>
-                                <label for="notelp" class="form-label">No. Telp User</label>
-                                <input type="text" name="notelp" class="form-control" id="notelp" placeholder="Masukkan No. Telp User" value="{{ $user->user_notelp }}" />
-                            </div>
-                            <div>
-                                <label for="email" class="form-label">E-mail User</label>
-                                <input type="email" name="email" class="form-control" id="email" placeholder="Masukkan E-mail User" value="{{ $user->user_email }}" />
-                            </div>
-                        </div>
-
-                        <div class="cl">
-                            <div>
-                                <label for="password" class="form-label">Password User</label>
-                                <input type="password" name="password" class="form-control" id="password" placeholder="Masukkan Password User" value="{{ old('password') }}" />
-                            </div>
-                            <div>
-                                <label for="password_confirmation" class="form-label">Konfirmasi Password</label>
-                                <input type="password" name="password_confirmation" class="form-control" id="password_confirmation" placeholder="Konfirmasi Password" />
-                            </div>
-                        </div>
-
-                        <div class="cl">
-                            <div>
-                                <label for="birthday" class="form-label">Tanggal Lahir</label>
-                                <input type="date" name="birthday" class="form-control" id="birthday" placeholder="Masukkan Tanggal Lahir" value="{{ $user->birthday }}" />
-                            </div>
-                            <div>
-                                <label for="gender" class="form-label">Jenis Kelamin</label>
-                                <select name="gender" class="form-control" id="gender">
-                                    <option value="1" {{ $user->gender == 1 ? 'selected' : '' }}>Laki-laki</option>
-                                    <option value="0" {{ $user->gender == 0 ? 'selected' : '' }}>Perempuan</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <input type="hidden" name="level" class="form-control" id="level" value="{{ $user->user_level }}" />
-                        <input type="hidden" name="status" class="form-control" id="status" value="{{ $user->user_status }}" />
-                    </div>
-                    <div class="modal-footer">
-                        <button type="submit" class="btn btn-primary"><i class="fas fa-save me-2"></i>Simpan</button>
-                    </div>
-                </form>
+    <div class="modal" id="updateUserModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title" id="updateUserModalLabel">Ubah Profil</h1>
+                <button type="button" class="btn-close" onclick="closeModal()">×</button>
             </div>
+            <form action="{{ route('updateProfile') }}" method="POST" enctype="multipart/form-data">
+                @csrf
+                <div class="mb-3">
+                    <label for="username" class="form-label">Username</label>
+                    <input type="text" name="username" class="form-control" id="username" value="{{ $personalInfo['username'] }}">
+                </div>
+                <div class="mb-3">
+                    <label for="fullname" class="form-label">Full Name</label>
+                    <input type="text" name="fullname" class="form-control" id="fullname" value="{{ $personalInfo['fullname'] }}">
+                </div>
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="email" name="email" class="form-control" id="email" value="{{ $personalInfo['email'] }}">
+                </div>
+                <div class="mb-3">
+                    <label for="phone" class="form-label">Phone</label>
+                    <input type="text" name="phone" class="form-control" id="phone" value="{{ $personalInfo['phone'] }}">
+                </div>
+                <div class="mb-3">
+                    <label for="dateofbirth" class="form-label">Date of Birth</label>
+                    <input type="date" name="dateofbirth" class="form-control" id="dateofbirth" value="{{ $personalInfo['dateofbirth'] }}">
+                </div>
+                <div class="mb-3">
+                    <label for="gender" class="form-label">Gender</label>
+                    <select name="gender" class="form-control" id="gender">
+                        <option value="Male" {{ $personalInfo['gender'] == 'Male' ? 'selected' : '' }}>Male</option>
+                        <option value="Female" {{ $personalInfo['gender'] == 'Female' ? 'selected' : '' }}>Female</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="profile_image" class="form-label">Profile Image</label>
+                    <input type="file" name="profile_image" class="form-control" id="profile_image">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal()">Close</button>
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                </div>
+            </form>
         </div>
+    </div>
 
+    <script>
+        function openModal() {
+            document.getElementById('updateUserModal').style.display = 'block';
+        }
 
-
-    </div>
-    @if (session('success'))
-    <div class="alert alert-success alert-dismissible fade show" role="alert">
-        <strong>Berhasil!</strong> {{ session('success') }}
-        <button type="button" class="btn-close" aria-label="Close" data-bs-dismiss="alert">
-            <span aria-hidden="true">&times;</span>
-        </button>
-    </div>
-@elseif (session('updated'))
-    <div class="alert alert-info alert-dismissible fade show" role="alert">
-        <strong>Berhasil!</strong> {{ session('updated') }}
-        <button type="button" class="btn-close" aria-label="Close" data-bs-dismiss="alert">
-            <span aria-hidden="true">&times;</span>
-        </button>
-    </div>
-@elseif (session('deleted'))
-    <div class="alert alert-warning alert-dismissible fade show" role="alert">
-        <strong>Berhasil!</strong> {{ session('deleted') }}
-        <button type="button" class="btn-close" aria-label="Close" data-bs-dismiss="alert">
-            <span aria-hidden="true">&times;</span>
-        </button>
-    </div>
-@elseif (session('error'))
-    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-        <strong>Gagal!</strong> {{ session('error') }}
-        <button type="button" class="btn-close" aria-label="Close" data-bs-dismiss="alert">
-            <span aria-hidden="true">&times;</span>
-        </button>
-    </div>
-@endif
-
+        function closeModal() {
+            document.getElementById('updateUserModal').style.display = 'none';
+        }
+    </script>
 @endsection
-
-<script>
-    function openModal() {
-        document.getElementById('updateUserModal').style.display = 'block';
-    }
-
-    function closeModal() {
-        document.getElementById('updateUserModal').style.display = 'none';
-    }
-
-
-    function closeAlert(button) {
-        var alert = button.parentElement;
-        alert.style.display = 'none';
-    }
-</script>
