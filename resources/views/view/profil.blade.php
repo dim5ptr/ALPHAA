@@ -442,7 +442,7 @@
         <div class="data">
             <p>
                 <span><strong>Username:</strong> {{ $personalInfo['username'] }}</span><br>
-                
+
                 <strong>Full Name:</strong> {{ $personalInfo['fullname'] }}<br>
                 <strong>Email:</strong> {{ $personalInfo['email'] }}<br>
                 <strong>Phone:</strong> {{ $personalInfo['phone'] ?? 'Not Provided' }}<br>
@@ -477,7 +477,7 @@
             <h1 class="modal-title" id="updateUserModalLabel">Ubah Profil</h1>
             <button type="button" class="btn-close" onclick="closeModal()">×</button>
         </div>
-        <form action="{{ route('updatePersonalInfo') }}" method="POST">
+        <form action="/data-user/{user_id}/personal-info" method="POST">
             @csrf
             @method('PATCH')
             @if ($errors->any())
@@ -536,7 +536,7 @@
             <h1 class="modal-title" id="updateImageModalLabel">Change Profile Image</h1>
             <button type="button" class="btn-close" onclick="closeImageModal()">×</button>
         </div>
-        <form action="{{ route('updateProfilePicture') }}" method="POST" enctype="multipart/form-data">
+        <form action="/data-user/{user_id}/profile-picture" method="POST" enctype="multipart/form-data">
             @csrf
             @method('PATCH')
             @if ($errors->any())

@@ -25,7 +25,7 @@ class PagesController extends Controller
     public function profilPage()
     {
         $personalInfo = [
-            'user_id' => session('user_id'),
+
             'fullname' => session('full_name'),
             'username' => session('username'),
             'birthday' => session('birthday'),
@@ -34,6 +34,7 @@ class PagesController extends Controller
             'phone' => session('phone'),
             'address' => session('address'),
             'image' => session('image'),
+            'user_id' => session('user_id'),
         ];
 
         return view('view.profil', compact('personalInfo'));
