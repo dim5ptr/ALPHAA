@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Auth\Events\Verified;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Session;
 use App\Mail\VerificationEmail;
 
 
@@ -477,52 +478,108 @@ class UserController extends Controller
     //         return redirect()->back()->withErrors('Something went wrong. Please try again.');
     //     }
     // }
-    public function showProfile()
-    {
 
-        $personalInfo = [
-            'fullname' => session('full_name'),
-            'username' => session('username'),
-            'dateofbirth' => session('birthday'),
-            'gender' => session('gender'),
-            'email' => session('email'),
-            'phone' => session('phone'),
+    public function updateProfilePicture(Request $request, $user_id)
+    {
+        // Remove dd() after testing
+        // dd($request->all(), $user_id);
+
+        // Validasi file
+        $request->validate([
+            'image' => 'required|file|mimes:jpg,jpeg,png|max:2048',
+        ]);
+
+        // API endpoint URL
+        $url = config('services.api.base_url') . '/sso/update_profile_picture.json';
+
+        // API request headers
+        $headers = [
+            'x-api-key' => env('API_KEY'),
+            'Authorization' => '29f9046aacc1ac739654f04ef434e722',
         ];
 
-        return view('view.profil', compact('personalInfo'));
+        // Kirim permintaan POST dengan file
+        $response = Http::withHeaders($headers)->attach(
+            'image',
+            file_get_contents($request->file('image')->getRealPath()),
+            $request->file('image')->getClientOriginalName()
+        )->post($url, ['user_id' => $user_id]);
 
+        // Log respons
+        Log::info('Profile Picture Update API Response', [
+            'url' => $url,
+            'response' => $response->json(),
+            'status' => $response->status()
+        ]);
 
+        // Periksa status respons
+        if ($response->successful()) {
+            // Log keberhasilan
+            Log::info('Profile picture updated successfully for user ID: ' . $user_id);
+            Session::flash('success', 'Profile picture updated successfully!');
+        } else {
+            // Log kegagalan
+            Log::error('Failed to update profile picture', [
+                'user_id' => $user_id,
+                'error' => $response->body()
+            ]);
+            Session::flash('error', 'Failed to update profile picture');
+        }
+
+        return redirect()->back();
     }
 
-    public function updateProfile(Request $request)
-{
-    // Update personal info
-    $personalInfoResponse = Http::withHeaders([
-        'x-api-key' => env('API_KEY'),
-        'Authorization' => '0f031be1caef52cfc46ecbb8eee10c77'
-    ])->post(env('BASE_URL') . '/sso/update_personal_info.json', [
-        'fullname' => $request->fullname,
-        'username' => $request->username,
-        'birthday' => $request->birthday,
-        'phone' => $request->phone,
-        'gender' => $request->gender,
-        'address' => $request->address,
-    ]);
+    public function updatePersonalInfo(Request $request, $user_id)
+    {
+        // Remove dd() after testing
+        // dd($request->all(), $user_id);
 
-    // Update profile picture
-    $profilePictureResponse = Http::withHeaders([
-        'x-api-key' => env('API_KEY'),
-        'Authorization' => '29f9046aacc1ac739654f04ef434e722'
-    ])->attach(
-        'image', file_get_contents($request->file('image')), $request->file('image')->getClientOriginalName()
-    )->post(env('BASE_URL') . '/sso/update_profile_picture.json');
+        // Validasi input
+        $validated = $request->validate([
+            'fullname' => 'required|string|max:255',
+            'username' => 'required|string|max:255',
+            'birthday' => 'required|date_format:Y-m-d',
+            'phone' => 'required|string|max:20',
+            'gender' => 'required|integer|in:0,1', // 1. Male, 0. Female
+            'address' => 'required|string|max:255',
+        ]);
 
-    if ($personalInfoResponse->successful() && $profilePictureResponse->successful()) {
-        return redirect()->back()->with('success', 'Profile updated successfully!');
-    } else {
-        return redirect()->back()->with('error', 'Failed to update profile.');
+        // API endpoint URL
+        $url = config('services.api.base_url') . '/sso/update_personal_info.json';
+
+        // API request headers
+        $headers = [
+            'x-api-key' => env('API_KEY'),
+            'Authorization' => '0f031be1caef52cfc46ecbb8eee10c77',
+        ];
+
+        // Kirim permintaan POST
+        $response = Http::withHeaders($headers)->post($url, array_merge($validated, ['user_id' => $user_id]));
+
+        // Log respons
+        Log::info('Personal Info Update API Response', [
+            'url' => $url,
+            'response' => $response->json(),
+            'status' => $response->status()
+        ]);
+
+        // Periksa status respons
+        if ($response->successful()) {
+            // Log keberhasilan
+            Log::info('Personal info updated successfully for user ID: ' . $user_id);
+            Session::flash('success', 'Personal info updated successfully!');
+        } else {
+            // Log kegagalan
+            Log::error('Failed to update personal info', [
+                'user_id' => $user_id,
+                'error' => $response->body()
+            ]);
+            Session::flash('error', 'Failed to update personal info');
+        }
+
+        return redirect()->back();
     }
-}
+
 
     public function deleteProfilePicture(Request $request)
     {
