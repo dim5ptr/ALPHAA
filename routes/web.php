@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\PagesController;
 
+
 // Email Verification Route
 //Route::get('email/verify/{id}/{hash}', [UserController::class, 'verifyEmail'])->name('verification.verify');
 
@@ -28,7 +29,9 @@ Route::get('/register/confirmation', function () {
 Route::middleware(['api'])->group(function () {
     Route::get('/dashboard', [PagesController::class, 'dashboardPage'])->name('dashboard');
     Route::get('/profil', [PagesController::class, 'profilPage'])->name('profil');
-    Route::put('/profil/update/{id}', [UserController::class, 'update'])->name('profile.update');
+    Route::get('/update-profile', [PagesController::class, 'showUpdateForm'])->name('showUpdateForm');
+    Route::post('/update-profile', [UserController::class, 'updateProfile'])->name('updateProfile');
+    Route::post('/update-profile-picture', [UserController::class, 'updateProfilePicture'])->name('updateProfilePicture');
     Route::get('/tes_pkl', [PagesController::class, 'tesPKL'])->name('tes_pkl');
     Route::patch('/data-user/{id}', [UserController::class, 'update'])->name('DataUser.update');
     Route::get('/about', [PagesController::class, 'aboutPage'])->name('about');

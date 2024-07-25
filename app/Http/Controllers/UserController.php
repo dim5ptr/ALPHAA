@@ -295,68 +295,114 @@ class UserController extends Controller
 
         return redirect()->route('dashboard')->with('success', 'Verifikasi berhasil!');
     }
-    
-    public function update(Request $request, $id)
+
+    // public function update(Request $request, $id)
+    // {
+    //     $validator = Validator::make($request->all(), [
+    //         'fullname' => 'required|string|max:255',
+    //         'username' => 'required|string|max:255',
+    //         'email' => 'required|string|email|max:255',
+    //         'notelp' => 'nullable|numeric',
+    //         'alamat' => 'nullable|string|max:255',
+    //         'password' => 'nullable|string|min:8|confirmed',
+    //         'birthday' => 'required|date',
+    //         'gender' => 'required|integer|in:0,1', // 0 for Female, 1 for Male
+    //     ]);
+
+    //     if ($validator->fails()) {
+    //         return redirect()->back()->withErrors($validator)->withInput();
+    //     }
+
+    //     $user = User::find($id);
+    //     if ($request->has('password')) {
+    //         $user->user_password = Hash::make($request->password);
+    //     }
+    //     $user->user_fullname = $request->fullname;
+    //     $user->user_username = $request->username;
+    //     $user->user_email = $request->email;
+    //     $user->user_notelp = $request->notelp;
+    //     $user->user_alamat = $request->alamat;
+    //     $user->user_level = $request->level;
+    //     $user->user_status = $request->status;
+
+    //     if ($request->hasFile('profil')) {
+    //         $file = $request->file('profil');
+    //         $filePath = $file->store('public/user/profile');
+    //         $user->user_profil_url = $filePath;
+    //     }
+
+    //     $user->save();
+
+    //     try {
+    //         $apiResponse = Http::withHeaders([
+    //             'x-api-key' => self::API_KEY,
+    //             'Authorization' => session('access_token'),
+    //             'Content-Type' => 'application/json',
+    //         ])->post(self::API_URL . '/sso/update_personal_info.json', [
+    //             'fullname' => $request->input('fullname'),
+    //             'username' => $request->input('username'),
+    //             'birthday' => $request->input('birthday'),
+    //             'phone' => $request->input('notelp'),
+    //             'gender' => $request->input('gender'),
+    //             'address' => $request->input('alamat'),
+    //         ]);
+
+    //         if ($apiResponse->failed()) {
+    //             return redirect()->back()->withErrors('Perbarui info pribadi di layanan eksternal gagal.');
+    //         }
+
+    //         return redirect()->back()->with('success', 'Profil berhasil diperbarui!');
+    //     } catch (\Exception $e) {
+    //         Log::error('Exception caught in update method', ['error' => $e->getMessage()]);
+    //         return redirect()->back()->withErrors('Something went wrong. Please try again.');
+    //     }
+    // }
+    public function showProfile()
     {
-        $validator = Validator::make($request->all(), [
-            'fullname' => 'required|string|max:255',
-            'username' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255',
-            'notelp' => 'nullable|numeric',
-            'alamat' => 'nullable|string|max:255',
-            'password' => 'nullable|string|min:8|confirmed',
-            'birthday' => 'required|date',
-            'gender' => 'required|integer|in:0,1', // 0 for Female, 1 for Male
-        ]);
 
-        if ($validator->fails()) {
-            return redirect()->back()->withErrors($validator)->withInput();
-        }
+        $personalInfo = [
+            'fullname' => session('full_name'),
+            'username' => session('username'),
+            'dateofbirth' => session('birthday'),
+            'gender' => session('gender'),
+            'email' => session('email'),
+            'phone' => session('phone'),
+        ];
 
-        $user = User::find($id);
-        if ($request->has('password')) {
-            $user->user_password = Hash::make($request->password);
-        }
-        $user->user_fullname = $request->fullname;
-        $user->user_username = $request->username;
-        $user->user_email = $request->email;
-        $user->user_notelp = $request->notelp;
-        $user->user_alamat = $request->alamat;
-        $user->user_level = $request->level;
-        $user->user_status = $request->status;
+        return view('view.profil', compact('personalInfo'));
 
-        if ($request->hasFile('profil')) {
-            $file = $request->file('profil');
-            $filePath = $file->store('public/user/profile');
-            $user->user_profil_url = $filePath;
-        }
 
-        $user->save();
-
-        try {
-            $apiResponse = Http::withHeaders([
-                'x-api-key' => self::API_KEY,
-                'Authorization' => session('access_token'),
-                'Content-Type' => 'application/json',
-            ])->post(self::API_URL . '/sso/update_personal_info.json', [
-                'fullname' => $request->input('fullname'),
-                'username' => $request->input('username'),
-                'birthday' => $request->input('birthday'),
-                'phone' => $request->input('notelp'),
-                'gender' => $request->input('gender'),
-                'address' => $request->input('alamat'),
-            ]);
-
-            if ($apiResponse->failed()) {
-                return redirect()->back()->withErrors('Perbarui info pribadi di layanan eksternal gagal.');
-            }
-
-            return redirect()->back()->with('success', 'Profil berhasil diperbarui!');
-        } catch (\Exception $e) {
-            Log::error('Exception caught in update method', ['error' => $e->getMessage()]);
-            return redirect()->back()->withErrors('Something went wrong. Please try again.');
-        }
     }
+
+    public function updateProfile(Request $request)
+{
+    // Update personal info
+    $personalInfoResponse = Http::withHeaders([
+        'x-api-key' => env('API_KEY'),
+        'Authorization' => '0f031be1caef52cfc46ecbb8eee10c77'
+    ])->post(env('BASE_URL') . '/sso/update_personal_info.json', [
+        'fullname' => $request->fullname,
+        'username' => $request->username,
+        'birthday' => $request->birthday,
+        'phone' => $request->phone,
+        'gender' => $request->gender,
+        'address' => $request->address,
+    ]);
+
+    // Update profile picture
+    $profilePictureResponse = Http::withHeaders([
+        'x-api-key' => env('API_KEY'),
+        'Authorization' => '29f9046aacc1ac739654f04ef434e722'
+    ])->attach(
+        'image', file_get_contents($request->file('image')), $request->file('image')->getClientOriginalName()
+    )->post(env('BASE_URL') . '/sso/update_profile_picture.json');
+
+    if ($personalInfoResponse->successful() && $profilePictureResponse->successful()) {
+        return redirect()->back()->with('success', 'Profile updated successfully!');
+    } else {
+        return redirect()->back()->with('error', 'Failed to update profile.');
+    }
+}
 
     public function deleteProfilePicture(Request $request)
     {
