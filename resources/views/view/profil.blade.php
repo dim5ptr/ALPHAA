@@ -281,7 +281,7 @@
     color: #365AC2;
     text-decoration: none;
     margin: 0 10px;
-    font-size: 18px; /* Adjust font size as needed */
+    font-size: 18px;
     font-weight: 900;
 }
 
@@ -360,9 +360,57 @@
     }
 }
 
+ /* Add new styles for the new modal */
+ .modal-image {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0, 0, 0, 0.5);
+    }
+
+    .modal-image-content {
+        background-color: #fefefe;
+        margin: 10% auto;
+        padding: 20px;
+        border: 1px solid #888;
+        width: 80%;
+        max-width: 600px;
+        border-radius: 10px;
+    }
+
+    .modal-image-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid #e5e5e5;
+        background-color: #007bff;
+        color: white;
+        padding: 10px 20px;
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+        margin-bottom: 2.1%;
+    }
+
+    .modal-image-header h1 {
+        margin: 0;
+        font-size: 24px;
+    }
+
+    .btn-close {
+        background: none;
+        border: none;
+        font-size: 24px;
+        cursor: pointer;
+        color: white;
+    }
+
 </style>
 @endsection
-
 @section('main')
 <header class="navbar">
     <div class="container">
@@ -378,90 +426,173 @@
     </div>
 </header>
 
-    <div class="container-flex">
-        <div class="banner">
-            <h4>Akun Pengguna</h4>
-            <form method="POST" action="{{ route('logout') }}" class="d-inline-block">
-                @csrf
-                <button type="submit" class="btn btn-dark">
-                    Logout
+<div class="container-flex">
+    <div class="banner">
+        <h4>Akun Pengguna</h4>
+        <form method="POST" action="{{ route('logout') }}" class="d-inline-block">
+            @csrf
+            <button type="submit" class="btn btn-dark">
+                Logout
+            </button>
+        </form>
+    </div>
+
+    <div class="profile-info">
+        <img id="profileImage" src="{{ $personalInfo['image'] ? asset('storage/' . $personalInfo['image']) : 'https://via.placeholder.com/150' }}" alt="Profile Image" width="150" height="150">
+        <div class="data">
+            <p>
+                <span><strong>Username:</strong> {{ $personalInfo['username'] }}</span><br>
+                
+                <strong>Full Name:</strong> {{ $personalInfo['fullname'] }}<br>
+                <strong>Email:</strong> {{ $personalInfo['email'] }}<br>
+                <strong>Phone:</strong> {{ $personalInfo['phone'] ?? 'Not Provided' }}<br>
+                <strong>Date of Birth:</strong> {{ $personalInfo['birthday'] ?? 'Not Provided' }}<br>
+                <strong>Gender:</strong>
+                @if($personalInfo['gender'] == 1)
+                    Male
+                @elseif($personalInfo['gender'] == 0)
+                    Female
+                @else
+                    Not Provided
+                @endif
+                </span><br>
+                <strong>Address:</strong> {{ $personalInfo['Address'] ?? 'Not Provided' }}
+            </p>
+            <div class="btn-container">
+                <button type="button" class="btn btn-light" onclick="openModal()">
+                    <i class="fas fa-user-edit me-2"></i>Edit Profile
                 </button>
-            </form>
-        </div>
-        <div class="profile-info">
-            <img width="130px" height="130px" src="{{ empty($user['user_profil_url']) ? asset('img/user.png') : asset('storage/user/profile/' . basename($user['user_profil_url'])) }}" alt="Profile Image">
-            <div class="data">
-                <p>
-                    <span><strong>Username:</strong> {{ $personalInfo['username'] }}</span><br>
-                    <strong>Full Name:</strong> {{ $personalInfo['fullname'] }}<br>
-                    <strong>Email:</strong> {{ $personalInfo['email'] }}<br>
-                    <strong>Phone:</strong> {{ $personalInfo['phone'] ?? 'Not Provided' }}<br>
-                    <strong>Date of Birth:</strong> {{ $personalInfo['dateofbirth'] ?? 'Not Provided' }}<br>
-                    <strong>Gender:</strong> {{ $personalInfo['gender'] ?? 'Not Provided' }}
-                </p>
-                <div class="btn-container">
-                    <button type="button" class="btn btn-light" onclick="openModal()">
-                        <i class="fas fa-user-edit me-2"></i>Edit Profile
-                    </button>
-                </div>
+                <button type="button" class="btn btn-light" onclick="openImageModal()">
+                    <i class="fas fa-image me-2"></i>Change Profile Image
+                </button>
             </div>
         </div>
     </div>
+</div>
 
-    <div class="modal" id="updateUserModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h1 class="modal-title" id="updateUserModalLabel">Ubah Profil</h1>
-                <button type="button" class="btn-close" onclick="closeModal()">×</button>
-            </div>
-            <form action="{{ route('updateProfile') }}" method="POST" enctype="multipart/form-data">
-                @csrf
-                <div class="mb-3">
-                    <label for="username" class="form-label">Username</label>
-                    <input type="text" name="username" class="form-control" id="username" value="{{ $personalInfo['username'] }}">
-                </div>
-                <div class="mb-3">
-                    <label for="fullname" class="form-label">Full Name</label>
-                    <input type="text" name="fullname" class="form-control" id="fullname" value="{{ $personalInfo['fullname'] }}">
-                </div>
-                <div class="mb-3">
-                    <label for="email" class="form-label">Email</label>
-                    <input type="email" name="email" class="form-control" id="email" value="{{ $personalInfo['email'] }}">
-                </div>
-                <div class="mb-3">
-                    <label for="phone" class="form-label">Phone</label>
-                    <input type="text" name="phone" class="form-control" id="phone" value="{{ $personalInfo['phone'] }}">
-                </div>
-                <div class="mb-3">
-                    <label for="dateofbirth" class="form-label">Date of Birth</label>
-                    <input type="date" name="dateofbirth" class="form-control" id="dateofbirth" value="{{ $personalInfo['dateofbirth'] }}">
-                </div>
-                <div class="mb-3">
-                    <label for="gender" class="form-label">Gender</label>
-                    <select name="gender" class="form-control" id="gender">
-                        <option value="Male" {{ $personalInfo['gender'] == 'Male' ? 'selected' : '' }}>Male</option>
-                        <option value="Female" {{ $personalInfo['gender'] == 'Female' ? 'selected' : '' }}>Female</option>
-                    </select>
-                </div>
-                <div class="mb-3">
-                    <label for="profile_image" class="form-label">Profile Image</label>
-                    <input type="file" name="profile_image" class="form-control" id="profile_image">
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" onclick="closeModal()">Close</button>
-                    <button type="submit" class="btn btn-primary">Save Changes</button>
-                </div>
-            </form>
+<!-- Profile Update Modal -->
+<div class="modal" id="updateUserModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h1 class="modal-title" id="updateUserModalLabel">Ubah Profil</h1>
+            <button type="button" class="btn-close" onclick="closeModal()">×</button>
         </div>
+        <form action="{{ route('updatePersonalInfo') }}" method="POST">
+            @csrf
+            @method('PATCH')
+            @if ($errors->any())
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+            <input type="hidden" name="id" value="{{ $personalInfo['user_id'] }}">
+            <div class="mb-3">
+                <label for="username" class="form-label">Username</label>
+                <input type="text" name="username" class="form-control" id="username" value="{{ old('username', $personalInfo['username']) }}">
+            </div>
+            <div class="mb-3">
+                <label for="fullname" class="form-label">Full Name</label>
+                <input type="text" name="fullname" class="form-control" id="fullname" value="{{ old('fullname', $personalInfo['fullname']) }}">
+            </div>
+            <div class="mb-3">
+                <label for="email" class="form-label">Email</label>
+                <input type="email" name="email" class="form-control" id="email" value="{{ old('email', $personalInfo['email']) }}" disabled>
+            </div>
+            <div class="mb-3">
+                <label for="phone" class="form-label">Phone</label>
+                <input type="text" name="phone" class="form-control" id="phone" value="{{ old('phone', $personalInfo['phone']) }}">
+            </div>
+            <div class="mb-3">
+                <label for="birthday" class="form-label">Date of Birth</label>
+                <input type="date" name="birthday" class="form-control" id="birthday" value="{{ old('birthday', $personalInfo['birthday']) }}">
+            </div>
+            <div class="mb-3">
+                <label for="gender" class="form-label">Gender</label>
+                <select name="gender" class="form-control" id="gender">
+                    <option value="1" {{ old('gender', $personalInfo['gender']) == '1' ? 'selected' : '' }}>Male</option>
+                    <option value="0" {{ old('gender', $personalInfo['gender']) == '0' ? 'selected' : '' }}>Female</option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="address" class="form-label">Address</label>
+                <input type="text" name="address" class="form-control" id="address" value="{{ old('address', $personalInfo['address']) }}">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="closeModal()">Close</button>
+                <button type="submit" class="btn btn-primary">Save Changes</button>
+            </div>
+        </form>
     </div>
+</div>
 
-    <script>
-        function openModal() {
-            document.getElementById('updateUserModal').style.display = 'block';
-        }
+<!-- Profile Image Update Modal -->
+<div class="modal-image" id="updateImageModal">
+    <div class="modal-image-content">
+        <div class="modal-image-header">
+            <h1 class="modal-title" id="updateImageModalLabel">Change Profile Image</h1>
+            <button type="button" class="btn-close" onclick="closeImageModal()">×</button>
+        </div>
+        <form action="{{ route('updateProfilePicture') }}" method="POST" enctype="multipart/form-data">
+            @csrf
+            @method('PATCH')
+            @if ($errors->any())
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+            <input type="hidden" name="id" value="{{ $personalInfo['user_id'] }}">
+            <div class="mb-3">
+                <label for="profile_image" class="form-label">Profile Image</label>
+                <input type="file" name="image" class="form-control" id="profile_image">
+            </div>
+            <div class="modal-image-footer">
+                <button type="button" class="btn btn-secondary" onclick="closeImageModal()">Close</button>
+                <button type="submit" class="btn btn-primary">Save Changes</button>
+            </div>
+        </form>
+    </div>
+</div>
 
-        function closeModal() {
-            document.getElementById('updateUserModal').style.display = 'none';
-        }
-    </script>
+<script>
+    function openModal() {
+        document.getElementById('updateUserModal').style.display = 'block';
+    }
+
+    function closeModal() {
+        document.getElementById('updateUserModal').style.display = 'none';
+    }
+
+    function openImageModal() {
+        document.getElementById('updateImageModal').style.display = 'block';
+    }
+
+    function closeImageModal() {
+        document.getElementById('updateImageModal').style.display = 'none';
+    }
+
+    document.querySelector('form').addEventListener('submit', function() {
+        closeModal();
+        closeImageModal();
+    });
+</script>
+
+
+@if (session('success'))
+<div class="alert alert-success">
+    {{ session('success') }}
+</div>
+@elseif (session('error'))
+<div class="alert alert-danger">
+    {{ session('error') }}
+</div>
+@endif
+
 @endsection

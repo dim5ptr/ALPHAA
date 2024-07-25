@@ -35,11 +35,11 @@ Route::get('/Aregister/confirmation', function () {
 Route::middleware(['api'])->group(function () {
     Route::get('/dashboard', [PagesController::class, 'dashboardPage'])->name('dashboard');
     Route::get('/profil', [PagesController::class, 'profilPage'])->name('profil');
-    Route::get('/update-profile', [PagesController::class, 'showUpdateForm'])->name('showUpdateForm');
-    Route::post('/update-profile', [UserController::class, 'updateProfile'])->name('updateProfile');
+    Route::post('/update-profile', [UserController::class, 'updatePersonalInfo'])->name('updatePersonalInfo');
     Route::post('/update-profile-picture', [UserController::class, 'updateProfilePicture'])->name('updateProfilePicture');
     Route::get('/tes_pkl', [PagesController::class, 'tesPKL'])->name('tes_pkl');
-    Route::patch('/data-user/{id}', [UserController::class, 'update'])->name('DataUser.update');
+    Route::patch('/data-user/{user_id}/personal-info', [UserController::class, 'updatePersonalInfo'])->name('personalInfo.update');
+    Route::patch('/data-user/{user_id}/profile-picture', [UserController::class, 'updateProfilePicture'])->name('profilePicture.update');
     Route::get('/about', [PagesController::class, 'aboutPage'])->name('about');
  });
 

@@ -25,32 +25,20 @@ class PagesController extends Controller
     public function profilPage()
     {
         $personalInfo = [
+            'user_id' => session('user_id'),
             'fullname' => session('full_name'),
             'username' => session('username'),
-            'dateofbirth' => session('birthday'),
+            'birthday' => session('birthday'),
             'gender' => session('gender'),
             'email' => session('email'),
             'phone' => session('phone'),
+            'address' => session('address'),
+            'image' => session('image'),
         ];
 
         return view('view.profil', compact('personalInfo'));
 
     }
-    public function showUpdateForm()
-    {
-        $personalInfo = [
-            'fullname' => session('full_name'),
-            'username' => session('username'),
-            'dateofbirth' => session('birthday'),
-            'gender' => session('gender'),
-            'email' => session('email'),
-            'phone' => session('phone'),
-        ];
-
-        return view('view.profil', compact('user'));
-
-    }
-
     public function dashboardPage()
     {
         return view("view.dashboard");
