@@ -234,6 +234,30 @@
             margin-top: 5%;
             color: #38393e;
         }
+
+        .tbl {
+            margin-top: 20px;
+        }
+        .user-list {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .user-list th, .user-list td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+        .user-list th {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .user-list tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        .user-list tr:hover {
+            background-color: #f1f1f1;
+        }
+        
     </style>
 </head>
 <body>
@@ -289,7 +313,24 @@
                 <h2>Login History</h2>
             </div>
             <div class="tbl">
-
+                <table class="user-list">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($data['users'] as $user)
+                        <tr>
+                            <td>{{ $user['id'] }}</td>
+                            <td>{{ $user['name'] }}</td>
+                            <td>{{ $user['email'] }}</td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
