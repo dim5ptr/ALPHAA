@@ -343,11 +343,15 @@
                     </a>
                 </li>
             </ul>
-            <li class="logout">
+            {{-- <li class="logout">
                 <a href="" class="out-link" id="logoutButton">
                     <span class="link"><i class='bx bx-log-out'></i>Logout</span>
                 </a>
-            </li>
+            </li> --}}
+              <form id="logoutForm" method="POST" action="{{ route('logout') }}">
+            @csrf
+            <button type="submit" class="logout-button">Logout</button>
+        </form>
             </ul>
         </div>
     </div>
