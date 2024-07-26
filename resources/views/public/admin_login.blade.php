@@ -46,7 +46,7 @@
         }
 
         .left {
-            background-color: #e9edf9;
+            background-color: #ffffff;
             color: #365AC2;
             display: flex;
             flex-direction: column;
