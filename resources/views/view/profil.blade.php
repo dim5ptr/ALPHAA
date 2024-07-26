@@ -477,7 +477,7 @@
             <h1 class="modal-title" id="updateUserModalLabel">Ubah Profil</h1>
             <button type="button" class="btn-close" onclick="closeModal()">×</button>
         </div>
-        <form action="/data-user/{user_id}/personal-info" method="POST">
+        <form action="{{ route('personalInfo.update') }}" method="POST">
             @csrf
             @method('PATCH')
             @if ($errors->any())
@@ -489,7 +489,7 @@
                     </ul>
                 </div>
             @endif
-            <input type="hidden" name="id" value="{{ $personalInfo['user_id'] }}">
+
             <div class="mb-3">
                 <label for="username" class="form-label">Username</label>
                 <input type="text" name="username" class="form-control" id="username" value="{{ old('username', $personalInfo['username']) }}">
@@ -536,7 +536,7 @@
             <h1 class="modal-title" id="updateImageModalLabel">Change Profile Image</h1>
             <button type="button" class="btn-close" onclick="closeImageModal()">×</button>
         </div>
-        <form action="/data-user/{user_id}/profile-picture" method="POST" enctype="multipart/form-data">
+        <form action="{{ route('profilePicture.update') }}" method="POST" enctype="multipart/form-data">
             @csrf
             @method('PATCH')
             @if ($errors->any())
@@ -548,7 +548,6 @@
                     </ul>
                 </div>
             @endif
-            <input type="hidden" name="id" value="{{ $personalInfo['user_id'] }}">
             <div class="mb-3">
                 <label for="profile_image" class="form-label">Profile Image</label>
                 <input type="file" name="image" class="form-control" id="profile_image">

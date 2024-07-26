@@ -34,9 +34,9 @@ class PagesController extends Controller
             'phone' => session('phone'),
             'address' => session('address'),
             'image' => session('image'),
-            'user_id' => session('user_id'),
         ];
-
+        // dd(session()->all());
+        // dd($personalInfo);
         return view('view.profil', compact('personalInfo'));
 
     }

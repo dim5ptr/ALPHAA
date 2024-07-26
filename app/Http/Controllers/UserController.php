@@ -21,82 +21,6 @@ class UserController extends Controller
     const API_URL='http://192.168.1.24:14041/api';
     const API_KEY='5af97cb7eed7a5a4cff3ed91698d2ffb';
 
-    // public function login(Request $request)
-    // {
-    //     // Validasi input
-    //     $credentials = $request->validate([
-    //         'email' => 'required|string|email|max:255',
-    //         'password' => 'required|string|min:8',
-    //     ]);
-
-    //     // Ambil pengguna berdasarkan email
-    //     $user = User::where("user_email", $credentials["email"])->first();
-
-    //     // Cek apakah pengguna ada dan password cocok
-    //     if (!$user || !Hash::check($credentials["password"], $user->user_password)) {
-    //         Log::warning('Login gagal: Email atau password salah.', [
-    //             'email' => $credentials["email"]
-    //         ]);
-    //         return back()->withErrors([
-    //             "message" => "Email atau password Anda salah.",
-    //         ])->withInput();
-    //     }
-
-    //     // Cek apakah email pengguna sudah diverifikasi
-    //     if (!$user->hasVerifiedEmail()) {
-    //         Log::warning('Login gagal: Email belum diverifikasi.', [
-    //             'email' => $credentials["email"]
-    //         ]);
-    //         return back()->withErrors([
-    //             "message" => "Silakan konfirmasi email Anda terlebih dahulu.",
-    //         ])->withInput();
-    //     }
-
-    //     // Login pengguna
-    //     Auth::login($user);
-    //     Log::info("🟢 Pengguna " . $user->user_fullname . " berhasil login");
-
-    //     // Panggil API untuk login pengguna pada layanan eksternal menggunakan metode GET
-    //     try {
-    //         $response = Http::withHeaders([
-    //             'x-api-key' => self::API_KEY,
-    //             'dev-key' => '12',
-    //         ])->get(self::API_URL . '/sso/login.json', [
-    //             'email' => $credentials['email'],
-    //             'password' => $credentials['password'],
-    //         ]);
-
-    //         $dataResponse = $response->json();
-
-    //         // Log respons API
-    //         Log::info('Respons API', ['response' => $dataResponse]);
-
-    //         if ($response->successful() && isset($dataResponse['result'])) {
-    //             if ($dataResponse['result'] === 1) {
-    //                 return redirect()->route("dashboard");
-    //             } else {
-    //                 Log::warning('Login eksternal gagal: ' . $dataResponse['data'], [
-    //                     'email' => $credentials["email"]
-    //                 ]);
-    //                 return back()->withErrors([
-    //                     'error_message' => $dataResponse['data'],
-    //                 ])->withInput();
-    //             }
-    //         } else {
-    //             // Log error API jika respons tidak sukses
-    //             Log::error('Kesalahan Respons API', ['response' => $dataResponse]);
-    //             return back()->withErrors([
-    //                 'error_message' => 'Login ke layanan eksternal gagal.',
-    //             ])->withInput();
-    //         }
-    //     } catch (\Exception $e) {
-    //         // Log pengecualian
-    //         Log::error('Exception tertangkap di metode login', ['error' => $e->getMessage()]);
-    //         return back()->withErrors([
-    //             'error_message' => 'Terjadi kesalahan, silakan coba lagi!',
-    //         ])->withInput();
-    //     }
-    // }
     public function login(Request $request)
     {
         // Validasi input
@@ -242,48 +166,6 @@ class UserController extends Controller
             ])->withInput();
         }
     }
-
-
-
-//     public function register(Request $request)
-// {
-//     $request->validate([
-//         'fullname' => 'required|string|max:255',
-//         'username' => 'required|string|max:255|unique:users,user_username',
-//         'email' => 'required|string|email|max:255|unique:users,user_email',
-//         'notelp' => 'required|string|max:20',
-//         'alamat' => 'required|string|max:255',
-//         'password' => 'required|string|min:8|confirmed',
-//     ]);
-
-//     $data = [
-//         'user_fullname' => $request->input('fullname'),
-//         'user_username' => $request->input('username'),
-//         'user_password' => bcrypt($request->input('password')),
-//         'user_email' => $request->input('email'),
-//         'user_notelp' => $request->input('notelp'),
-//         'user_alamat' => $request->input('alamat'),
-//     ];
-
-//     $user = User::create($data);
-//     $user->sendEmailVerificationNotification(); // Mengirim email verifikasi
-
-//     // Make the API call to register the user on the external service
-//     $apiResponse = Http::withHeaders([
-//         'x-api-key' => config('app.api_key'),
-//     ])->post(config('app.base_url') . '/sso/register.json', [
-//         'email' => $request->input('email'),
-//         'password' => $request->input('password'),
-//         'address' => $request->input('alamat'),
-//     ]);
-
-//     if ($apiResponse->failed()) {
-//         return redirect()->route('register')->withErrors('Pendaftaran ke layanan eksternal gagal.');
-//     }
-
-//     // Redirect ke halaman dengan pesan sukses
-//     return redirect()->route('register.confirmation')->with('success', 'Pendaftaran berhasil! Silakan cek email Anda untuk konfirmasi.');
-// }
 
     public function register(Request $request)
     {
@@ -478,47 +360,37 @@ class UserController extends Controller
     //         return redirect()->back()->withErrors('Something went wrong. Please try again.');
     //     }
     // }
-
-    public function updateProfilePicture(Request $request, $user_id)
+    public function updateProfilePicture(Request $request)
     {
-        // Remove dd() after testing
-        // dd($request->all(), $user_id);
-
-        // Validasi file
         $request->validate([
             'image' => 'required|file|mimes:jpg,jpeg,png|max:2048',
         ]);
 
-        // API endpoint URL
+        $user_id = auth()->id(); // Ambil user ID dari auth
+
         $url = config('services.api.base_url') . '/sso/update_profile_picture.json';
 
-        // API request headers
         $headers = [
             'x-api-key' => env('API_KEY'),
             'Authorization' => '29f9046aacc1ac739654f04ef434e722',
         ];
 
-        // Kirim permintaan POST dengan file
         $response = Http::withHeaders($headers)->attach(
             'image',
             file_get_contents($request->file('image')->getRealPath()),
             $request->file('image')->getClientOriginalName()
         )->post($url, ['user_id' => $user_id]);
 
-        // Log respons
         Log::info('Profile Picture Update API Response', [
             'url' => $url,
             'response' => $response->json(),
             'status' => $response->status()
         ]);
 
-        // Periksa status respons
         if ($response->successful()) {
-            // Log keberhasilan
             Log::info('Profile picture updated successfully for user ID: ' . $user_id);
             Session::flash('success', 'Profile picture updated successfully!');
         } else {
-            // Log kegagalan
             Log::error('Failed to update profile picture', [
                 'user_id' => $user_id,
                 'error' => $response->body()
@@ -528,13 +400,8 @@ class UserController extends Controller
 
         return redirect()->back();
     }
-
-    public function updatePersonalInfo(Request $request, $user_id)
+    public function updatePersonalInfo(Request $request)
     {
-        // Remove dd() after testing
-        // dd($request->all(), $user_id);
-
-        // Validasi input
         $validated = $request->validate([
             'fullname' => 'required|string|max:255',
             'username' => 'required|string|max:255',
@@ -544,32 +411,27 @@ class UserController extends Controller
             'address' => 'required|string|max:255',
         ]);
 
-        // API endpoint URL
+        $user_id = auth()->id(); // Ambil user ID dari auth
+
         $url = config('services.api.base_url') . '/sso/update_personal_info.json';
 
-        // API request headers
         $headers = [
             'x-api-key' => env('API_KEY'),
             'Authorization' => '0f031be1caef52cfc46ecbb8eee10c77',
         ];
 
-        // Kirim permintaan POST
         $response = Http::withHeaders($headers)->post($url, array_merge($validated, ['user_id' => $user_id]));
 
-        // Log respons
         Log::info('Personal Info Update API Response', [
             'url' => $url,
             'response' => $response->json(),
             'status' => $response->status()
         ]);
 
-        // Periksa status respons
         if ($response->successful()) {
-            // Log keberhasilan
             Log::info('Personal info updated successfully for user ID: ' . $user_id);
             Session::flash('success', 'Personal info updated successfully!');
         } else {
-            // Log kegagalan
             Log::error('Failed to update personal info', [
                 'user_id' => $user_id,
                 'error' => $response->body()
@@ -579,6 +441,7 @@ class UserController extends Controller
 
         return redirect()->back();
     }
+
 
 
     public function deleteProfilePicture(Request $request)
