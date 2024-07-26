@@ -344,7 +344,7 @@
                 </li>
             </ul>
             <li class="logout">
-                <a href="" class="out-link">
+                <a href="" class="out-link" id="logoutButton">
                     <span class="link"><i class='bx bx-log-out'></i>Logout</span>
                 </a>
             </li>
@@ -416,5 +416,38 @@
             }
         }
     </script>
+{{--
+<script>
+    document.getElementById('logoutForm').addEventListener('submit', function(event) {
+        event.preventDefault(); // Mencegah form submit secara default
+
+        const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+        const headers = new Headers();
+        headers.append('X-CSRF-TOKEN', token);
+        headers.append('Content-Type', 'application/json');
+
+        fetch(this.action, {
+            method: 'POST',
+            headers: headers,
+            body: JSON.stringify({})
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('Logout berhasil!');
+                window.location.href = data.redirect; // Redirect ke halaman login setelah logout
+            } else {
+                alert(data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Terjadi kesalahan saat logout!');
+        });
+    });
+</script> --}}
+</div>
+
+
 </body>
 </html>

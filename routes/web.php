@@ -53,3 +53,5 @@ Route::middleware(['api'])->group(function () {
     // Route::patch('/data-user/{id}', [UserController::class, 'update'])->name('DataUser.update');
     // Route::get('/about', [PagesController::class, 'aboutPage'])->name('about');
  });
+
+ Route::post('/logout', [UserController::class, 'logout'])->name('logout');
