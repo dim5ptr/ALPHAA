@@ -409,7 +409,19 @@
         color: white;
     }
 
-    .sidebar {
+    html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+            background-color: #d5def7;
+        }
+
+        body {
+            transition: margin-left 0.3s;
+        }
+
+        .sidebar {
             height: 100%;
             width: 250px;
             position: fixed;
@@ -777,6 +789,19 @@
         closeModal();
         closeImageModal();
     });
+
+    function toggleSidebar() {
+            var sidebar = document.getElementById("sidebar");
+            var mainContent = document.getElementById("main-content");
+
+            if (sidebar.style.left === "0px") {
+                sidebar.style.left = "-270px";
+                mainContent.style.marginLeft = "10%";
+            } else {
+                sidebar.style.left = "0px";
+                mainContent.style.marginLeft = "19%";
+            }
+        }
 </script>
 
 
