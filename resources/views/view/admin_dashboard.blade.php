@@ -257,7 +257,7 @@
         .user-list tr:hover {
             background-color: #f1f1f1;
         }
-        
+
     </style>
 </head>
 <body>
@@ -322,12 +322,12 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($data['users'] as $user)
+                        {{-- @foreach ($data['users'] as $user)
                         <tr>
                             <td>{{ $user['id'] }}</td>
                             <td>{{ $user['name'] }}</td>
                             <td>{{ $user['email'] }}</td>
-                        </tr>
+                        </tr> --}}
                         @endforeach
                     </tbody>
                 </table>

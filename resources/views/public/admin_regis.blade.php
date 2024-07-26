@@ -11,14 +11,19 @@
             font-family: Arial, sans-serif;
             background-color: #8396ca;
             height: 100vh;
+            display: flex;
+            justify-content: center;
         }
+
         .container {
+            position: absolute;
             padding-top: 5%;
+            margin-top: 5vh;
             max-width: 75%;
             border-radius: 20px;
             display: flex;
             justify-content: center;
-            margin: 50px auto;
+
         }
         .form-container {
             background: #365AC2;
