@@ -194,10 +194,6 @@
             box-shadow: 0 2px 5px 2px rgba(0, 0, 0, 0.1); /* Add box shadow */
         }
 
-        .grt {
-            padding-left: 5%;
-            width: 50%;
-        }
 
         .bar img {
             width: 20%;
@@ -205,15 +201,27 @@
             float: left;
             margin-left: 2%;
             margin-top: 2%;
-
         }
 
-        .grt h1{
-            margin-left: 2%;
-            padding-top: 2%;
-           font-size: 40px;
-           font-weight: 700;
+        .grt {
+            margin: 1%;
+            padding: 3%;
+            width: 50%;
+        }
 
+        .grt h1 {
+            margin-bottom: 10px; /* Mengatur jarak bawah pada h1 */
+            font-size: xx-large; /* Mengatur ukuran font h1 */
+        }
+        .grt h4 {
+            margin: 0; /* Mengatur margin pada h4 */
+            font-size: 16px;
+            font-weight: 600;
+            color: #365AC2;
+        }
+        .grt span {
+            font-weight: bold; /* Menebalkan teks di dalam span */
+            color: #ffae00; /* Mengatur warna teks di dalam span */
         }
 
         .bar2 {
@@ -237,25 +245,26 @@
 
         .tbl {
             margin-top: 20px;
+            justify-content: center;
         }
-        .user-list {
-            width: 100%;
+
+        .tbl table {
+            width: 95%;
             border-collapse: collapse;
+            margin: auto;
         }
-        .user-list th, .user-list td {
-            border: 1px solid #ddd;
-            padding: 10px;
-            text-align: left;
+
+        thead {
+            background-color: #a9b8e8; /* Warna latar belakang abu-abu */
         }
-        .user-list th {
-            background-color: #4CAF50;
-            color: white;
+        th, td {
+            border-bottom: 1px solid #ddd; /* Garis bawah */
+            padding: 8px;
+            text-align: center; /* Teks rata tengah */
         }
-        .user-list tr:nth-child(even) {
-            background-color: #f9f9f9;
-        }
-        .user-list tr:hover {
-            background-color: #f1f1f1;
+
+        tbody tr:hover {
+            background-color: #f0f0f0 ; /* Warna latar belakang saat hover */
         }
 
     </style>
@@ -313,24 +322,44 @@
                 <h2>Login History</h2>
             </div>
             <div class="tbl">
-                <table class="user-list">
+                <table id="Table">
                     <thead>
                         <tr>
-                            <th>ID</th>
-                            <th>Name</th>
+                            <th>Id</th>
                             <th>Email</th>
+                            <th>Time</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {{-- @foreach ($data['users'] as $user)
-                        <tr>
-                            <td>{{ $user['id'] }}</td>
-                            <td>{{ $user['name'] }}</td>
-                            <td>{{ $user['email'] }}</td>
-                        </tr> --}}
-                        @endforeach
+                        <!-- Baris data akan ditambahkan di sini -->
                     </tbody>
                 </table>
+
+                <script>
+                    // Data yang akan digunakan untuk mengisi tabel
+                    const data = [
+                        { Id: 0989, Email: 'yunadesu@gmail.com', Time: '09.00' },
+                        { Id: 0978, Emal: 'yunadesu@gmail.com', Time: '09.01' },
+                        { Id: 0967, Email: "yunadesu@gmail.com", Time: '09.05' }
+                    ];
+
+                    // Fungsi untuk mengisi tabel dengan data
+                    function populateTable() {
+                        const tableBody = document.querySelector('#Table tbody');
+                        data.forEach(item => {
+                            const row = document.createElement('tr');
+                            for (const key in item) {
+                                const cell = document.createElement('td');
+                                cell.textContent = item[key];
+                                row.appendChild(cell);
+                            }
+                            tableBody.appendChild(row);
+                        });
+                    }
+
+                    // Panggil fungsi untuk mengisi tabel saat halaman dimuat
+                    document.addEventListener('DOMContentLoaded', populateTable);
+                </script>
             </div>
         </div>
     </div>
