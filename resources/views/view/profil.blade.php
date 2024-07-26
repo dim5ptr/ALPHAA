@@ -426,7 +426,18 @@
     </div>
 </header>
 
+
+
 <div class="container-flex">
+    @if (session('success'))
+<div class="alert alert-success">
+    {{ session('success') }}
+</div>
+@elseif (session('error'))
+<div class="alert alert-danger">
+    {{ session('error') }}
+</div>
+@endif
     <div class="banner">
         <h4>Akun Pengguna</h4>
         <form method="POST" action="{{ route('logout') }}" class="d-inline-block">
@@ -438,11 +449,14 @@
     </div>
 
     <div class="profile-info">
-        <img id="profileImage" src="{{ $personalInfo['image'] ? asset('storage/' . $personalInfo['image']) : 'https://via.placeholder.com/150' }}" alt="Profile Image" width="150" height="150">
+        @if ($personalInfo['profile_picture'] === '' || $personalInfo['profile_picture'] === null)
+            <img id="profileImage" src="{{ asset('img/user.png') }}" alt="Profile Image" width="150" height="150" class="rounded m-2 mx-auto d-block shadow-md">
+        @else
+            <img id="profileImage" src="{{ asset('storage/user/profile/' . basename($personalInfo['profile_picture'])) }}" alt="Profile Image" width="150" height="150" class="rounded m-2 mx-auto d-block shadow-md">
+        @endif
         <div class="data">
             <p>
                 <span><strong>Username:</strong> {{ $personalInfo['username'] }}</span><br>
-
                 <strong>Full Name:</strong> {{ $personalInfo['fullname'] }}<br>
                 <strong>Email:</strong> {{ $personalInfo['email'] }}<br>
                 <strong>Phone:</strong> {{ $personalInfo['phone'] ?? 'Not Provided' }}<br>
@@ -456,7 +470,6 @@
                     Not Provided
                 @endif
                 </span><br>
-                <strong>Address:</strong> {{ $personalInfo['Address'] ?? 'Not Provided' }}
             </p>
             <div class="btn-container">
                 <button type="button" class="btn btn-light" onclick="openModal()">
@@ -517,10 +530,6 @@
                     <option value="0" {{ old('gender', $personalInfo['gender']) == '0' ? 'selected' : '' }}>Female</option>
                 </select>
             </div>
-            <div class="mb-3">
-                <label for="address" class="form-label">Address</label>
-                <input type="text" name="address" class="form-control" id="address" value="{{ old('address', $personalInfo['address']) }}">
-            </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" onclick="closeModal()">Close</button>
                 <button type="submit" class="btn btn-primary">Save Changes</button>
@@ -536,7 +545,7 @@
             <h1 class="modal-title" id="updateImageModalLabel">Change Profile Image</h1>
             <button type="button" class="btn-close" onclick="closeImageModal()">×</button>
         </div>
-        <form action="{{ route('profilePicture.update') }}" method="POST" enctype="multipart/form-data">
+        <form action="{{ route('upload.profile.picture') }}" method="POST" enctype="multipart/form-data">
             @csrf
             @method('PATCH')
             @if ($errors->any())
@@ -550,7 +559,7 @@
             @endif
             <div class="mb-3">
                 <label for="profile_image" class="form-label">Profile Image</label>
-                <input type="file" name="image" class="form-control" id="profile_image">
+                <input type="file" name="profile_picture" class="form-control" id="profile_image">
             </div>
             <div class="modal-image-footer">
                 <button type="button" class="btn btn-secondary" onclick="closeImageModal()">Close</button>
@@ -584,14 +593,5 @@
 </script>
 
 
-@if (session('success'))
-<div class="alert alert-success">
-    {{ session('success') }}
-</div>
-@elseif (session('error'))
-<div class="alert alert-danger">
-    {{ session('error') }}
-</div>
-@endif
 
 @endsection

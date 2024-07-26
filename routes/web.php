@@ -36,7 +36,7 @@ Route::middleware(['api'])->group(function () {
     Route::get('/dashboard', [PagesController::class, 'dashboardPage'])->name('dashboard');
     Route::get('/profil', [PagesController::class, 'profilPage'])->name('profil');
     Route::post('/update-profile', [UserController::class, 'updatePersonalInfo'])->name('updatePersonalInfo');
-    Route::post('/update-profile-picture', [UserController::class, 'updateProfilePicture'])->name('updateProfilePicture');
+    Route::post('/update-profile-picture', [UserController::class, 'updateProfilePicture'])->name('upload.profile.picture');
     Route::get('/tes_pkl', [PagesController::class, 'tesPKL'])->name('tes_pkl');
     Route::patch('/update-profile-picture', [UserController::class, 'updateProfilePicture'])->name('profilePicture.update');
     Route::patch('/update-personal-info', [UserController::class, 'updatePersonalInfo'])->name('personalInfo.update');
