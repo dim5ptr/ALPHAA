@@ -500,6 +500,7 @@ class UserController extends Controller
 
     public function logout(Request $request)
     {
+
         $apiUrl = 'http://192.168.1.24:14041/api/sso/logout.json';
         $apiKey = '5af97cb7eed7a5a4cff3ed91698d2ffb';
         $authToken = '49d843007dabb68bfddf309df8441dd0';
@@ -515,9 +516,19 @@ class UserController extends Controller
             $request->session()->invalidate();
             $request->session()->regenerateToken();
 
-            return response()->json(['success' => true, 'redirect' => route('login')]);
+            return response()->json([
+                'success' => true,
+                'redirect' => route('login')
+            ]);
         } else {
-            return response()->json(['success' => false, 'message' => 'Logout gagal!']);
+            return response()->json([
+                'success' => false,
+                'message' => 'Logout gagal!',
+                'prettyPrint' => json_encode([
+                    'success' => false,
+                    'message' => 'Logout gagal!'
+                ], JSON_PRETTY_PRINT)
+            ]);
         }
     }
 }

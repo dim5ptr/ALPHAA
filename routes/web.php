@@ -54,4 +54,4 @@ Route::middleware(['api'])->group(function () {
     // Route::get('/about', [PagesController::class, 'aboutPage'])->name('about');
  });
 
- Route::post('/logout', [UserController::class, 'logout'])->name('logout');
+ Route::post('/logout', [UserController::class, 'logout'])->middleware('api')->name('logout');
