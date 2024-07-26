@@ -491,4 +491,27 @@ class UserController extends Controller
             return redirect()->route('profil')->withErrors('Something went wrong. Please try again.');
         }
     }
+
+    public function logout(Request $request)
+    {
+        $apiUrl = 'http://192.168.1.24:14041/api/sso/logout.json';
+        $apiKey = '5af97cb7eed7a5a4cff3ed91698d2ffb';
+        $authToken = '49d843007dabb68bfddf309df8441dd0';
+
+        $response = Http::withHeaders([
+            'Authorization' => $authToken,
+            'x-api-key' => $apiKey,
+            'Content-Type' => 'application/json'
+        ])->post($apiUrl, []);
+
+        if ($response->successful()) {
+            Auth::logout();
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+
+            return response()->json(['success' => true, 'redirect' => route('login')]);
+        } else {
+            return response()->json(['success' => false, 'message' => 'Logout gagal!']);
+        }
+    }
 }
