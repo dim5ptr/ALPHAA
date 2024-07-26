@@ -199,6 +199,7 @@
         justify-content: space-between;
         align-items: center;
         color: white;
+        margin-top: 20px;
     }
 
     .banner h4 {
@@ -215,11 +216,13 @@
 
     .profile-info img {
         border-radius: 50%;
-        margin-right: 20px;
+        margin-right: 50px;
     }
 
     .profile-info .data {
         flex: 1;
+        margin-left: 30px;
+        margin-top: 50px
     }
 
     .profile-info .data span {

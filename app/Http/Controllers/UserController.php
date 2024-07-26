@@ -363,9 +363,7 @@ class UserController extends Controller
     public function showuploadProfilePicture()
     {
         return view ('uploadprofile');
-    }
-
-    public function updateProfilePicture(Request $request)
+    }public function updateProfilePicture(Request $request)
     {
         // Pastikan file gambar ada dalam request
         if ($request->hasFile('profile_picture')) {
@@ -386,19 +384,21 @@ class UserController extends Controller
             // Mengambil respons dari permintaan
             $data = $response->json();
 
+            // Log respons dari API
+            Log::info('Update Profile Picture Response:', ['response' => $data]);
+
             // Sekarang Anda dapat menangani respons sesuai kebutuhan
             if ($response->successful()) {
                 // Jika respons berhasil, simpan gambar di penyimpanan lokal
                 $filename = $file->getClientOriginalName();
-                $file->move(public_path('profile_pictures'), $filename);
+                $file->storeAs('public/user/profile', $filename);
 
                 // Simpan path gambar ke session
-                session(['profile_picture' => 'profile_pictures/' . $filename]);
-
-
+                $profilePicturePath = 'storage/user/profile/' . $filename;
+                session(['profile_picture' => $profilePicturePath]);
 
                 // Simpan path gambar ke local storage juga
-                echo "<script>localStorage.setItem('profile_picture', 'profile_pictures/$filename');</script>";
+                echo "<script>localStorage.setItem('profile_picture', '$profilePicturePath');</script>";
 
                 return redirect()->route('profil')->with('success', 'Profile picture uploaded successfully.');
             } else {
@@ -410,6 +410,8 @@ class UserController extends Controller
             return redirect()->back()->with('error', 'No file uploaded.');
         }
     }
+
+
     public function updatePersonalInfo(Request $request)
     {
         // Mengirim data ke endpoint menggunakan HTTP Client
@@ -424,16 +426,19 @@ class UserController extends Controller
             'gender' => $request->gender == 'Male' ? 1 : 0,
         ]);
 
+        // Log respons dari API
+        $data = $response->json();
+        Log::info('Update Personal Info Response:', ['response' => $data]);
+
         // Cek respon dari endpoint dan sesuaikan tindakan berikutnya
         if ($response->successful()) {
             // Jika response berhasil, perbarui session dengan data yang baru
-           session([
+            session([
                 'full_name' => $request->fullname,
                 'username' => $request->username,
                 'birthday' => $request->birthday,
                 'gender' => $request->gender,
                 'phone' => $request->phone,
-
             ]);
 
             return redirect('/profil')->with('success', 'Data has been saved!');
@@ -442,6 +447,7 @@ class UserController extends Controller
             return redirect()->back()->with('error', 'Failed to save data! Please try again.');
         }
     }
+
 
 
 
