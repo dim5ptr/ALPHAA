@@ -32,8 +32,7 @@ class PagesController extends Controller
             'gender' => session('gender'),
             'email' => session('email'),
             'phone' => session('phone'),
-            'address' => session('address'),
-            'image' => session('image'),
+            'profile_picture' => session('profile_picture'),
         ];
         // dd(session()->all());
         // dd($personalInfo);

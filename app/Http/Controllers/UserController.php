@@ -360,86 +360,87 @@ class UserController extends Controller
     //         return redirect()->back()->withErrors('Something went wrong. Please try again.');
     //     }
     // }
+    public function showuploadProfilePicture()
+    {
+        return view ('uploadprofile');
+    }
+
     public function updateProfilePicture(Request $request)
     {
-        $request->validate([
-            'image' => 'required|file|mimes:jpg,jpeg,png|max:2048',
-        ]);
+        // Pastikan file gambar ada dalam request
+        if ($request->hasFile('profile_picture')) {
+            $file = $request->file('profile_picture');
 
-        $user_id = auth()->id(); // Ambil user ID dari auth
+            // Membuat array data yang akan dikirimkan dalam permintaan
+            $requestData = [
+                'profile_picture' => $file,
+            ];
 
-        $url = config('services.api.base_url') . '/sso/update_profile_picture.json';
+            // Mengirim permintaan HTTP dengan file yang diunggah
+            $response = Http::withHeaders([
+                'Authorization' => session('access_token'),
+                'x-api-key' => self::API_KEY,
+            ])->attach('profile_picture', $file->getPathname(), $file->getClientOriginalName())
+            ->post(self::API_URL . '/sso/update_profile_picture.json', $requestData);
 
-        $headers = [
-            'x-api-key' => env('API_KEY'),
-            'Authorization' => '29f9046aacc1ac739654f04ef434e722',
-        ];
+            // Mengambil respons dari permintaan
+            $data = $response->json();
 
-        $response = Http::withHeaders($headers)->attach(
-            'image',
-            file_get_contents($request->file('image')->getRealPath()),
-            $request->file('image')->getClientOriginalName()
-        )->post($url, ['user_id' => $user_id]);
+            // Sekarang Anda dapat menangani respons sesuai kebutuhan
+            if ($response->successful()) {
+                // Jika respons berhasil, simpan gambar di penyimpanan lokal
+                $filename = $file->getClientOriginalName();
+                $file->move(public_path('profile_pictures'), $filename);
 
-        Log::info('Profile Picture Update API Response', [
-            'url' => $url,
-            'response' => $response->json(),
-            'status' => $response->status()
-        ]);
+                // Simpan path gambar ke session
+                session(['profile_picture' => 'profile_pictures/' . $filename]);
 
-        if ($response->successful()) {
-            Log::info('Profile picture updated successfully for user ID: ' . $user_id);
-            Session::flash('success', 'Profile picture updated successfully!');
+
+
+                // Simpan path gambar ke local storage juga
+                echo "<script>localStorage.setItem('profile_picture', 'profile_pictures/$filename');</script>";
+
+                return redirect()->route('profil')->with('success', 'Profile picture uploaded successfully.');
+            } else {
+                // Jika respons gagal, kembalikan pesan kesalahan
+                return redirect()->back()->with('error', 'An error occurred while uploading profile picture.');
+            }
         } else {
-            Log::error('Failed to update profile picture', [
-                'user_id' => $user_id,
-                'error' => $response->body()
-            ]);
-            Session::flash('error', 'Failed to update profile picture');
+            // Jika tidak ada file yang diunggah, kembalikan pesan kesalahan
+            return redirect()->back()->with('error', 'No file uploaded.');
         }
-
-        return redirect()->back();
     }
     public function updatePersonalInfo(Request $request)
     {
-        $validated = $request->validate([
-            'fullname' => 'required|string|max:255',
-            'username' => 'required|string|max:255',
-            'birthday' => 'required|date_format:Y-m-d',
-            'phone' => 'required|string|max:20',
-            'gender' => 'required|integer|in:0,1', // 1. Male, 0. Female
-            'address' => 'required|string|max:255',
+        // Mengirim data ke endpoint menggunakan HTTP Client
+        $response = Http::withHeaders([
+            'x-api-key' => self::API_KEY,
+            'Authorization' => session('access_token'),
+        ])->post(self::API_URL . '/sso/update_personal_info.json', [
+            'fullname' => $request->fullname,
+            'username' => $request->username,
+            'birthday' => $request->birthday,
+            'phone' => $request->phone,
+            'gender' => $request->gender == 'Male' ? 1 : 0,
         ]);
 
-        $user_id = auth()->id(); // Ambil user ID dari auth
-
-        $url = config('services.api.base_url') . '/sso/update_personal_info.json';
-
-        $headers = [
-            'x-api-key' => env('API_KEY'),
-            'Authorization' => '0f031be1caef52cfc46ecbb8eee10c77',
-        ];
-
-        $response = Http::withHeaders($headers)->post($url, array_merge($validated, ['user_id' => $user_id]));
-
-        Log::info('Personal Info Update API Response', [
-            'url' => $url,
-            'response' => $response->json(),
-            'status' => $response->status()
-        ]);
-
+        // Cek respon dari endpoint dan sesuaikan tindakan berikutnya
         if ($response->successful()) {
-            Log::info('Personal info updated successfully for user ID: ' . $user_id);
-            Session::flash('success', 'Personal info updated successfully!');
-        } else {
-            Log::error('Failed to update personal info', [
-                'user_id' => $user_id,
-                'error' => $response->body()
-            ]);
-            Session::flash('error', 'Failed to update personal info');
-        }
+            // Jika response berhasil, perbarui session dengan data yang baru
+           session([
+                'full_name' => $request->fullname,
+                'username' => $request->username,
+                'birthday' => $request->birthday,
+                'gender' => $request->gender,
+                'phone' => $request->phone,
 
-        return redirect()->back();
+            ]);
+
+            return redirect('/profil')->with('success', 'Data has been saved!');
+        } else {
+            // Jika gagal, kembalikan pengguna dengan pesan error
+            return redirect()->back()->with('error', 'Failed to save data! Please try again.');
+        }
     }
 
 
