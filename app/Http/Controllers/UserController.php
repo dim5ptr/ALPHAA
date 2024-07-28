@@ -363,58 +363,63 @@ class UserController extends Controller
     public function showuploadProfilePicture()
     {
         return view ('uploadprofile');
-    }public function updateProfilePicture(Request $request)
+    }
+
+    public function updateProfilePicture(Request $request)
     {
-        // Pastikan file gambar ada dalam request
         if ($request->hasFile('profile_picture')) {
             $file = $request->file('profile_picture');
 
-            // Membuat array data yang akan dikirimkan dalam permintaan
             $requestData = [
                 'profile_picture' => $file,
             ];
 
-            // Mengirim permintaan HTTP dengan file yang diunggah
             $response = Http::withHeaders([
                 'Authorization' => session('access_token'),
                 'x-api-key' => self::API_KEY,
             ])->attach('profile_picture', $file->getPathname(), $file->getClientOriginalName())
             ->post(self::API_URL . '/sso/update_profile_picture.json', $requestData);
 
-            // Mengambil respons dari permintaan
             $data = $response->json();
 
-            // Log respons dari API
             Log::info('Update Profile Picture Response:', ['response' => $data]);
 
-            // Sekarang Anda dapat menangani respons sesuai kebutuhan
             if ($response->successful()) {
-                // Jika respons berhasil, simpan gambar di penyimpanan lokal
                 $filename = $file->getClientOriginalName();
                 $file->storeAs('public/user/profile', $filename);
 
                 // Simpan path gambar ke session
-                $profilePicturePath = 'storage/user/profile/' . $filename;
-                session(['profile_picture' => $profilePicturePath]);
+                session(['profile_picture' => 'storage/user/profile/' . $filename]);
 
-                // Simpan path gambar ke local storage juga
-                echo "<script>localStorage.setItem('profile_picture', '$profilePicturePath');</script>";
+                // Memanggil metode save untuk menyimpan gambar di API atau di tempat lain jika diperlukan
+                $this->saveProfilePictureToAPI($filename);
 
                 return redirect()->route('profil')->with('success', 'Profile picture uploaded successfully.');
             } else {
-                // Jika respons gagal, kembalikan pesan kesalahan
                 return redirect()->back()->with('error', 'An error occurred while uploading profile picture.');
             }
         } else {
-            // Jika tidak ada file yang diunggah, kembalikan pesan kesalahan
             return redirect()->back()->with('error', 'No file uploaded.');
         }
     }
 
+    protected function saveProfilePictureToAPI($filename)
+    {
+        // Implementasikan logika untuk menyimpan gambar ke API jika diperlukan
+        // Contoh:
+        $response = Http::withHeaders([
+            'Authorization' => session('access_token'),
+            'x-api-key' => self::API_KEY,
+        ])->post(self::API_URL . '/sso/save_profile_picture.json', [
+            'profile_picture' => $filename,
+        ]);
 
+        $data = $response->json();
+
+        Log::info('Save Profile Picture Response:', ['response' => $data]);
+    }
     public function updatePersonalInfo(Request $request)
     {
-        // Mengirim data ke endpoint menggunakan HTTP Client
         $response = Http::withHeaders([
             'x-api-key' => self::API_KEY,
             'Authorization' => session('access_token'),
@@ -426,13 +431,11 @@ class UserController extends Controller
             'gender' => $request->gender == 'Male' ? 1 : 0,
         ]);
 
-        // Log respons dari API
         $data = $response->json();
+
         Log::info('Update Personal Info Response:', ['response' => $data]);
 
-        // Cek respon dari endpoint dan sesuaikan tindakan berikutnya
         if ($response->successful()) {
-            // Jika response berhasil, perbarui session dengan data yang baru
             session([
                 'full_name' => $request->fullname,
                 'username' => $request->username,
@@ -441,14 +444,34 @@ class UserController extends Controller
                 'phone' => $request->phone,
             ]);
 
+            // Memanggil metode save untuk menyimpan informasi pribadi di API jika diperlukan
+            $this->savePersonalInfoToAPI($request);
+
             return redirect('/profil')->with('success', 'Data has been saved!');
         } else {
-            // Jika gagal, kembalikan pengguna dengan pesan error
             return redirect()->back()->with('error', 'Failed to save data! Please try again.');
         }
     }
 
+    protected function savePersonalInfoToAPI($request)
+    {
+        // Implementasikan logika untuk menyimpan informasi pribadi ke API jika diperlukan
+        // Contoh:
+        $response = Http::withHeaders([
+            'Authorization' => session('access_token'),
+            'x-api-key' => self::API_KEY,
+        ])->post(self::API_URL . '/sso/save_personal_info.json', [
+            'fullname' => $request->fullname,
+            'username' => $request->username,
+            'birthday' => $request->birthday,
+            'phone' => $request->phone,
+            'gender' => $request->gender == 'Male' ? 1 : 0,
+        ]);
 
+        $data = $response->json();
+
+        Log::info('Save Personal Info Response:', ['response' => $data]);
+    }
 
 
     public function deleteProfilePicture(Request $request)
