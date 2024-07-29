@@ -123,7 +123,7 @@
             max-width: 70%;
         }
         .error {
-            color: red;
+            color: rgb(255, 255, 255);
         }
     </style>
 </head>
