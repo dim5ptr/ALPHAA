@@ -46,7 +46,11 @@ Route::get('/change-password', [PagesController::class, 'showChangePasswordForm'
 
 // Definisikan rute untuk menangani permintaan POST formulir perubahan kata sandi
 Route::post('/change-password', [UserController::class, 'changePassword'])->name('change-password');
+Route::get('/confirmpw', [PagesController::class, 'PesanPw'])->name('confirmpw');
  });
+
+
+
 
  Route::middleware(['api'])->group(function () {
     Route::get('/Adashboard', [PagesController::class, 'AdashboardPage'])->name('Adashboard');

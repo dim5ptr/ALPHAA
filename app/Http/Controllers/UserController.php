@@ -564,7 +564,7 @@ public function ChangePassword(Request $request)
             // Password berhasil diubah
             Auth::logout(); // Logout pengguna
             Session::flash('success', 'Password changed successfully. Please log in again.'); // Pesan sukses
-            return Redirect::route('login'); // Redirect ke halaman login
+            return Redirect::route('confirmpw'); // Redirect ke halaman login
 
         // Ambil access token dari session
         $accessToken = session('access_token');

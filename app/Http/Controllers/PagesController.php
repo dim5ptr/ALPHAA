@@ -65,4 +65,9 @@ class PagesController extends Controller
     {
         return view('view.security'); // Pastikan ini sesuai dengan nama tampilan Anda
     }
+
+    public function PesanPw()
+    {
+        return view("view.pw-confirm");
+    }
 }
