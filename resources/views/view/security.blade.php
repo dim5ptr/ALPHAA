@@ -336,7 +336,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="/security" class="nav-link-act">
+                    <a href="/change-password" class="nav-link-act">
                         <span class="link"><i class="fa-solid fa-user-shield"></i>ㅤSecurity</span>
                     </a>
                 </li>
