@@ -199,7 +199,7 @@
         }
 
         .nav-link .nav-link-act i {
-            padding-right: 15px;
+            padding-right: 10px;
             font-size: 20px;
             color: #365AC2;
             cursor: pointer;
@@ -323,23 +323,18 @@
         <div class="sidebar-isi">
             <ul class="list">
                 <li>
-                    <a href="{{ route('dashboard') }}" class="nav-link-act">
-                        <span class="link"><i class='bx bxs-home'></i>Dashboard</span>
-                    </a>
-                </li>
-                {{-- <li>
-                    <a href="#" class="nav-link">
-                        <span class="link"><i class='bx bx-layout'></i>List User</span>
-                    </a>
-                </li> --}}
-                <li>
-                    <a href="{{ route('profil') }}" class="nav-link">
-                        <span class="link"><i class='bx bxs-user-detail'></i>Profile</span>
+                    <a href="/dashboard" class="nav-link-act">
+                        <span class="link"><i class="fa-solid fa-house-chimney"></i>ㅤDashboard</span>
                     </a>
                 </li>
                 <li>
-                    <a href="{{ route('change-password-form') }}" class="nav-link">
-                        <span class="link"><i class='bx bxs-cog'></i>Settings</span>
+                    <a href="/profil" class="nav-link">
+                        <span class="link"><i class="fa-solid fa-id-card"></i>ㅤProfile</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/change-password" class="nav-link">
+                        <span class="link"><i class="fa-solid fa-user-shield"></i>ㅤSecurity</span>
                     </a>
                 </li>
             </ul>

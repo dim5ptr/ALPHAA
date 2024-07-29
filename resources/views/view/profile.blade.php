@@ -1,21 +1,16 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="icon" type="image/x-icon" href="img/logo_sarastya.jpg">
-    {{-- ? CSS ? --}}
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
+@extends('layouts.app')
 
-    {{-- ? JavaScript ? --}}
-    <script src="https://use.fontawesome.com/releases/v6.1.0/js/all.js" crossorigin="anonymous"></script>
-    <script src="{{ asset('js/bootstrap.bundle.min.js') }}"></script>
-    <title>Document</title>
+@auth
+    @php
+        $userRole = Auth::user()->user_level;
+        $user = Auth::user();
+    @endphp
+@endauth
+
+@section('title', 'Data Profil')
+
+@section('header')
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 <style>
     body {
         background-color: #d5def7;
@@ -472,11 +467,10 @@
             color: aliceblue;
             border: 2px solid aliceblue;
         }
-
-        </style>
-</head>
-<body>
-    <div class="navbar">
+</style>
+@endsection
+@section('main')
+<header class="navbar">
     <nav class="navbar">
         <p class="p1"><span>{{ \Carbon\Carbon::now()->format('l') }},</span><br>{{ \Carbon\Carbon::now()->format('F j, Y') }}</p>
     </nav>
@@ -510,7 +504,8 @@
             </ul>
         </div>
     </div>
-</div>
+</header>
+
 
 
 <div class="container-flex">
@@ -690,5 +685,6 @@
         }
 </script>
 
-</body>
-</html>
+
+
+@endsection
