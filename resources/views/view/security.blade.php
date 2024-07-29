@@ -284,6 +284,16 @@
             background-color: #365AA3;
         }
 
+        .error-message {
+        color: red;
+        font-size: 12px;
+        margin-top: 5px;
+        display: block;
+        }
+        .error {
+            border: 1px solid red;
+        }
+
     </style>
 </head>
 <body>
@@ -342,17 +352,21 @@
                         <h3>Manage Your Password</h3>
                         <p>Your new password must be different from your previous used password.</p>
                         <form id="change-password-form" method="POST" action="{{ route('change-password') }}">
+                            @csrf
                             <div>
-                            <label for="current_password">Current Password</label><br>
+                                <label for="current_password">Current Password</label><br>
                                 <input type="password" id="current_password" name="current_password" required>
+                                <span id="current_password_error" class="error-message"></span>
                             </div>
                             <div>
                                 <label for="new_password">New Password</label><br>
-                                <input type="password" id="new_password" name="new_password" required>
+                                <input type="password" id="password" name="password" required>
+                                <span id="new_password_error" class="error-message"></span>
                             </div>
                             <div>
-                                <label for="confirm_password">Confirm new Password</label><br>
-                                <input type="password" id="confirm_password" name="confirm_password" required>
+                                <label for="confirm_password">Confirm New Password</label><br>
+                                <input type="password" id="password_confirmation" name="password_confirmation" required>
+                                <span id="confirm_password_error" class="error-message"></span>
                             </div>
                             <button type="submit">Update</button>
                         </form>
@@ -363,17 +377,74 @@
     </div>
     <script>
         function toggleSidebar() {
-            var sidebar = document.getElementById("sidebar");
-            var mainContent = document.getElementById("main-content");
-
-            if (sidebar.style.left === "0px") {
-                sidebar.style.left = "-270px";
-                mainContent.style.marginLeft = "10%";
+            var sidebar = document.getElementById('sidebar');
+            if (sidebar.style.left === '0px') {
+                sidebar.style.left = '-270px';
             } else {
-                sidebar.style.left = "0px";
-                mainContent.style.marginLeft = "19%";
+                sidebar.style.left = '0px';
             }
         }
+        function validatePassword() {
+    const currentPassword = document.getElementById('current_password');
+    const newPassword = document.getElementById('new_password');
+    const confirmPassword = document.getElementById('confirm_password');
+
+    const currentPasswordError = document.getElementById('current_password_error');
+    const newPasswordError = document.getElementById('new_password_error');
+    const confirmPasswordError = document.getElementById('confirm_password_error');
+
+    let valid = true;
+
+    // Clear previous errors
+    currentPassword.classList.remove('error');
+    newPassword.classList.remove('error');
+    confirmPassword.classList.remove('error');
+    currentPasswordError.textContent = '';
+    newPasswordError.textContent = '';
+    confirmPasswordError.textContent = '';
+
+    // Validate current password
+    if (currentPassword.value.trim() === '') {
+        currentPassword.classList.add('error');
+        currentPasswordError.textContent = 'Current password is required';
+        valid = false;
+    }
+
+    // Validate new password
+    if (newPassword.value.trim() === '') {
+        newPassword.classList.add('error');
+        newPasswordError.textContent = 'New password is required';
+        valid = false;
+    } else if (newPassword.value.length < 8) {
+        newPassword.classList.add('error');
+        newPasswordError.textContent = 'New password must be at least 8 characters long';
+        valid = false;
+    }
+
+    // Validate confirm password
+    if (confirmPassword.value.trim() === '') {
+        confirmPassword.classList.add('error');
+        confirmPasswordError.textContent = 'Confirm password is required';
+        valid = false;
+    } else if (confirmPassword.value !== newPassword.value) {
+        confirmPassword.classList.add('error');
+        confirmPasswordError.textContent = 'Passwords do not match';
+        valid = false;
+    }
+
+    return valid;
+}
+
+// Validate on input event
+document.getElementById('change-password-form').addEventListener('input', validatePassword);
+
+// Optionally validate on form submission as well
+document.getElementById('change-password-form').addEventListener('submit', function(event) {
+    if (!validatePassword()) {
+        event.preventDefault(); // Prevent form submission if validation fails
+    }
+});
+
     </script>
 </body>
 </html>

@@ -492,34 +492,53 @@ class UserController extends Controller
     }
 
     public function changePassword(Request $request)
-    {
-        $request->validate([
-            'password' => 'required|string|min:8|confirmed',
-        ]);
+{
+    // Validasi input
+    $validator = Validator::make($request->all(), [
+        'password' => 'required|string|min:6',
+        'password_confirmation' => 'required|string|same:password',
+    ]);
 
-        $user = Auth::user();
-        $user->user_password = Hash::make($request->password);
-        $user->save();
-
-        try {
-            $apiResponse = Http::withHeaders([
-                'x-api-key' => self::API_KEY,
-                'Authorization' => session('access_token'),
-            ])->post(self::API_URL . '/sso/change_password.json', [
-                'password' => $request->input('password'),
-                'address' => 'MDX-SSA',
-            ]);
-
-            if ($apiResponse->failed()) {
-                return redirect()->route('profil')->withErrors('Perubahan kata sandi di layanan eksternal gagal.');
-            }
-
-            return redirect()->route('profil')->with('success', 'Kata sandi berhasil diubah!');
-        } catch (\Exception $e) {
-            Log::error('Exception caught in changePassword method', ['error' => $e->getMessage()]);
-            return redirect()->route('profil')->withErrors('Something went wrong. Please try again.');
-        }
+    if ($validator->fails()) {
+        return redirect()->back()
+                         ->withErrors($validator)
+                         ->withInput();
     }
+
+    // Ambil data dari request
+    $password = $request->input('password');
+
+    // Konfigurasi API
+    $apiUrl = env('BASE_URL') . '/sso/change_password.json';
+    $apiKey = env('API_KEY');
+    $authToken = '0f031be1caef52cfc46ecbb8eee10c77';
+
+    // Kirim request ke API
+    $response = Http::withHeaders([
+        'x-api-key' => $apiKey,
+        'Authorization' => $authToken,
+    ])->post($apiUrl, [
+        'password' => $password,
+    ]);
+
+    // Log respons API
+    Log::info('API Response:', [
+        'status' => $response->status(),
+        'body' => $response->body(),
+        'headers' => $response->headers(),
+    ]);
+
+    // Tangani respons API
+    if ($response->successful()) {
+        return redirect()->route('change-password')
+                         ->with('success', 'Password changed successfully.');
+    } else {
+        return redirect()->route('change-password')
+                         ->with('error', 'Failed to change password.');
+    }
+}
+
+
 
 
 public function logout(Request $request)
