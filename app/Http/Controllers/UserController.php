@@ -3,16 +3,21 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Mail\RegisterMail;
+use App\Mail\ActivationMail;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Auth\Events\Verified;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Redirect;
+use Laravel\Socialite\Facades\Socialite;
+use Illuminate\Support\Facades\Validator;
+use GuzzleHttp\Client;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Auth\Events\Verified;
 use App\Mail\VerificationEmail;
 
 
@@ -491,53 +496,136 @@ class UserController extends Controller
         return redirect()->route('profil')->with('error', 'Foto profil tidak ditemukan.');
     }
 
-    public function changePassword(Request $request)
-{
-    // Validasi input
-    $validator = Validator::make($request->all(), [
-        'password' => 'required|string|min:6',
-        'password_confirmation' => 'required|string|same:password',
-    ]);
+//     public function changePassword(Request $request)
+// {
+//     // Validasi input
+//     $validator = Validator::make($request->all(), [
+//         'password' => 'required|string|min:6',
+//         'password_confirmation' => 'required|string|same:password',
+//     ]);
 
-    if ($validator->fails()) {
-        return redirect()->back()
-                         ->withErrors($validator)
-                         ->withInput();
+//     if ($validator->fails()) {
+//         return redirect()->back()
+//                          ->withErrors($validator)
+//                          ->withInput();
+//     }
+
+//     // Ambil data dari request
+//     $password = $request->input('password');
+
+//     // Konfigurasi API
+//     $apiUrl = env('BASE_URL') . '/sso/change_password.json';
+//     $apiKey = env('API_KEY');
+//     $authToken = '0f031be1caef52cfc46ecbb8eee10c77';
+
+//     // Kirim request ke API
+//     $response = Http::withHeaders([
+//         'x-api-key' => $apiKey,
+//         'Authorization' => $authToken,
+//     ])->post($apiUrl, [
+//         'password' => $password,
+//     ]);
+
+//     // Log respons API
+//     Log::info('API Response:', [
+//         'status' => $response->status(),
+//         'body' => $response->body(),
+//         'headers' => $response->headers(),
+//     ]);
+
+//     // Tangani respons API
+//     if ($response->successful()) {
+//         return redirect()->route('change-password')
+//                          ->with('success', 'Password changed successfully.');
+//     } else {
+//         return redirect()->route('change-password')
+//                          ->with('error', 'Failed to change password.');
+//     }
+// }
+
+public function ChangePassword(Request $request)
+    {
+        $request->validate([
+            'new_password' => 'required|min:6',
+            'confirm_new_password' => 'required|same:new_password',
+        ]);
+
+
+        $access_token = session('access_token');
+
+        $response = Http::withHeaders([
+            'Authorization' => $access_token,
+            'x-api-key' => self:: API_KEY,
+        ])->post(self::API_URL . '/sso/change_password.json', [
+            'password' => $request->new_password,
+        ]);
+
+        if ($response->successful()) {
+            // Password berhasil diubah
+            Auth::logout(); // Logout pengguna
+            Session::flash('success', 'Password changed successfully. Please log in again.'); // Pesan sukses
+            return Redirect::route('login'); // Redirect ke halaman login
+
+        // Ambil access token dari session
+        $accessToken = session('access_token');
+
+        // Periksa apakah access token ada
+        // if (!$accessToken) {
+        //     return redirect()->route('login')->withErrors(['error' => 'Access token not found. Please login again.']);
+        // }
+
+        // Periksa apakah pengguna sudah login
+        if (!auth()->check()) {
+            return redirect()->route('login')->withErrors(['error' => 'User not logged in.']);
+        }
+
+        // Ambil email pengguna yang sudah login
+        $userEmail = auth()->user()->email;
+
+        // Verifikasi password lama dengan memanggil endpoint login
+        $loginResponse = Http::withHeaders([
+            'x-api-key' => self::API_KEY
+        ])->post(self::API_URL . '/sso/login.json', [
+            'username' => $userEmail, // Gunakan email pengguna yang sudah login
+            'password' => $request->old_password,
+        ]);
+
+        // Periksa apakah respon login berhasil
+        if ($loginResponse->successful() && isset($loginResponse['data']['access_token'])) {
+            // Ganti password
+                $changePasswordResponse = Http::withHeaders([
+                    'Authentication' => $accessToken,
+                    'x-api-key' => self::API_KEY
+                ])->post(self::API_URL . '/sso/change_password.json', [
+                    'password' => $request->new_password,
+                ]);
+
+                // Periksa apakah perubahan password berhasil
+                if ($changePasswordResponse->successful()) {
+                    session()->forget('access_token');
+                    auth()->logout();
+
+
+                    // Redirect dengan pesan sukses
+                    return redirect()->route('login')->with('success', 'Password changed successfully. Please login again.');
+                } else {
+                    // Tangani kesalahan validasi atau kesalahan lain dari API
+                    $errorMessages = $changePasswordResponse->json();
+                    if ($changePasswordResponse->status() == 422) {
+                        return back()->withErrors($errorMessages)->withInput();
+                    } else {
+                        // Redirect dengan pesan kesalahan
+                        return back()->withErrors(['error' => 'Failed to change password. Please try again later.'])->withInput();
+                    }
+                }
+
+            } else {
+                // Gagal mengubah password
+                Session::flash('error', 'Failed to change password. Please try again.'); // Pesan error
+                return Redirect::back(); // Kembali ke halaman sebelumnya
+            }
+        }
     }
-
-    // Ambil data dari request
-    $password = $request->input('password');
-
-    // Konfigurasi API
-    $apiUrl = env('BASE_URL') . '/sso/change_password.json';
-    $apiKey = env('API_KEY');
-    $authToken = '0f031be1caef52cfc46ecbb8eee10c77';
-
-    // Kirim request ke API
-    $response = Http::withHeaders([
-        'x-api-key' => $apiKey,
-        'Authorization' => $authToken,
-    ])->post($apiUrl, [
-        'password' => $password,
-    ]);
-
-    // Log respons API
-    Log::info('API Response:', [
-        'status' => $response->status(),
-        'body' => $response->body(),
-        'headers' => $response->headers(),
-    ]);
-
-    // Tangani respons API
-    if ($response->successful()) {
-        return redirect()->route('change-password')
-                         ->with('success', 'Password changed successfully.');
-    } else {
-        return redirect()->route('change-password')
-                         ->with('error', 'Failed to change password.');
-    }
-}
-
 
 
 

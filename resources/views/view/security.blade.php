@@ -352,19 +352,19 @@
                         <p>Your new password must be different from your previous used password.</p>
                         <form id="change-password-form" method="POST" action="{{ route('change-password') }}">
                             @csrf
-                            <div>
+                            {{-- <div>
                                 <label for="current_password">Current Password</label><br>
                                 <input type="password" id="current_password" name="current_password" required>
                                 <span id="current_password_error" class="error-message"></span>
-                            </div>
+                            </div> --}}
                             <div>
                                 <label for="new_password">New Password</label><br>
-                                <input type="password" id="password" name="password" required>
+                                <input type="password" id="password" name="new_password" required>
                                 <span id="new_password_error" class="error-message"></span>
                             </div>
                             <div>
                                 <label for="confirm_password">Confirm New Password</label><br>
-                                <input type="password" id="password_confirmation" name="password_confirmation" required>
+                                <input type="password" id="password_confirmation" name="confirm_new_password" required>
                                 <span id="confirm_password_error" class="error-message"></span>
                             </div>
                             <button type="submit">Update</button>
