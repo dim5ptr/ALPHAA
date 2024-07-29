@@ -516,17 +516,18 @@
     </div>
 
     <div id="main-content" class="main-content">
+        @if (session('success'))
+        <div class="alert alert-success" id="alert-success">
+            {{ session('success') }}
+        </div>
+        @elseif (session('error'))
+        <div class="alert alert-danger" id="alert-danger">
+            {{ session('error') }}
+        </div>
+        @endif
         <div class="banner">
             <div class="container-flex">
-                @if (session('success'))
-            <div class="alert alert-success">
-                {{ session('success') }}
-            </div>
-            @elseif (session('error'))
-            <div class="alert alert-danger">
-                {{ session('error') }}
-            </div>
-            @endif
+
 
             <div class="judul">
                 <h4>Akun Pengguna</h4>
@@ -663,6 +664,26 @@
             }
         }
 
+        const successAlert = document.getElementById('alert-success');
+            if (successAlert) {
+                setTimeout(function() {
+                    successAlert.style.opacity = 0;
+                    setTimeout(function() {
+                        successAlert.style.display = 'none';
+                    }, 500);
+                }, 5000);
+            }
+
+            // Hide error alert after 5 seconds
+            const errorAlert = document.getElementById('alert-danger');
+            if (errorAlert) {
+                setTimeout(function() {
+                    errorAlert.style.opacity = 0;
+                    setTimeout(function() {
+                        errorAlert.style.display = 'none';
+                    }, 500);
+                }, 5000);
+            }
         function openModal() {
         document.getElementById('updateUserModal').style.display = 'block';
     }
