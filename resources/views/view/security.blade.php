@@ -377,11 +377,15 @@
     </div>
     <script>
         function toggleSidebar() {
-            var sidebar = document.getElementById('sidebar');
-            if (sidebar.style.left === '0px') {
-                sidebar.style.left = '-270px';
+            var sidebar = document.getElementById("sidebar");
+            var mainContent = document.getElementById("main-content");
+
+            if (sidebar.style.left === "0px") {
+                sidebar.style.left = "-270px";
+                mainContent.style.marginLeft = "10%";
             } else {
-                sidebar.style.left = '0px';
+                sidebar.style.left = "0px";
+                mainContent.style.marginLeft = "19%";
             }
         }
         function validatePassword() {
