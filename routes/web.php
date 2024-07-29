@@ -23,7 +23,7 @@ Route::post('/Alogin', [UserController::class, 'Alogin'])->name('admin.login');
 // Register Routes
 Route::get('/register', [PagesController::class, 'registerPage'])->name('register');
 Route::post('/register', [UserController::class, 'register'])->name('user.register');
-Route::get('/register/confirmation', function () {
+Route::get('/register-confirmation', function () {
     return view('public.register-confirmation');
 })->name('register-confirmation');
 Route::get('/Aregister', [PagesController::class, 'AregisterPage'])->name('Aregister');
