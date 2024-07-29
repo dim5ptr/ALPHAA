@@ -293,6 +293,26 @@
             border: 1px solid red;
         }
 
+        /* In your CSS file */
+.alert {
+    padding: 15px;
+    border-radius: 4px;
+    margin-bottom: 20px;
+}
+
+.alert-success {
+    background-color: #d4edda;
+    color: #155724;
+    border-color: #c3e6cb;
+}
+
+.alert-danger {
+    background-color: #f8d7da;
+    color: #721c24;
+    border-color: #f5c6cb;
+}
+
+
     </style>
 </head>
 <body>
@@ -316,7 +336,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="/security" class="nav-link-act">
+                    <a href="/change-password" class="nav-link-act">
                         <span class="link"><i class="fa-solid fa-user-shield"></i>ㅤSecurity</span>
                     </a>
                 </li>
@@ -350,104 +370,94 @@
                     <div class="inpage">
                         <h3>Manage Your Password</h3>
                         <p>Your new password must be different from your previous used password.</p>
-                        <form id="change-password-form" method="POST" action="{{ route('change-password') }}">
-                            @csrf
-                            {{-- <div>
-                                <label for="current_password">Current Password</label><br>
-                                <input type="password" id="current_password" name="current_password" required>
-                                <span id="current_password_error" class="error-message"></span>
-                            </div> --}}
-                            <div>
-                                <label for="new_password">New Password</label><br>
-                                <input type="password" id="password" name="new_password" required>
-                                <span id="new_password_error" class="error-message"></span>
-                            </div>
-                            <div>
-                                <label for="confirm_password">Confirm New Password</label><br>
-                                <input type="password" id="password_confirmation" name="confirm_new_password" required>
-                                <span id="confirm_password_error" class="error-message"></span>
-                            </div>
-                            <button type="submit">Update</button>
-                        </form>
+                        @if (session('success'))
+            <div class="alert alert-success">
+                {{ session('success') }}
+            </div>
+        @endif
+
+        @if (session('error'))
+            <div class="alert alert-danger">
+                {{ session('error') }}
+            </div>
+        @endif
+        <form id="change-password-form" method="POST" action="{{ route('change-password') }}">
+            @csrf
+            <div>
+                <label for="new-password">New Password:</label><br>
+                <input type="password" id="new-password" name="new-password" required>
+                <span id="new-password-error" class="error-message"></span>
+            </div>
+            <div>
+                <label for="confirm-password">Confirm New Password:</label><br>
+                <input type="password" id="confirm-password" name="confirm-password" required>
+                <span id="confirm-password-error" class="error-message"></span>
+            </div>
+            <button type="submit">Change Password</button>
+        </form>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <script>
-        function toggleSidebar() {
-            var sidebar = document.getElementById("sidebar");
-            var mainContent = document.getElementById("main-content");
 
-            if (sidebar.style.left === "0px") {
-                sidebar.style.left = "-270px";
-                mainContent.style.marginLeft = "10%";
+    <script>
+        // Function to toggle sidebar visibility
+        function toggleSidebar() {
+            var sidebar = document.querySelector('.sidebar');
+            var openBtn = document.querySelector('.open-btn');
+            if (sidebar.style.left === '0px') {
+                sidebar.style.left = '-270px';
+                openBtn.style.left = '2%';
             } else {
-                sidebar.style.left = "0px";
-                mainContent.style.marginLeft = "19%";
+                sidebar.style.left = '0px';
+                openBtn.style.left = '272px';
             }
         }
-        function validatePassword() {
-    const currentPassword = document.getElementById('current_password');
-    const newPassword = document.getElementById('new_password');
-    const confirmPassword = document.getElementById('confirm_password');
 
-    const currentPasswordError = document.getElementById('current_password_error');
-    const newPasswordError = document.getElementById('new_password_error');
-    const confirmPasswordError = document.getElementById('confirm_password_error');
+        document.addEventListener('DOMContentLoaded', function() {
+            var newPasswordInput = document.getElementById('new-password');
+            var confirmPasswordInput = document.getElementById('confirm-password');
+            var newPasswordError = document.getElementById('new-password-error');
+            var confirmPasswordError = document.getElementById('confirm-password-error');
 
-    let valid = true;
+            // Real-time validation function
+            function validatePasswords() {
+                var newPasswordValue = newPasswordInput.value;
+                var confirmPasswordValue = confirmPasswordInput.value;
 
-    // Clear previous errors
-    currentPassword.classList.remove('error');
-    newPassword.classList.remove('error');
-    confirmPassword.classList.remove('error');
-    currentPasswordError.textContent = '';
-    newPasswordError.textContent = '';
-    confirmPasswordError.textContent = '';
+                // Clear previous error messages
+                newPasswordError.textContent = '';
+                confirmPasswordError.textContent = '';
+                newPasswordInput.classList.remove('error');
+                confirmPasswordInput.classList.remove('error');
 
-    // Validate current password
-    if (currentPassword.value.trim() === '') {
-        currentPassword.classList.add('error');
-        currentPasswordError.textContent = 'Current password is required';
-        valid = false;
-    }
+                if (newPasswordValue.length < 8) {
+                    newPasswordError.textContent = 'Password must be at least 8 characters long.';
+                    newPasswordInput.classList.add('error');
+                }
 
-    // Validate new password
-    if (newPassword.value.trim() === '') {
-        newPassword.classList.add('error');
-        newPasswordError.textContent = 'New password is required';
-        valid = false;
-    } else if (newPassword.value.length < 8) {
-        newPassword.classList.add('error');
-        newPasswordError.textContent = 'New password must be at least 8 characters long';
-        valid = false;
-    }
+                if (newPasswordValue !== confirmPasswordValue) {
+                    confirmPasswordError.textContent = 'Passwords do not match.';
+                    confirmPasswordInput.classList.add('error');
+                }
+            }
 
-    // Validate confirm password
-    if (confirmPassword.value.trim() === '') {
-        confirmPassword.classList.add('error');
-        confirmPasswordError.textContent = 'Confirm password is required';
-        valid = false;
-    } else if (confirmPassword.value !== newPassword.value) {
-        confirmPassword.classList.add('error');
-        confirmPasswordError.textContent = 'Passwords do not match';
-        valid = false;
-    }
+            // Add event listeners for real-time validation
+            newPasswordInput.addEventListener('input', validatePasswords);
+            confirmPasswordInput.addEventListener('input', validatePasswords);
 
-    return valid;
-}
+            // Handle form submission
+            var form = document.getElementById('change-password-form');
+            form.addEventListener('submit', function(event) {
+                validatePasswords();
 
-// Validate on input event
-document.getElementById('change-password-form').addEventListener('input', validatePassword);
-
-// Optionally validate on form submission as well
-document.getElementById('change-password-form').addEventListener('submit', function(event) {
-    if (!validatePassword()) {
-        event.preventDefault(); // Prevent form submission if validation fails
-    }
-});
-
+                // Prevent form submission if there are errors
+                if (newPasswordError.textContent || confirmPasswordError.textContent) {
+                    event.preventDefault();
+                }
+            });
+        });
     </script>
 </body>
 </html>
