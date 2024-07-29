@@ -15,14 +15,14 @@
             background-color: #ffffff;
             background-size: cover;
             border-radius: 20px;
-            margin: 20px 5%;
+            margin: 5px 5%;
             padding: 40px;
             box-shadow: 0 4px 8px 4px rgba(0, 0, 0, 0.1);
         }
 
         .wlc h2 {
-            margin-top: 8%;
-            font-size: 2.8rem;
+            margin-top: 3%;
+            font-size: 2rem;
             font-weight: 800;
             color: rgba(20, 19, 19, 0.923);
             margin-bottom: 1%;
@@ -40,7 +40,7 @@
 
         .wlc p {
             color: #666;
-            font-size: 1.5rem;
+            font-size: 1.2rem;
             line-height: 1.5;
         }
 
@@ -50,7 +50,7 @@
         }
 
         .pict img {
-            width: 60%;
+            width: 70%;
             margin-left: 20%;
         }
 
@@ -65,8 +65,8 @@
             grid-template-columns: repeat(auto-fit, minmax(5%, 4fr));
             height: 100%;
             gap: 20px;
-            margin: 20px 2%;
-            padding: 40px;
+            margin: 0px 2%;
+            padding: 17px;
         }
 
         .card {
@@ -235,6 +235,7 @@
             position: fixed;
             background-color: white;
             padding: 0px;
+            margin-bottom: 10%;
             display: flex;
             justify-content: flex-end;
             font-size: 14px;
@@ -367,7 +368,8 @@
         {{ session('error') }}
     </div>
 @endif
-
+       <h2>ㅤㅤㅤ ㅤ ㅤㅤㅤㅤㅤ ㅤ    </br>
+    </h2>
         <div class="banner">
             <div class="wlc">
                 <h2>Selamat Datang di <span>Sarastya Technology Integrata</span></h2>
