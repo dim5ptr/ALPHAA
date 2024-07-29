@@ -36,7 +36,7 @@
         color: #000000;
     }
 
-    .btn-primary, .btn-dark, .btn-danger, .btn-light {
+    .btn-primary, .btn-danger, .btn-light {
         padding: 8px 20px;
         text-align: center;
         text-decoration: none;

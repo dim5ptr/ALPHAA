@@ -10,10 +10,10 @@
     <style>
         /* CSS Anda disini */
         html, body {
-            height: 100vh;
+            height: 70vh;
             margin: 0;
             padding: 0;
-            font-family: 'Poppins', sans-serif;
+            font-family: Arial, sans-serif;
             background-color: #d5def7;
         }
 
@@ -147,151 +147,297 @@
 
         .main-content {
             width: 80%;
-            height: 100vh;
+            height: 40vh;
             flex: 1;
             margin-top: 5%;
             margin-left: 10%;
             transition: margin-left .3s;
         }
 
-        .menu {
-            display: flex;
+        .banner {
             float: right;
             margin-right: 10%;
             margin-top: 3%;
             width: 80%;
-            height: 70vh;
+            height: 50vh;
             margin-left: 4%;
         }
 
-        .list2 {
-            background-color: white;
-            width: 18%;
-            height: 98%;
-            margin-top: 0.6%;
-            border-top-left-radius: 5px;
-            border-bottom-left-radius: 5px;
-            box-shadow: 0 2px 5px 2px rgba(0, 0, 0, 0.1);
-        }
+        .btn-primary, .btn-danger, .btn-light {
+        padding: 8px 20px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin: 4px 2px;
+        cursor: pointer;
+        border-radius: 4px;
+        border: none;
+        transition: background-color 0.3s ease;
+    }
 
-        .list2 ul {
-            list-style-type: none;
-            padding: 0;
-            margin: 0;
-        }
+    .btn-primary {
+        background-color: #007bff;
+        color: white;
+    }
 
-        .list2 ul li {
-            margin: 2 autopx, 0;
-        }
+    .btn-primary:hover {
+        background-color: #0056b3;
+    }
 
-        .nav-mini {
-            display: block;
-            padding: 10px;
-            text-decoration: none;
-            font-weight: 400;
-            color: #365AC2;
-            position: relative;
-            overflow: hidden;
-            transition: box-shadow 0.3s;
-        }
+    .btn-light {
+        background-color: #365AC2;
+        color: white;
+    }
 
-        .nav-mini-act {
-            display: block;
-            padding: 10px;
-            text-decoration: none;
-            font-weight: 600;
-            color: #365AC2;
-            position: relative;
-            overflow: hidden;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2), 0 2px 5px rgba(0, 0, 0, 0.2);
-        }
+    .btn-light:hover {
+        background-color: #0e4988;
+    }
 
-        .nav-mini-act::before {
-            content: "";
-            position: absolute;
-            bottom: 0;
-            left: 0%;
-            width: 100%;
-            height: 2px;
-            background-color: #365AC2;
-        }
+    .btn-danger {
+        background-color: #dc3545;
+        color: white;
+    }
 
-        .nav-mini::before {
-            content: "";
-            position: absolute;
-            bottom: 0;
-            left: 50%;
-            width: 0;
-            height: 2px;
-            background-color: #365AC2;
-            transition: all 0.3s;
-        }
+    .btn-danger:hover {
+        background-color: #c82333;
+    }
 
-        .nav-mini:hover::before {
-            left: 0;
-            width: 100%;
-        }
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0, 0, 0, 0.5);
+    }
 
-        .nav-mini:hover {
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2), 0 2px 5px rgba(0, 0, 0, 0.2);
-        }
+    .modal-content {
+        background-color: #fefefe;
+        margin: 2% auto;
+        padding: 20px;
+        border: 1px solid #888;
+        width: 80%;
+        max-width: 600px;
+        border-radius: 10px;
+    }
 
-        .page {
-            background-color: white;
-            width: 80%;
-            height: 100%;
-            border-radius: 5px;
-            margin-right: 20;
-            box-shadow: 0 2px 5px 2px rgba(0, 0, 0, 0.1);
-            z-index: 1000;
-        }
+    .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid #e5e5e5;
+        background-color: #007bff;
+        color: white;
+        padding: 10px 20px;
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+        margin-bottom: 2.1%;
+    }
 
-        .inpage {
-            margin-left: 10%;
-            font-size: 15px;
-        }
+    .modal-header h1 {
+        margin: 0;
+        font-size: 24px;
+    }
 
-        .inpage h3 {
-            margin-bottom: 20px;
-            font-size: 24px;
-            color: #333;
-        }
+    .btn-close {
+        background: none;
+        border: none;
+        font-size: 24px;
+        cursor: pointer;
+        color: white;
+    }
 
-        .inpage p {
-            margin-bottom: 3%;
-        }
+    .form-control {
+        width: 96%;
+        padding: 10px;
+        margin-bottom: 15px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 14px;
+    }
 
-        .inpage input[type="password"] {
-            width: 60%;
-            padding: 15px;
-            margin: 10px 0;
-            margin-bottom: 2%;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-        }
-
-        .inpage button {
-            background-color: #365AC5;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            margin-top: 20px;
-        }
-        .inpage button:hover {
-            background-color: #365AA3;
-        }
-
-        .error-message {
-        color: red;
-        font-size: 12px;
-        margin-top: 5px;
+    .form-label {
         display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+        font-size: 14px;
+    }
+
+    .modal-footer {
+        display: flex;
+        justify-content: flex-end;
+        border-top: 1px solid #e5e5e5;
+        padding-top: 10px;
+        margin-top: 20px;
+    }
+
+    .alert {
+        padding: 20px;
+        margin-bottom: 15px;
+        border: 1px solid transparent;
+        border-radius: 4px;
+        text-align: left;
+    }
+
+    .alert-success {
+        color: #155724;
+        background-color: #d4edda;
+        border-color: #c3e6cb;
+    }
+
+    .alert-info {
+        color: #0c5460;
+        background-color: #d1ecf1;
+        border-color: #bee5eb;
+    }
+
+    .alert-warning {
+        color: #856404;
+        background-color: #fff3cd;
+        border-color: #ffeeba;
+    }
+
+    .alert-danger {
+        color: #721c24;
+        background-color: #f8d7da;
+        border-color: #f5c6cb;
+    }
+
+    .modal-image {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0, 0, 0, 0.5);
+    }
+
+    .modal-image-content {
+        background-color: #fefefe;
+        margin: 10% auto;
+        padding: 20px;
+        border: 1px solid #888;
+        width: 80%;
+        max-width: 600px;
+        border-radius: 10px;
+    }
+
+    .modal-image-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid #e5e5e5;
+        background-color: #007bff;
+        color: white;
+        padding: 10px 20px;
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+        margin-bottom: 2.1%;
+    }
+
+    .modal-image-header h1 {
+        margin: 0;
+        font-size: 24px;
+    }
+
+    .btn-close {
+        background: none;
+        border: none;
+        font-size: 24px;
+        cursor: pointer;
+        color: white;
+    }
+
+    .container-flex {
+        max-width: 100%;
+        background-color: white;
+        margin: 4% auto;
+        border-radius: 15px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .judul {
+        width: 95%;
+        margin-top: 2%;
+        padding: auto;
+        padding-top: 25px;
+        padding-bottom: 25px;
+        padding-left: 20px;
+        border-radius: 15px;
+        background-color: #0056b3;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        color: white;
+        left: 2%;
+    }
+
+    .judul h4 {
+        margin: 0;
+        font-size: 24px;
+    }
+
+    .profile-info {
+        display: flex;
+        align-items: center;
+        width: 100%;
+    }
+
+    .profile-info img {
+        border-radius: 50%;
+        margin-right: 10px;
+        margin-left: 5%;
+
+    }
+
+    .profile-info .data {
+        flex: 1;
+        margin-left: 30px;
+        margin-top: 20px
+    }
+
+    .profile-info .data span {
+        font-size: 18px;
+        color: #000000;
+    }
+
+    .profile-info .data p {
+        font-size: 16px;
+        color: rgb(92, 89, 89);
+    }
+
+    .btn-container {
+        display: flex;
+        justify-content: flex-start;
+        margin-top: 20px;
+        margin-bottom: 5%;
+    }
+
+    @media (max-width: 768px) {
+        .profile-info {
+            flex-direction: column;
+            align-items: center;
         }
-        .error {
-            border: 1px solid red;
+
+        .profile-info img {
+            margin-bottom: 20px;
         }
+
+        .profile-info .data span, .profile-info .data p {
+            text-align: center;
+            line-height: 30px;
+        }
+    }
+
+
 
     </style>
 </head>
@@ -300,7 +446,7 @@
         <p class="p1"><span>{{ \Carbon\Carbon::now()->format('l') }} </span><br>{{ \Carbon\Carbon::now()->format('F j, Y') }}</p>
     </nav>
 
-    <button class="open-btn" onclick="toggleSidebar()">&#9776; Security</button>
+    <button class="open-btn" onclick="toggleSidebar()">&#9776; Profile</button>
 
     <div id="sidebar" class="sidebar">
         <div class="sidebar-isi">
@@ -311,12 +457,12 @@
                     </a>
                 </li>
                 <li>
-                    <a href="/profil" class="nav-link">
+                    <a href="/profil" class="nav-link-act">
                         <span class="link"><i class="fa-solid fa-id-card"></i>ㅤProfile</span>
                     </a>
                 </li>
                 <li>
-                    <a href="/security" class="nav-link-act">
+                    <a href="/change-password" class="nav-link">
                         <span class="link"><i class="fa-solid fa-user-shield"></i>ㅤSecurity</span>
                     </a>
                 </li>
@@ -326,6 +472,17 @@
 
     <div id="main-content" class="main-content">
         <div class="banner">
+            <div class="container-flex">
+                @if (session('success'))
+            <div class="alert alert-success">
+                {{ session('success') }}
+            </div>
+            @elseif (session('error'))
+            <div class="alert alert-danger">
+                {{ session('error') }}
+            </div>
+            @endif
+
             <div class="judul">
                 <h4>Akun Pengguna</h4>
             </div>
@@ -355,10 +512,10 @@
                     </p>
                     <div class="btn-container">
                         <button type="button" class="btn btn-light" onclick="openModal()">
-                            <i class="fas fa-user-edit me-2"></i>Edit Profile
+                            <i class="fas fa-user-edit me-2"></i> Edit Profile
                         </button>
                         <button type="button" class="btn btn-light" onclick="openImageModal()">
-                            <i class="fas fa-image me-2"></i>Change Profile Image
+                            <i class="fas fa-image me-2"></i> Change Profile Image
                         </button>
                     </div>
                 </div>
@@ -412,7 +569,6 @@
                         </select>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" onclick="closeModal()">Close</button>
                         <button type="submit" class="btn btn-primary">Save Changes</button>
                     </div>
                 </form>
@@ -443,7 +599,6 @@
                         <input type="file" name="profile_picture" class="form-control" id="profile_image">
                     </div>
                     <div class="modal-image-footer">
-                        <button type="button" class="btn btn-secondary" onclick="closeImageModal()">Close</button>
                         <button type="submit" class="btn btn-primary">Save Changes</button>
                     </div>
                 </form>
