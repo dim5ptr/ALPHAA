@@ -291,24 +291,34 @@
         .logout-button {
             margin-left: 15%;
             display: flex;
-            align-items: center;
+            text-align : center;
             padding: 8px 9px;
             margin-bottom: 2%;
             border-radius: 5px;
             text-decoration: none;
+            font-weight: 700;
+            font-size: 15px;
             width: calc(80% - 40px);
             box-sizing: border-box;
             position: relative;
-            top: 90%;
+            top: 100%;
             background-color: white;
+            color: #c23636;
             border: 2px solid #c23636;
             transition: background-color 0.3s, color 0.3s;
         }
 
+        .logout-button i{
+            font-weight: 700;
+            font-size: 20px;
+            color: #c23636;
+        }
+
+        .logout-button:hover i,
         .logout-button:hover {
-            background-color: #ff0000;
+            background-color: #c23636;;
             color: aliceblue;
-            border: 2px solid aliceblue;
+            font-weight: 700;
         }
     </style>
 </head>
@@ -345,7 +355,7 @@
             </li> --}}
             <form id="logoutForm" class="logoutForm" method="POST" action="{{ route('logout') }}">
             @csrf
-            <button type="submit" class="logout-button">Logout</button>
+            <button type="submit" class="logout-button">ㅤ <i class="fa-solid fa-right-from-bracket"></i>ㅤLogout</button>
             </form>
             </ul>
         </div>
