@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <title>Document</title>
 
     <style>
@@ -70,8 +70,7 @@
         }
 
         .nav-link .nav-link-act i {
-            margin-right: 5%;
-            padding-right: 15px;
+            padding-right: 10px;
             font-size: 20px;
             color: #365AC2;
             cursor: pointer;
@@ -308,17 +307,17 @@
             <ul class="list">
                 <li>
                     <a href="/dashboard" class="nav-link">
-                        <span class="link"><i class='bx bxs-home'></i>Dashboard</span>
+                        <span class="link"><i class="fa-solid fa-house-chimney"></i>ㅤDashboard</span>
                     </a>
                 </li>
                 <li>
                     <a href="/profil" class="nav-link">
-                        <span class="link"><i class='bx bxs-user-detail'></i>Profile</span>
+                        <span class="link"><i class="fa-solid fa-id-card"></i>ㅤProfile</span>
                     </a>
                 </li>
                 <li>
                     <a href="/security" class="nav-link-act">
-                        <span class="link"><i class="fa-solid fa-user-shield"></i>Security</span>
+                        <span class="link"><i class="fa-solid fa-user-shield"></i>ㅤSecurity</span>
                     </a>
                 </li>
             </ul>
