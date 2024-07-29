@@ -404,14 +404,14 @@
     <script>
         // Function to toggle sidebar visibility
         function toggleSidebar() {
-            var sidebar = document.querySelector('.sidebar');
-            var openBtn = document.querySelector('.open-btn');
-            if (sidebar.style.left === '0px') {
-                sidebar.style.left = '-270px';
-                openBtn.style.left = '2%';
+            var sidebar = document.getElementById("sidebar");
+            var mainContent = document.getElementById("main-content");
+            if (sidebar.style.left === "0px") {
+                sidebar.style.left = "-270px";
+                mainContent.style.marginLeft = "10%";
             } else {
-                sidebar.style.left = '0px';
-                openBtn.style.left = '272px';
+                sidebar.style.left = "0px";
+                mainContent.style.marginLeft = "19%";
             }
         }
 
