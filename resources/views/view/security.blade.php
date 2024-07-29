@@ -318,7 +318,7 @@
                 </li>
                 <li>
                     <a href="/security" class="nav-link-act">
-                        <span class="link"><i class='bx bxs-cog'></i>Security</span>
+                        <span class="link"><i class="fa-solid fa-user-shield"></i>Security</span>
                     </a>
                 </li>
             </ul>
