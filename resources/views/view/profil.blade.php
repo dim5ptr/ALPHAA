@@ -473,8 +473,9 @@
 
         .profile-info .data span, .profile-info .data p {
             text-align: center;
-            line-height: 30px;
+            line-height: 0;
         }
+
     }
 
 
@@ -539,11 +540,10 @@
                 @endif
                 <div class="data">
                     <p>
-                        <span><strong>Username:</strong> {{ $personalInfo['username'] }}</span><br>
-                        <strong>Full Name:</strong> {{ $personalInfo['fullname'] }}<br>
-                        <strong>Email:</strong> {{ $personalInfo['email'] }}<br>
-                        <strong>Phone:</strong> {{ $personalInfo['phone'] ?? 'Not Provided' }}<br>
-                        <strong>Date of Birth:</strong> {{ $personalInfo['birthday'] ?? 'Not Provided' }}<br>
+                        <span><strong>Username:</strong> {{ $personalInfo['username'] }}</span></br>
+                        <strong>Email:</strong> {{ $personalInfo['email'] }}</br>
+                        <strong>Phone:</strong> {{ $personalInfo['phone'] ?? 'Not Provided' }}</br>
+                        <strong>Date of Birth:</strong> {{ $personalInfo['birthday'] ?? 'Not Provided' }}</br>
                         <strong>Gender:</strong>
                         @if($personalInfo['gender'] == 1)
                             Male
