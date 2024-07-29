@@ -61,4 +61,8 @@ class PagesController extends Controller
     {
         return view('auth.verify-email');
     }
+    public function showChangePasswordForm()
+    {
+        return view('view.security'); // Pastikan ini sesuai dengan nama tampilan Anda
+    }
 }

@@ -341,7 +341,7 @@
                     <div class="inpage">
                         <h3>Manage Your Password</h3>
                         <p>Your new password must be different from your previous used password.</p>
-                        <form>
+                        <form id="change-password-form" method="POST" action="{{ route('change-password') }}">
                             <div>
                             <label for="current_password">Current Password</label><br>
                                 <input type="password" id="current_password" name="current_password" required>

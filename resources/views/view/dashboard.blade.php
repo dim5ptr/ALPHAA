@@ -282,13 +282,13 @@
             margin-left: 10%;
             transition: margin-left .3s;
         }
-        .logout {
+        .logoutForm {
             list-style: none;
             height: 50%;
             top: 50%;
 
         }
-        .out-link {
+        .logout-button {
             margin-left: 15%;
             display: flex;
             align-items: center;
@@ -305,7 +305,7 @@
             transition: background-color 0.3s, color 0.3s;
         }
 
-        .out-link:hover {
+        .logout-button:hover {
             background-color: #ff0000;
             color: aliceblue;
             border: 2px solid aliceblue;
@@ -338,7 +338,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="#" class="nav-link">
+                    <a href="{{ route('change-password-form') }}" class="nav-link">
                         <span class="link"><i class='bx bxs-cog'></i>Settings</span>
                     </a>
                 </li>
@@ -348,15 +348,21 @@
                     <span class="link"><i class='bx bx-log-out'></i>Logout</span>
                 </a>
             </li> --}}
-              <form id="logoutForm" method="POST" action="{{ route('logout') }}">
+            <form id="logoutForm" class="logoutForm" method="POST" action="{{ route('logout') }}">
             @csrf
             <button type="submit" class="logout-button">Logout</button>
-        </form>
+            </form>
             </ul>
         </div>
     </div>
 
     <div id="main-content" class="main-content">
+        @if (session('error'))
+    <div class="alert alert-danger">
+        {{ session('error') }}
+    </div>
+@endif
+
         <div class="banner">
             <div class="wlc">
                 <h2>Selamat Datang di <span>Sarastya Technology Integrata</span></h2>

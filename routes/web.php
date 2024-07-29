@@ -25,7 +25,7 @@ Route::get('/register', [PagesController::class, 'registerPage'])->name('registe
 Route::post('/register', [UserController::class, 'register'])->name('user.register');
 Route::get('/register/confirmation', function () {
     return view('public.register-confirmation');
-})->name('register.confirmation');
+})->name('register-confirmation');
 Route::get('/Aregister', [PagesController::class, 'AregisterPage'])->name('Aregister');
 Route::post('/Aregister', [UserController::class, 'Aregister'])->name('admin.register');
 Route::get('/Aregister/confirmation', function () {
@@ -41,6 +41,11 @@ Route::middleware(['api'])->group(function () {
     Route::patch('/update-profile-picture', [UserController::class, 'updateProfilePicture'])->name('profilePicture.update');
     Route::patch('/update-personal-info', [UserController::class, 'updatePersonalInfo'])->name('personalInfo.update');
     Route::get('/about', [PagesController::class, 'aboutPage'])->name('about');
+    // Definisikan rute untuk menampilkan formulir perubahan kata sandi
+Route::get('/change-password', [PagesController::class, 'showChangePasswordForm'])->name('change-password-form');
+
+// Definisikan rute untuk menangani permintaan POST formulir perubahan kata sandi
+Route::post('/change-password', [UserController::class, 'changePassword'])->name('change-password');
  });
 
  Route::middleware(['api'])->group(function () {

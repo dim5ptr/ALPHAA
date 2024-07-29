@@ -194,7 +194,7 @@ class UserController extends Controller
                     // Send verification email
                     Mail::to($request->email)->send(new VerificationEmail($request->email));
 
-                    return redirect('register.confirmation')->with('success_message', $dataResponse['data']);
+                    return redirect('register-confirmation')->with('success_message', $dataResponse['data']);
                 } else {
                     return back()->withErrors([
                         'error_message' => $dataResponse['data'],
@@ -521,37 +521,35 @@ class UserController extends Controller
         }
     }
 
-    public function logout(Request $request)
-    {
 
-        $apiUrl = 'http://192.168.1.24:14041/api/sso/logout.json';
-        $apiKey = '5af97cb7eed7a5a4cff3ed91698d2ffb';
-        $authToken = '49d843007dabb68bfddf309df8441dd0';
+public function logout(Request $request)
+{
+    $apiUrl = 'http://192.168.1.24:14041/api/sso/logout.json';
+    $apiKey = '5af97cb7eed7a5a4cff3ed91698d2ffb';
+    $authToken = '49d843007dabb68bfddf309df8441dd0';
 
-        $response = Http::withHeaders([
-            'Authorization' => $authToken,
-            'x-api-key' => $apiKey,
-            'Content-Type' => 'application/json'
-        ])->post($apiUrl, []);
+    $response = Http::withHeaders([
+        'Authorization' => $authToken,
+        'x-api-key' => $apiKey,
+        'Content-Type' => 'application/json'
+    ])->post($apiUrl, []);
 
-        if ($response->successful()) {
-            Auth::logout();
-            $request->session()->invalidate();
-            $request->session()->regenerateToken();
+    // Log the API response
+    Log::info('Logout API Response:', $response->json());
 
-            return response()->json([
-                'success' => true,
-                'redirect' => route('login')
-            ]);
-        } else {
-            return response()->json([
-                'success' => false,
-                'message' => 'Logout gagal!',
-                'prettyPrint' => json_encode([
-                    'success' => false,
-                    'message' => 'Logout gagal!'
-                ], JSON_PRETTY_PRINT)
-            ]);
-        }
+    if ($response->successful() || $response->json()['data'] == 'Token expired') {
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        // Redirect to login page
+        return redirect()->route('login')->with('status', 'You have been logged out.');
+    } else {
+        // Log the failed response for debugging
+        Log::error('Logout failed:', $response->json());
+
+        // Redirect back with an error message
+        return redirect()->back()->with('error', 'Logout gagal!');
     }
+}
 }

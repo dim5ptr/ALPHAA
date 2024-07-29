@@ -122,6 +122,9 @@
         .pict img {
             max-width: 70%;
         }
+        .error {
+            color: red;
+        }
     </style>
 </head>
 <body>
@@ -129,34 +132,42 @@
         <div class="form-container">
             <h2>Daftar</h2>
             @if ($errors->any())
-                <div class="alert alert-danger" id="error-alert">
-                    <ul>
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+            @endif
+            @if (session('success_message'))
+            <div class="alert alert-success">
+                {{ session('success_message') }}
+            </div>
             @endif
 
-            <form action="{{ route('register') }}" method="POST">
+            <form action="{{ route('register') }}" method="POST" id="registerForm">
                 @csrf
                 <div class="form-group">
                     <div class="input-group">
                         <i class="fa fa-envelope"></i>
                         <input type="email" id="email" name="email" placeholder="Email" value="{{ old('email') }}" required>
                     </div>
+                    <span id="email-error" class="error"></span>
                 </div>
                 <div class="form-group">
                     <div class="input-group">
                         <i class="fa fa-lock"></i>
                         <input type="password" id="password" name="password" placeholder="Password" required>
                     </div>
+                    <span id="password-error" class="error"></span>
                 </div>
                 <div class="form-group">
                     <div class="input-group">
                         <i class="fa fa-lock"></i>
                         <input type="password" id="password_confirmation" name="password_confirmation" placeholder="Confirm Password" required>
                     </div>
+                    <span id="password-confirmation-error" class="error"></span>
                 </div>
                 <button type="submit" class="btn btn-primary">Daftar</button>
             </form>
@@ -168,13 +179,76 @@
     </div>
 
     <script>
-        // Automatically hide alert messages after 10 seconds
-        setTimeout(() => {
-            const alert = document.getElementById('error-alert');
-            if (alert) {
-                alert.style.display = 'none';
+        document.getElementById('email').addEventListener('input', function () {
+            const email = this.value;
+            const errorElement = document.getElementById('email-error');
+
+            // Simple email validation regex
+            const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+            if (!emailPattern.test(email)) {
+                errorElement.textContent = 'Please enter a valid email address!';
+            } else {
+                errorElement.textContent = '';
             }
-        }, 5000);
+        });
+
+        document.getElementById('password').addEventListener('input', function () {
+            const password = this.value;
+            const errorElement = document.getElementById('password-error');
+
+            if (password.length < 8) {
+                errorElement.textContent = 'Password must be at least 8 characters long!';
+            } else {
+                errorElement.textContent = '';
+            }
+        });
+
+        document.getElementById('password_confirmation').addEventListener('input', function () {
+            const password = document.getElementById('password').value;
+            const passwordConfirmation = this.value;
+            const errorElement = document.getElementById('password-confirmation-error');
+
+            if (password !== passwordConfirmation) {
+                errorElement.textContent = 'Passwords do not match!';
+            } else {
+                errorElement.textContent = '';
+            }
+        });
+
+        document.getElementById('registerForm').addEventListener('submit', function (event) {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const passwordConfirmation = document.getElementById('password_confirmation').value;
+
+            const emailErrorElement = document.getElementById('email-error');
+            const passwordErrorElement = document.getElementById('password-error');
+            const passwordConfirmationErrorElement = document.getElementById('password-confirmation-error');
+
+            // Simple email validation regex
+            const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+            if (!emailPattern.test(email)) {
+                emailErrorElement.textContent = 'Please enter a valid email address!';
+                event.preventDefault();
+            } else {
+                emailErrorElement.textContent = '';
+            }
+
+            if (password.length < 8) {
+                passwordErrorElement.textContent = 'Password must be at least 8 characters long!';
+                event.preventDefault();
+            } else {
+                passwordErrorElement.textContent = '';
+            }
+
+            if (password !== passwordConfirmation) {
+                passwordConfirmationErrorElement.textContent = 'Passwords do not match!';
+                event.preventDefault();
+            } else {
+                passwordConfirmationErrorElement.textContent = '';
+            }
+        });
     </script>
 </body>
 </html>

@@ -222,15 +222,17 @@
                     <span class="close-btn" onclick="closeAlert('alert-danger')">&times;</span>
                 </div>
                 @endif
-                <form action="{{ route('user.login') }}" method="post">
+                <form id="loginForm" action="{{ route('user.login') }}" method="post">
                     @csrf
                     <div class="input-group">
                         <input type="email" id="email" name="email" placeholder="Email" value="{{ old('email') }}">
                         <span class="icon"><i class="fas fa-envelope"></i></span>
+                        <div id="emailError" class="error-message"></div>
                     </div>
                     <div class="input-group">
                         <input type="password" id="password" name="password" placeholder="Password">
                         <span class="icon"><i class="fas fa-lock"></i></span>
+                        <div id="passwordError" class="error-message"></div>
                     </div>
                     <div class="forgot-password">
                         <a href="{{ route('password.request') }}">Lupa Password?</a>
@@ -267,6 +269,50 @@
                         errorAlert.style.display = 'none';
                     }, 500);
                 }, 5000);
+            }
+
+            // Real-time validation
+            const emailInput = document.getElementById('email');
+            const passwordInput = document.getElementById('password');
+            const loginForm = document.getElementById('loginForm');
+            const emailError = document.getElementById('emailError');
+            const passwordError = document.getElementById('passwordError');
+
+            emailInput.addEventListener('input', function() {
+                validateEmail();
+            });
+
+            passwordInput.addEventListener('input', function() {
+                validatePassword();
+            });
+
+            loginForm.addEventListener('submit', function(event) {
+                if (!validateEmail() || !validatePassword()) {
+                    event.preventDefault();
+                }
+            });
+
+            function validateEmail() {
+                const email = emailInput.value.trim();
+                const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailPattern.test(email)) {
+                    emailError.textContent = 'Please enter a valid email address';
+                    return false;
+                } else {
+                    emailError.textContent = '';
+                    return true;
+                }
+            }
+
+            function validatePassword() {
+                const password = passwordInput.value.trim();
+                if (password.length < 8) {
+                    passwordError.textContent = 'Password must be at least 8 characters long';
+                    return false;
+                } else {
+                    passwordError.textContent = '';
+                    return true;
+                }
             }
         });
 
