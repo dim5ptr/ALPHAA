@@ -428,12 +428,12 @@
             @csrf
             <div>
                 <label for="new-password">New Password:</label><br>
-                <input type="password" id="new-password" name="new-password" required>
+                <input type="password" id="new-password" name="new_password" required>
                 <span id="new-password-error" class="error-message"></span>
             </div>
             <div>
                 <label for="confirm-password">Confirm New Password:</label><br>
-                <input type="password" id="confirm-password" name="confirm-password" required>
+                <input type="password" id="confirm-password" name="confirm_new_password" required>
                 <span id="confirm-password-error" class="error-message"></span>
             </div>
             <button type="submit">Change Password</button>
