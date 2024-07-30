@@ -68,6 +68,7 @@ class UserController extends Controller
                     if (isset($personalInfo['profile_picture'])) {
                         session(['profile_picture' => $personalInfo['profile_picture']]);
                     }
+                    
                 }
 
                 return redirect()->route('dashboard');

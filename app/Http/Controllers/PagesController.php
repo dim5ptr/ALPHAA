@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Log;
+
 
 class PagesController extends Controller
 {
@@ -41,7 +44,17 @@ class PagesController extends Controller
     }
     public function dashboardPage()
     {
-        return view("view.dashboard");
+        $accessToken = Session::get('access_token');
+
+    // Debugging: Tampilkan token untuk memastikan apakah token ada
+    if (!$accessToken) {
+        return redirect()->route('login')->withErrors(['error' => 'Please log in first.']);
+    }
+
+    // Tambahkan debugging untuk memastikan token berhasil diambil
+    Log::info('Access Token: ' . $accessToken);
+
+    return view("view.dashboard");
     }
     public function AdashboardPage()
     {
