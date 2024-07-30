@@ -32,7 +32,7 @@ Route::get('/Aregister/confirmation', function () {
     return view('public.register-confirmation');
 })->name('Aregister.confirmation');
 // Authenticated Routes
-Route::middleware(['api'])->group(function () {
+Route::middleware(['auth','api'])->group(function () {
     Route::get('/dashboard', [PagesController::class, 'dashboardPage'])->name('dashboard');
     Route::get('/profil', [PagesController::class, 'profilPage'])->name('profil');
     Route::post('/update-profile', [UserController::class, 'updatePersonalInfo'])->name('updatePersonalInfo');
@@ -47,6 +47,7 @@ Route::get('/change-password', [PagesController::class, 'showChangePasswordForm'
 // Definisikan rute untuk menangani permintaan POST formulir perubahan kata sandi
 Route::post('/change-password', [UserController::class, 'changePassword'])->name('change-password');
 Route::get('/confirmpw', [PagesController::class, 'PesanPw'])->name('confirmpw');
+Route::post('/logout', [UserController::class, 'logout'])->name('logout');
  });
 
 
@@ -63,4 +64,4 @@ Route::get('/confirmpw', [PagesController::class, 'PesanPw'])->name('confirmpw')
     // Route::get('/about', [PagesController::class, 'aboutPage'])->name('about');
  });
 
- Route::post('/logout', [UserController::class, 'logout'])->middleware('api')->name('logout');
+

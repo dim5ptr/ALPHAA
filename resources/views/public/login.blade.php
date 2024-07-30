@@ -222,7 +222,7 @@
                     <span class="close-btn" onclick="closeAlert('alert-danger')">&times;</span>
                 </div>
                 @endif
-                <form id="loginForm" action="{{ route('user.login') }}" method="post">
+                {{-- <form id="loginForm" action="{{ route('user.login') }}" method="post">
                     @csrf
                     <div class="input-group">
                         <input type="email" id="email" name="email" placeholder="Email" value="{{ old('email') }}">
@@ -238,7 +238,30 @@
                         <a href="{{ route('password.request') }}">Lupa Password?</a>
                     </div>
                     <input type="submit" value="Login" class="btn-login">
+                </form> --}}
+                <form id="loginForm" action="{{ route('user.login') }}" method="post">
+                    @csrf
+                    <div class="input-group">
+                        <input type="email" id="email" name="email" placeholder="Email" value="{{ old('email') }}" required>
+                        <span class="icon"><i class="fas fa-envelope"></i></span>
+                        @if ($errors->has('email'))
+                            <div id="emailError" class="error-message">{{ $errors->first('email') }}</div>
+                        @endif
+                    </div>
+                    <div class="input-group">
+                        <input type="password" id="password" name="password" placeholder="Password" required>
+                        <span class="icon"><i class="fas fa-lock"></i></span>
+                        @if ($errors->has('password'))
+                            <div id="passwordError" class="error-message">{{ $errors->first('password') }}</div>
+                        @endif
+                    </div>
+
+                    <div class="forgot-password">
+                        <a href="{{ route('password.request') }}">Lupa Password?</a>
+                    </div>
+                    <input type="submit" value="Login" class="btn-login">
                 </form>
+
                 <br>
                 <div class="register-link">
                     <p>Belum punya akun? <a href="{{ route('register') }}">Daftar Sekarang</a></p>
