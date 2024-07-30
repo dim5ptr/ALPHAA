@@ -6,7 +6,7 @@ use App\Http\Controllers\PagesController;
 
 
 // Email Verification Route
-Route::get('email/verify/{id}/{hash}', [UserController::class, 'verifyEmail'])->name('verification.verify');
+//Route::get('email/verify/{id}/{hash}', [UserController::class, 'verifyEmail'])->name('verification.verify');
 
 // Authentication Routes
 require __DIR__.'/auth.php';
