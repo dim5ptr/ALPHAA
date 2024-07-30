@@ -32,7 +32,7 @@ Route::get('/Aregister/confirmation', function () {
     return view('public.register-confirmation');
 })->name('Aregister.confirmation');
 // Authenticated Routes
-Route::middleware(['auth','api'])->group(function () {
+Route::middleware(['auth:api'])->group(function () {
     Route::get('/dashboard', [PagesController::class, 'dashboardPage'])->name('dashboard');
     Route::get('/profil', [PagesController::class, 'profilPage'])->name('profil');
     Route::post('/update-profile', [UserController::class, 'updatePersonalInfo'])->name('updatePersonalInfo');

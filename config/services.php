@@ -36,8 +36,8 @@ return [
     ],
 
     'api' => [
-        'key' => env('API_KEY'),
         'base_url' => env('BASE_URL'),
+        'api_key' => env('API_KEY'),
     ],
 
     'backbone' => [

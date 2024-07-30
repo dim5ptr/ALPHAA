@@ -9,6 +9,9 @@ use Illuminate\Support\Facades\Log;
 
 class PagesController extends Controller
 {
+    const API_URL='http://192.168.1.24:14041/api';
+    const API_KEY='5af97cb7eed7a5a4cff3ed91698d2ffb';
+
     public function loginPage()
     {
         return view("public.login");
@@ -42,20 +45,21 @@ class PagesController extends Controller
         return view('view.profil', compact('personalInfo'));
 
     }
-    public function dashboardPage()
+
+    public function dashboardPage(Request $request)
     {
-        $accessToken = Session::get('access_token');
+        // Check if the access token exists in the session
+        if (!session()->has('access_token')) {
+            // If not authenticated, redirect to the login page with an error message
+            return redirect()->route('login')->with('error', 'Please log in to access the dashboard.');
+        }
 
-    // Debugging: Tampilkan token untuk memastikan apakah token ada
-    if (!$accessToken) {
-        return redirect()->route('login')->withErrors(['error' => 'Please log in first.']);
+        // If authenticated, return the dashboard view with the access token
+        return view('view.dashboard', [
+            'access_token' => session('access_token'),
+        ]);
     }
 
-    // Tambahkan debugging untuk memastikan token berhasil diambil
-    Log::info('Access Token: ' . $accessToken);
-
-    return view("view.dashboard");
-    }
     public function AdashboardPage()
     {
         return view("view.admin_dashboard");

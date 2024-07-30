@@ -23,7 +23,7 @@ use App\Mail\VerificationEmail;
 
 class UserController extends Controller
 {
-    const API_URL='http://192.168.1.24:14041/api';
+    const BASE_URL='http://192.168.1.24:14041/api';
     const API_KEY='5af97cb7eed7a5a4cff3ed91698d2ffb';
 
     public function login(Request $request)
@@ -37,11 +37,11 @@ class UserController extends Controller
     try {
         $response = Http::withHeaders([
             'x-api-key' => self::API_KEY,
-        ])->post(self::API_URL . '/sso/login.json', [
+            'Authorization' => 'Bearer ' . session('access_token'),
+        ])->post(self::BASE_URL . '/sso/login.json', [
             'username' => $request->email,
             'password' => $request->password,
         ]);
-
         $responseData = $response->json();
 
         // Log response for debugging
@@ -114,7 +114,7 @@ class UserController extends Controller
         try {
             $response = Http::withHeaders([
                 'x-api-key' => self::API_KEY,
-            ])->post(self::API_URL . '/sso/login.json', [
+            ])->post(self::BASE_URL . '/sso/login.json', [
                 'username' => $request->email,
                 'password' => $request->password,
             ]);
@@ -188,7 +188,7 @@ class UserController extends Controller
             // Send request to SSO API
             $response = Http::withHeaders([
                 'x-api-key' => self::API_KEY,
-            ])->post(self::API_URL . '/sso/register.json', [
+            ])->post(self::BASE_URL . '/sso/register.json', [
                 'email' => $request->email,
                 'password' => $request->password,
             ]);
@@ -237,7 +237,7 @@ class UserController extends Controller
             // Send request to SSO API
             $response = Http::withHeaders([
                 'x-api-key' => self::API_KEY,
-            ])->post(self::API_URL . '/sso/register.json', [
+            ])->post(self::BASE_URL . '/sso/register.json', [
                 'email' => $request->email,
                 'password' => $request->password,
             ]);
@@ -350,7 +350,7 @@ class UserController extends Controller
     //             'x-api-key' => self::API_KEY,
     //             'Authorization' => session('access_token'),
     //             'Content-Type' => 'application/json',
-    //         ])->post(self::API_URL . '/sso/update_personal_info.json', [
+    //         ])->post(self::BASE_URL . '/sso/update_personal_info.json', [
     //             'fullname' => $request->input('fullname'),
     //             'username' => $request->input('username'),
     //             'birthday' => $request->input('birthday'),
@@ -387,7 +387,7 @@ class UserController extends Controller
                 'Authorization' => session('access_token'),
                 'x-api-key' => self::API_KEY,
             ])->attach('profile_picture', $file->getPathname(), $file->getClientOriginalName())
-            ->post(self::API_URL . '/sso/update_profile_picture.json', $requestData);
+            ->post(self::BASE_URL . '/sso/update_profile_picture.json', $requestData);
 
             $data = $response->json();
 
@@ -419,7 +419,7 @@ class UserController extends Controller
         $response = Http::withHeaders([
             'Authorization' => session('access_token'),
             'x-api-key' => self::API_KEY,
-        ])->post(self::API_URL . '/sso/save_profile_picture.json', [
+        ])->post(self::BASE_URL . '/sso/save_profile_picture.json', [
             'profile_picture' => $filename,
         ]);
 
@@ -432,7 +432,7 @@ class UserController extends Controller
         $response = Http::withHeaders([
             'x-api-key' => self::API_KEY,
             'Authorization' => session('access_token'),
-        ])->post(self::API_URL . '/sso/update_personal_info.json', [
+        ])->post(self::BASE_URL . '/sso/update_personal_info.json', [
             'fullname' => $request->fullname,
             'username' => $request->username,
             'birthday' => $request->birthday,
@@ -469,7 +469,7 @@ class UserController extends Controller
         $response = Http::withHeaders([
             'Authorization' => session('access_token'),
             'x-api-key' => self::API_KEY,
-        ])->post(self::API_URL . '/sso/save_personal_info.json', [
+        ])->post(self::BASE_URL . '/sso/save_personal_info.json', [
             'fullname' => $request->fullname,
             'username' => $request->username,
             'birthday' => $request->birthday,
@@ -560,7 +560,7 @@ public function ChangePassword(Request $request)
         $response = Http::withHeaders([
             'Authorization' => $access_token,
             'x-api-key' => self:: API_KEY,
-        ])->post(self::API_URL . '/sso/change_password.json', [
+        ])->post(self::BASE_URL . '/sso/change_password.json', [
             'password' => $request->new_password,
         ]);
 
@@ -589,7 +589,7 @@ public function ChangePassword(Request $request)
         // Verifikasi password lama dengan memanggil endpoint login
         $loginResponse = Http::withHeaders([
             'x-api-key' => self::API_KEY
-        ])->post(self::API_URL . '/sso/login.json', [
+        ])->post(self::BASE_URL . '/sso/login.json', [
             'username' => $userEmail, // Gunakan email pengguna yang sudah login
             'password' => $request->old_password,
         ]);
@@ -600,7 +600,7 @@ public function ChangePassword(Request $request)
                 $changePasswordResponse = Http::withHeaders([
                     'Authentication' => $accessToken,
                     'x-api-key' => self::API_KEY
-                ])->post(self::API_URL . '/sso/change_password.json', [
+                ])->post(self::BASE_URL . '/sso/change_password.json', [
                     'password' => $request->new_password,
                 ]);
 
@@ -635,9 +635,10 @@ public function ChangePassword(Request $request)
 
 public function logout(Request $request)
 {
-    $apiUrl = 'http://192.168.1.24:14041/api/sso/logout.json';
-    $apiKey = '5af97cb7eed7a5a4cff3ed91698d2ffb';
-    $authToken = '49d843007dabb68bfddf309df8441dd0';
+    $apiUrl = env('BASE_URL') . '/sso/logout.json'; // Base URL from environment
+    $apiKey = env('API_KEY'); // API Key from environment
+    $authToken = session('access_token'); // Authentication token from session
+
 
     $response = Http::withHeaders([
         'Authorization' => $authToken,
