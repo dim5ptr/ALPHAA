@@ -69,27 +69,40 @@ class UserController extends Controller
                     session(['profile_picture' => $personalInfo['profile_picture']]);
                 }
             }
-
             return redirect()->route('dashboard');
-        } else {
-            // Tangani hasil respons berdasarkan nilai result
-            $errorMessages = [
-                2 => 'Error 2 occurred. Please check the details.',
-                3 => 'Error 3 occurred. Please check the details.',
-                4 => 'Error 4 occurred. Please check the details.',
-            ];
-
-            // Jika result tidak sesuai dengan errorMessages, tampilkan pesan default
-            $resultCode = $responseData['result'] ?? null;
-            $errorMessage = $errorMessages[$resultCode] ?? 'The provided credentials do not match our records.';
-
-            // Log the error message for debugging
-            Log::error('Login failed', ['error' => $responseData['message'] ?? $errorMessage]);
-
+        } elseif (isset($responseData['data']) && $responseData['result'] === 2) {
             return back()->withErrors([
-                'error' => $responseData['message'] ?? $errorMessage,
+                'error' => $responseData['data'],
+            ])->withInput();
+        } elseif (isset($responseData['data']) && $responseData['result'] === 3) {
+            return back()->withErrors([
+                'error' => $responseData['data'],
+            ])->withInput();
+        } elseif (isset($responseData['data']) && $responseData['result'] === 4) {
+            return back()->withErrors([
+                'error' => $responseData['data'],
             ])->withInput();
         }
+        //     return redirect()->route('dashboard');
+        // } else {
+        //     // Tangani hasil respons berdasarkan nilai result
+        //     $errorMessages = [
+        //         2 => 'Error 2 occurred. Please check the details.',
+        //         3 => 'Error 3 occurred. Please check the details.',
+        //         4 => 'Error 4 occurred. Please check the details.',
+        //     ];
+
+        //     // Jika result tidak sesuai dengan errorMessages, tampilkan pesan default
+        //     $resultCode = $responseData['result'] ?? null;
+        //     $errorMessage = $errorMessages[$resultCode] ?? 'The provided credentials do not match our records.';
+
+        //     // Log the error message for debugging
+        //     Log::error('Login failed', ['error' => $responseData['message'] ?? $errorMessage]);
+
+        //     return back()->withErrors([
+        //         'error' => $responseData['message'] ?? $errorMessage,
+        //     ])->withInput();
+        // }
 
     } catch (\Exception $e) {
         // Log the exception for debugging
